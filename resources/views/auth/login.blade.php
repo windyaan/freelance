@@ -314,6 +314,7 @@
                             <option value="">-- Pilih Peran --</option>
                             <option value="freelancer" {{ old('role') == 'freelancer' ? 'selected' : '' }}>Freelancer</option>
                             <option value="client" {{ old('role') == 'client' ? 'selected' : '' }}>Client</option>
+                            <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                         </select>
                         @error('role')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
