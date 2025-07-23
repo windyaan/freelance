@@ -37,8 +37,10 @@
             position: absolute;
             bottom: 60px;
             left: 40px;
+            right: 40px;
             color: white;
             z-index: 2;
+            text-align: left;
         }
 
         .hero-title {
@@ -46,17 +48,6 @@
             font-weight: 700;
             line-height: 1.2;
             margin-bottom: 20px;
-        }
-
-        .hero-subtitle {
-            font-size: 1rem;
-            opacity: 0.9;
-            margin-bottom: 10px;
-        }
-
-        .hero-author {
-            font-size: 0.9rem;
-            opacity: 0.8;
         }
 
         .pagination {
@@ -242,20 +233,19 @@
                 flex-direction: column;
             }
 
-            }
-
             .hero-content {
                 position: relative;
                 bottom: auto;
                 left: auto;
-                padding: 40px;
+                right: auto;
+                padding: 20px;
                 text-align: center;
             }
 
             .hero-title {
-                font-size: 1.8rem;
+                font-size: 1.5rem;
             }
-
+        }
     </style>
 </head>
 <body>
@@ -308,6 +298,7 @@
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
+
                     <div class="form-group">
                         <label class="form-label" for="role">LOGIN SEBAGAI</label>
                         <select name="role" id="role" class="form-input" required>
@@ -345,5 +336,4 @@
         </div>
     </div>
 </body>
-</html>
 </html>
