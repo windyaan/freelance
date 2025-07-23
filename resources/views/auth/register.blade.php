@@ -48,17 +48,6 @@
             margin-bottom: 20px;
         }
 
-        .hero-subtitle {
-            font-size: 1rem;
-            opacity: 0.9;
-            margin-bottom: 10px;
-        }
-
-        .hero-author {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
         .pagination {
             position: absolute;
             bottom: 20px;
@@ -66,8 +55,6 @@
             color: white;
             font-size: 0.9rem;
         }
-
-
 
         .right-section {
             flex: 1;
@@ -300,11 +287,11 @@
             .container {
                 flex-direction: column;
             }
-            
+
             .left-section {
                 min-height: 200px;
             }
-            
+
             .hero-content {
                 position: relative;
                 bottom: auto;
@@ -312,13 +299,9 @@
                 padding: 40px;
                 text-align: center;
             }
-            
+
             .hero-title {
                 font-size: 1.8rem;
-            }
-            
-            .hero-image {
-                display: none;
             }
 
             .form-row {
@@ -331,18 +314,9 @@
 <body>
     <div class="container">
         <div class="left-section">
-            <div class="hero-image">
-                <div class="laptop-mockup">
-                    <div class="video-call">
-                        <i class="fas fa-video fa-3x"></i>
-                    </div>
-                </div>
-            </div>
-            
             <div class="hero-content">
                 <h2 class="hero-title">Jual Skillmu dan Buat Penawaran dengan berbagai Client</h2>
             </div>
-            
             <div class="pagination">1 of 5</div>
         </div>
 
@@ -351,25 +325,16 @@
                 <div class="logo">
                     <h1><span class="skill">Skill</span><span class="match">Match</span></h1>
                 </div>
-
                 <h2 class="welcome-title">Welcome back</h2>
                 <p class="welcome-subtitle">Already have account? <a href="{{ route('login') }}">Log In</a></p>
 
                 <form method="POST" action="{{ route('register') }}">
                     @csrf
-                    
+
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="first_name">FIRST NAME</label>
-                            <input 
-                                type="text" 
-                                id="first_name" 
-                                name="first_name" 
-                                class="form-input" 
-                                placeholder="Your name"
-                                value="{{ old('first_name') }}"
-                                required
-                            >
+                            <input type="text" id="first_name" name="first_name" class="form-input" placeholder="Your name" value="{{ old('first_name') }}" required>
                             @error('first_name')
                                 <div class="error-message">{{ $message }}</div>
                             @enderror
@@ -377,34 +342,16 @@
 
                         <div class="form-group">
                             <label class="form-label" for="last_name">LAST NAME</label>
-                            <input 
-                                type="text" 
-                                id="last_name" 
-                                name="last_name" 
-                                class="form-input" 
-                                placeholder="Your name"
-                                value="{{ old('last_name') }}"
-                                required
-                            >
+                            <input type="text" id="last_name" name="last_name" class="form-input" placeholder="Your name" value="{{ old('last_name') }}" required>
                             @error('last_name')
                                 <div class="error-message">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
 
-        
-
                     <div class="form-group">
                         <label class="form-label" for="username">USERNAME</label>
-                        <input 
-                            type="text" 
-                            id="username" 
-                            name="username" 
-                            class="form-input" 
-                            placeholder="Your name"
-                            value="{{ old('username') }}"
-                            required
-                        >
+                        <input type="text" id="username" name="username" class="form-input" placeholder="Your name" value="{{ old('username') }}" required>
                         @error('username')
                             <div class="error-message">{{ $message }}</div>
                         @enderror
@@ -412,19 +359,13 @@
 
                     <div class="form-group">
                         <label class="form-label" for="password">PASSWORD</label>
-                        <input 
-                            type="password" 
-                            id="password" 
-                            name="password" 
-                            class="form-input" 
-                            placeholder="Enter your password"
-                            required
-                        >
+                        <input type="password" id="password" name="password" class="form-input" placeholder="Enter your password" required>
                         @error('password')
                             <div class="error-message">{{ $message }}</div>
                         @enderror
                     </div>
 
+                    
                     <div class="forgot-password">
                         <a href="{{ route('password.request') }}">Forget password</a>
                     </div>
@@ -442,17 +383,13 @@
                         @enderror
                     </div>
 
-                    <button type="submit" class="btn-primary btn-register">Sign In</button>
+                    <button type="submit" class="btn-primary">Sign In</button>
+
                 </form>
 
                 <div class="divider">
-                    <span>or</span>
-                </div>
+                 </div>
 
-                <button class="btn-google">
-                    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" style="width: 20px; height: 20px;">
-                    Sign in with Google
-                </button>
 
                 <div class="footer-links">
                     <a href="#">Customer Support</a>
