@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>SkillMatch - Sign Up</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
     <style>
+        /* Salin semua CSS dari halaman login di sini agar konsisten */
         * {
             margin: 0;
             padding: 0;
@@ -48,17 +49,6 @@
             margin-bottom: 20px;
         }
 
-        .hero-subtitle {
-            font-size: 1rem;
-            opacity: 0.9;
-            margin-bottom: 10px;
-        }
-
-        .hero-author {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
         .pagination {
             position: absolute;
             bottom: 20px;
@@ -66,8 +56,6 @@
             color: white;
             font-size: 0.9rem;
         }
-
-
 
         .right-section {
             flex: 1;
@@ -129,29 +117,7 @@
             font-weight: 500;
         }
 
-        .form-input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-            background: white;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #4ade80;
-        }
-
-        .form-input::placeholder {
-            color: #9ca3af;
-        }
-
-        .select-wrapper {
-            position: relative;
-        }
-
+        .form-input,
         .form-select {
             width: 100%;
             padding: 15px;
@@ -160,35 +126,12 @@
             font-size: 1rem;
             transition: border-color 0.3s;
             background: white;
-            appearance: none;
-            cursor: pointer;
         }
 
+        .form-input:focus,
         .form-select:focus {
             outline: none;
             border-color: #4ade80;
-        }
-
-        .select-wrapper::after {
-            content: '\f078';
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6b7280;
-            pointer-events: none;
-        }
-        .forgot-password {
-            text-align: right;
-            margin-bottom: 30px;
-        }
-
-        .forgot-password a {
-            color: #4ade80;
-            text-decoration: none;
-            font-size: 0.9rem;
         }
 
         .btn-primary {
@@ -207,15 +150,6 @@
 
         .btn-primary:hover {
             background: #1e1b4b;
-        }
-
-        .btn-register {
-            background: #4ade80;
-            margin-bottom: 15px;
-        }
-
-        .btn-register:hover {
-            background: #22c55e;
         }
 
         .divider {
@@ -280,15 +214,6 @@
             color: #4ade80;
         }
 
-        .form-row {
-            display: flex;
-            gap: 15px;
-        }
-
-        .form-row .form-group {
-            flex: 1;
-        }
-
         .error-message {
             color: #ef4444;
             font-size: 0.8rem;
@@ -300,14 +225,8 @@
                 flex-direction: column;
             }
 
-            .left-section {
-                min-height: 200px;
-            }
-
             .hero-content {
                 position: relative;
-                bottom: auto;
-                left: auto;
                 padding: 40px;
                 text-align: center;
             }
@@ -315,138 +234,80 @@
             .hero-title {
                 font-size: 1.8rem;
             }
-
-            .hero-image {
-                display: none;
-            }
-
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
         }
     </style>
 </head>
 <body>
-            <div class="hero-content">
-                <h2 class="hero-title">Jual Skillmu dan Buat Penawaran dengan berbagai Client</h2>
+<div class="container">
+    <div class="left-section">
+        <div class="hero-content">
+            <h2 class="hero-title">Jual Skillmu dan Buat Penawaran dengan berbagai Client</h2>
+        </div>
+        <div class="pagination">1 of 5</div>
+    </div>
+
+    <div class="right-section">
+        <div class="signup-form">
+            <div class="logo">
+                <h1><span class="skill">Skill</span><span class="match">Match</span></h1>
+            </div>
+            <h2 class="welcome-title">Create an account</h2>
+            <p class="welcome-subtitle">Already have an account? <a href="{{ route('login') }}">Log In</a></p>
+
+            <form method="POST" action="{{ route('register') }}">
+                @csrf
+                <div class="form-group">
+                    <label class="form-label" for="name">NAMA</label>
+                    <input type="text" id="name" name="name" class="form-input" value="{{ old('name') }}" required>
+                    @error('name')<div class="error-message">{{ $message }}</div>@enderror
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">EMAIL</label>
+                    <input type="email" id="email" name="email" class="form-input" value="{{ old('email') }}" required>
+                    @error('email')<div class="error-message">{{ $message }}</div>@enderror
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">PASSWORD</label>
+                    <input type="password" id="password" name="password" class="form-input" required>
+                    @error('password')<div class="error-message">{{ $message }}</div>@enderror
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password_confirmation">CONFIRM PASSWORD</label>
+                    <input type="password" id="password_confirmation" name="password_confirmation" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="role">REGISTER AS</label>
+                    <select name="role" id="role" class="form-input" required>
+                        <option value="">Choose role</option>
+                        <option value="freelancer" {{ old('role') == 'freelancer' ? 'selected' : '' }}>Freelancer</option>
+                        <option value="client" {{ old('role') == 'client' ? 'selected' : '' }}>Client</option>
+                        <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                    </select>
+                    @error('role')<div class="error-message">{{ $message }}</div>@enderror
+                </div>
+
+                <button type="submit" class="btn-primary">Sign Up</button>
+            </form>
+
+            <div class="divider">
+                <span>or</span>
             </div>
 
-            <div class="pagination">1 of 5</div>
-        </div>
+            <button class="btn-google">
+                <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" style="width: 20px; height: 20px;">
+                Sign up with Google
+            </button>
 
-        <div class="right-section">
-            <div class="signup-form">
-                <div class="logo">
-                    <h1><span class="skill">Skill</span><span class="match">Matchaaaaaaaaaaaaaaaaaaaaaaa</span></h1>
-                </div>
-                <h2 class="welcome-title">Welcome back</h2>
-                <p class="welcome-subtitle">Already have account? <a href="{{ route('login') }}">Log In</a></p>
-
-                <form method="POST" action="{{ route('register') }}">
-                    @csrf
-
-                    {{-- NAME --}}
-                    <div class="form-group">
-                        <label class="form-label" for="name">NAMA</label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            class="form-input"
-                            placeholder="Your name"
-                            value="{{ old('name') }}"
-                            required
-                        >
-                        @error('name')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    {{-- EMAIL --}}
-                    <div class="form-group">
-                        <label class="form-label" for="email">EMAIL</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            class="form-input"
-                            placeholder="Your email"
-                            value="{{ old('email') }}"
-                            required
-                        >
-                        @error('email')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    {{-- PASSWORD --}}
-                    <div class="form-group">
-                        <label class="form-label" for="password">PASSWORD</label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            class="form-input"
-                            placeholder="Enter your password"
-                            required
-                        >
-                        @error('password')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="password_confirmation">CONFIRM PASSWORD</label>
-                        <input
-                            type="password"
-                            id="password_confirmation"
-                            name="password_confirmation"
-                            class="form-input"
-                            placeholder="Re-enter your password"
-                            required
-                        >
-                        @error('password_confirmation')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-
-                    {{-- ROLE --}}
-                    <div class="form-group">
-                        <label class="form-label" for="role">REGISTER AS</label>
-                        <div class="select-wrapper">
-                            <select name="role" id="role" class="form-select" required>
-                                <option value="">Choose role</option>
-                                <option value="freelancer" {{ old('role') == 'freelancer' ? 'selected' : '' }}>Freelancer</option>
-                                <option value="client" {{ old('role') == 'client' ? 'selected' : '' }}>Client</option>
-                                <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                            </select>
-                        </div>
-                        @error('role')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    {{-- SUBMIT --}}
-                    <button type="submit" class="btn-primary btn-register">Sign In</button>
-                </form>
-
-                <div class="divider">
-                    <span>or</span>
-                </div>
-
-                <button class="btn-google">
-                    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" style="width: 20px; height: 20px;">
-                    Sign in with Google
-                </button>
-
-                <div class="footer-links">
-                    <a href="#">Customer Support</a>
-                    <a href="#">Terms of Service</a>
-                </div>
+            <div class="footer-links">
+                <a href="#">Customer Support</a>
+                <a href="#">Terms of Service</a>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>
