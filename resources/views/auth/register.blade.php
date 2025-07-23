@@ -48,6 +48,17 @@
             margin-bottom: 20px;
         }
 
+        .hero-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .hero-author {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
         .pagination {
             position: absolute;
             bottom: 20px;
@@ -55,6 +66,8 @@
             color: white;
             font-size: 0.9rem;
         }
+
+
 
         .right-section {
             flex: 1;
@@ -167,7 +180,6 @@
             color: #6b7280;
             pointer-events: none;
         }
-
         .forgot-password {
             text-align: right;
             margin-bottom: 30px;
@@ -304,6 +316,10 @@
                 font-size: 1.8rem;
             }
 
+            .hero-image {
+                display: none;
+            }
+
             .form-row {
                 flex-direction: column;
                 gap: 0;
@@ -312,11 +328,10 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="left-section">
             <div class="hero-content">
                 <h2 class="hero-title">Jual Skillmu dan Buat Penawaran dengan berbagai Client</h2>
             </div>
+
             <div class="pagination">1 of 5</div>
         </div>
 
@@ -331,51 +346,81 @@
                 <form method="POST" action="{{ route('register') }}">
                     @csrf
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label" for="first_name">FIRST NAME</label>
-                            <input type="text" id="first_name" name="first_name" class="form-input" placeholder="Your name" value="{{ old('first_name') }}" required>
-                            @error('first_name')
-                                <div class="error-message">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="last_name">LAST NAME</label>
-                            <input type="text" id="last_name" name="last_name" class="form-input" placeholder="Your name" value="{{ old('last_name') }}" required>
-                            @error('last_name')
-                                <div class="error-message">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-
+                    {{-- NAME --}}
                     <div class="form-group">
-                        <label class="form-label" for="username">USERNAME</label>
-                        <input type="text" id="username" name="username" class="form-input" placeholder="Your name" value="{{ old('username') }}" required>
-                        @error('username')
+                        <label class="form-label" for="name">NAMA</label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            class="form-input"
+                            placeholder="Your name"
+                            value="{{ old('name') }}"
+                            required
+                        >
+                        @error('name')
                             <div class="error-message">{{ $message }}</div>
                         @enderror
                     </div>
 
+                    {{-- EMAIL --}}
+                    <div class="form-group">
+                        <label class="form-label" for="email">EMAIL</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="form-input"
+                            placeholder="Your email"
+                            value="{{ old('email') }}"
+                            required
+                        >
+                        @error('email')
+                            <div class="error-message">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- PASSWORD --}}
                     <div class="form-group">
                         <label class="form-label" for="password">PASSWORD</label>
-                        <input type="password" id="password" name="password" class="form-input" placeholder="Enter your password" required>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-input"
+                            placeholder="Enter your password"
+                            required
+                        >
                         @error('password')
                             <div class="error-message">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    
-                    <div class="forgot-password">
-                        <a href="{{ route('password.request') }}">Forget password</a>
+                    <div class="form-group">
+                        <label class="form-label" for="password_confirmation">CONFIRM PASSWORD</label>
+                        <input
+                            type="password"
+                            id="password_confirmation"
+                            name="password_confirmation"
+                            class="form-input"
+                            placeholder="Re-enter your password"
+                            required
+                        >
+                        @error('password_confirmation')
+                            <div class="error-message">{{ $message }}</div>
+                        @enderror
                     </div>
 
+
+                    {{-- ROLE --}}
                     <div class="form-group">
+                        <label class="form-label" for="role">REGISTER AS</label>
                         <div class="select-wrapper">
                             <select name="role" id="role" class="form-select" required>
-                                <option value="">DAFTAR SEBAGAI</option>
+                                <option value="">Choose role</option>
                                 <option value="freelancer" {{ old('role') == 'freelancer' ? 'selected' : '' }}>Freelancer</option>
                                 <option value="client" {{ old('role') == 'client' ? 'selected' : '' }}>Client</option>
+                                <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                             </select>
                         </div>
                         @error('role')
@@ -383,13 +428,18 @@
                         @enderror
                     </div>
 
-                    <button type="submit" class="btn-primary">Sign In</button>
-
+                    {{-- SUBMIT --}}
+                    <button type="submit" class="btn-primary btn-register">Sign In</button>
                 </form>
 
                 <div class="divider">
-                 </div>
+                    <span>or</span>
+                </div>
 
+                <button class="btn-google">
+                    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" style="width: 20px; height: 20px;">
+                    Sign in with Google
+                </button>
 
                 <div class="footer-links">
                     <a href="#">Customer Support</a>
