@@ -249,7 +249,7 @@
         <div class="right-section">
             <div class="signup-form">
                 <div class="logo">
-                    <h1><span class="skill">Skill</span><span class="match">Matchaaaaaaaaaaaaaaaaaaaaaaa</span></h1>
+                    <h1><span class="skill">Skill</span><span class="match">Match</span></h1>
                 </div>
                 <h2 class="welcome-title">Welcome back</h2>
                 <p class="welcome-subtitle">Already have account? <a href="{{ route('login') }}">Log In</a></p>
