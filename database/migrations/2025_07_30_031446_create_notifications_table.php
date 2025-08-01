@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('profiles', function (Blueprint $table) {
+        Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->text('bio')->nullable();
-            $table->string('avatar_url')->nullable();
-            $table->json('skills'); // langsung simpan array JSON
+            $table->string('type');//tipe notificationnya
+            $table->text('content');//isi dari notificationnya
+            $table->string('link_url')->nullable();//boleh kosong
+            $table->boolean('is_read')->default(false);
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('profiles');
+        Schema::dropIfExists('notifications');
     }
 };

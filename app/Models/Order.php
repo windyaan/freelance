@@ -4,20 +4,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Milestone extends Model
+class Order extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'offer_id',
-        'title',
-        'description',
+        'amount',
+        'payment_method',
         'status',
-        'completed_at'//optional
     ];
 
-    //relasi many to one ke tabel offers
+    //relasi many to one ke tabe offer
     public function offer() {
-        return $this->belongsTo(Offer::class, 'offer_id');
+        return $this->belongsTo(Offer::class);
     }
 }
