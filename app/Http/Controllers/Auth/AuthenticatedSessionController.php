@@ -35,7 +35,6 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->route('ini.freelancer');
             }
         };
-        
         return redirect()->intended(route('dashboard', absolute: false));
 
     }
