@@ -198,7 +198,12 @@ body {
     justify-content: flex-end;
 }
 
-/* Updated logout button styling */
+/* Updated logout button styling - now for form submission */
+.navbar-logout-form {
+    margin: 0;
+    padding: 0;
+}
+
 .navbar-logout {
     background: #ef4444;
     color: white;
@@ -783,11 +788,14 @@ body {
             <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Profile">
         </div>
         
-        <!-- Logout Button - Now comes after profile -->
-        <a href="{{ route('landing') }}" class="navbar-logout" onclick="return confirmLogout()">
-            <span>🚪</span>
-            Log Out
-        </a>
+        <!-- Logout Form - Using Laravel's proper logout method -->
+        <form method="POST" action="{{ route('logout') }}" class="navbar-logout-form">
+            @csrf
+            <button type="submit" class="navbar-logout" onclick="return confirmLogout()">
+                <span>🚪</span>
+                Log Out
+            </button>
+        </form>
     </div>
 </div>
 
