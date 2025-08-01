@@ -246,13 +246,13 @@
         <div class="pagination">1 of 5</div>
     </div>
 
-    <div class="right-section">
-        <div class="signup-form">
-            <div class="logo">
-                <h1><span class="skill">Skill</span><span class="match">Match</span></h1>
-            </div>
-            <h2 class="welcome-title">Create an account</h2>
-            <p class="welcome-subtitle">Already have an account? <a href="{{ route('login') }}">Log In</a></p>
+        <div class="right-section">
+            <div class="signup-form">
+                <div class="logo">
+                    <h1><span class="skill">Skill</span><span class="match">Matchaaaaaaaaaaaaaaaaaaaaaaa</span></h1>
+                </div>
+                <h2 class="welcome-title">Welcome back</h2>
+                <p class="welcome-subtitle">Already have account? <a href="{{ route('login') }}">Log In</a></p>
 
             <form method="POST" action="{{ route('register') }}">
                 @csrf
@@ -279,16 +279,22 @@
                     <input type="password" id="password_confirmation" name="password_confirmation" class="form-input" required>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label" for="role">REGISTER AS</label>
-                    <select name="role" id="role" class="form-input" required>
-                        <option value="">Choose role</option>
-                        <option value="freelancer" {{ old('role') == 'freelancer' ? 'selected' : '' }}>Freelancer</option>
-                        <option value="client" {{ old('role') == 'client' ? 'selected' : '' }}>Client</option>
-                        <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                    </select>
-                    @error('role')<div class="error-message">{{ $message }}</div>@enderror
-                </div>
+
+                    {{-- ROLE --}}
+                    <div class="form-group">
+                        <label class="form-label" for="role">REGISTER AS</label>
+                        <div class="select-wrapper">
+                            <select name="role" id="role" class="form-select" required>
+                                <option value="">Choose role</option>
+                                <option value="freelancer" {{ old('role') == 'freelancer' ? 'selected' : '' }}>Freelancer</option>
+                                <option value="client" {{ old('role') == 'client' ? 'selected' : '' }}>Client</option>
+                                <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                            </select>
+                        </div>
+                        @error('role')
+                            <div class="error-message">{{ $message }}</div>
+                        @enderror
+                    </div>
 
                 <button type="submit" class="btn-primary">Sign Up</button>
             </form>

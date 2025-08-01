@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('milestones', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('project_id')->constrained('offers')->onDelete('cascade');
+            $table->string('title');
+            $table->text('description');
+            $table->enum('status', ['Start', 'Progress', 'Done', 'ACC'])->default('Progress');
+            $table->timestamp('completed_at')->nullable();
             $table->timestamps();
         });
     }
