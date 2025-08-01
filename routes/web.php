@@ -4,12 +4,11 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return redirect()->route('login');
 });
-
 
 // ROUTE LOGOUT MANUAL - TAMBAHAN BARU
 Route::get('/keluar', function () {
@@ -22,15 +21,6 @@ Route::get('/keluar', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
-
-// Route::get('/home', [HomeController::class, 'redirect'])
-//     ->middleware(['auth'])
-//     ->name('home');
-
-// // Auth Routes
-// Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-
-// Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -50,23 +40,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Route yang sudah ada
-    // Route::get('/client', [UserController::class, 'index'])->name('client.index');
+    Route::get('/client', [UserController::class, 'index'])->name('client.index');
 
     // Tambahkan route baru ini
-    Route::get('/client-dashboard', [UserController::class, 'index'])->name('client.dashboard');
-
-    Route::get('ini-untuk-client',function(){
-    return "Ini client";
-})->name('ini.client')->middleware('role:client');
-
-Route::get('ini-untuk-freelancer',function(){
-    return "Ini freelancer";
-})->name('ini.freelancer')->middleware('role:freelancer');
+     Route::get('/client-dashboard', [UserController::class, 'index'])->name('client.dashboard');
 });
 
 
     // Tambahkan route ini untuk /dashboard
-    Route::get('/dashboardtu', [UserController::class, 'index'])->name('user.dashboard');
+    Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
 
     Route::get('/', function () {
     return redirect()->route('login');
