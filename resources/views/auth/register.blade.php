@@ -243,7 +243,7 @@
         <div class="hero-content">
             <h2 class="hero-title">Jual Skillmu dan Buat Penawaran dengan berbagai Client</h2>
         </div>
-        <div class="pagination">1 of 5</div>
+        
     </div>
 
         <div class="right-section">
@@ -279,34 +279,25 @@
                     <input type="password" id="password_confirmation" name="password_confirmation" class="form-input" required>
                 </div>
 
-
-                    {{-- ROLE --}}
-                    <div class="form-group">
-                        <label class="form-label" for="role">REGISTER AS</label>
-                        <div class="select-wrapper">
-                            <select name="role" id="role" class="form-select" required>
-                                <option value="">Choose role</option>
-                                <option value="freelancer" {{ old('role') == 'freelancer' ? 'selected' : '' }}>Freelancer</option>
-                                <option value="client" {{ old('role') == 'client' ? 'selected' : '' }}>Client</option>
-                                <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                            </select>
-                        </div>
-                        @error('role')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
-                    </div>
+                <div class="form-group">
+                    <label class="form-label" for="role">REGISTER AS</label>
+                    <select name="role" id="role" class="form-input" required>
+                        <option value="">Choose role</option>
+                        <option value="freelancer" {{ old('role') == 'freelancer' ? 'selected' : '' }}>Freelancer</option>
+                        <option value="client" {{ old('role') == 'client' ? 'selected' : '' }}>Client</option>
+                        <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                    </select>
+                    @error('role')<div class="error-message">{{ $message }}</div>@enderror
+                </div>
 
                 <button type="submit" class="btn-primary">Sign Up</button>
             </form>
 
             <div class="divider">
-                <span>or</span>
+                
             </div>
 
-            <button class="btn-google">
-                <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" style="width: 20px; height: 20px;">
-                Sign up with Google
-            </button>
+          
 
             <div class="footer-links">
                 <a href="#">Customer Support</a>
