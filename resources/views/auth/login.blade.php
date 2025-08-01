@@ -37,8 +37,10 @@
             position: absolute;
             bottom: 60px;
             left: 40px;
+            right: 40px;
             color: white;
             z-index: 2;
+            text-align: left;
         }
 
         .hero-title {
@@ -46,17 +48,6 @@
             font-weight: 700;
             line-height: 1.2;
             margin-bottom: 20px;
-        }
-
-        .hero-subtitle {
-            font-size: 1rem;
-            opacity: 0.9;
-            margin-bottom: 10px;
-        }
-
-        .hero-author {
-            font-size: 0.9rem;
-            opacity: 0.8;
         }
 
         .pagination {
@@ -242,20 +233,19 @@
                 flex-direction: column;
             }
 
-            }
-
             .hero-content {
                 position: relative;
                 bottom: auto;
                 left: auto;
-                padding: 40px;
+                right: auto;
+                padding: 20px;
                 text-align: center;
             }
 
             .hero-title {
-                font-size: 1.8rem;
+                font-size: 1.5rem;
             }
-
+        }
     </style>
 </head>
 <body>
@@ -264,7 +254,7 @@
             <div class="hero-content">
                 <h2 class="hero-title">Jual Skillmu dan Buat Penawaran dengan berbagai Client</h2>
             </div>
-            <div class="pagination">1 of 5</div>
+            
         </div>
 
         <div class="right-section">
@@ -279,7 +269,7 @@
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
                     <div class="form-group">
-                        <label class="form-label" for="email">USERNAME</label>
+                        <label class="form-label" for="email">EMAIL</label>
                         <input
                             type="email"
                             id="email"
@@ -308,6 +298,7 @@
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
+
                     <div class="form-group">
     <label class="form-label" for="role">Login Sebagai</label>
     <select name="role" id="role" class="form-input" required>
@@ -330,13 +321,8 @@
                 </form>
 
                 <div class="divider">
-                    <span>or</span>
                 </div>
 
-                <button class="btn-google">
-                    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" style="width: 20px; height: 20px;">
-                    Sign in with Google
-                </button>
 
                 <div class="footer-links">
                     <a href="#">Customer Support</a>
@@ -346,5 +332,4 @@
         </div>
     </div>
 </body>
-</html>
 </html>
