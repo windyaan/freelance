@@ -43,7 +43,7 @@ Route::middleware('auth')->group(function () {
 
     // Route yang sudah ada
     // Route::get('/client', [UserController::class, 'index'])->name('client.index');
-    
+
     // Tambahkan route baru ini
     Route::get('/client-dashboard', [UserController::class, 'index'])->name('client.dashboard');
 
@@ -64,9 +64,9 @@ Route::get('ini-untuk-freelancer',function(){
     return redirect()->route('login');
     })->name('landing');
 
-    
+
 
 });
 
-// 
+//
 require __DIR__.'/auth.php';
