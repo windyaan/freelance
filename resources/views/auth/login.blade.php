@@ -254,7 +254,7 @@
             <div class="hero-content">
                 <h2 class="hero-title">Jual Skillmu dan Buat Penawaran dengan berbagai Client</h2>
             </div>
-            <div class="pagination">1 of 5</div>
+            
         </div>
 
         <div class="right-section">
@@ -269,7 +269,7 @@
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
                     <div class="form-group">
-                        <label class="form-label" for="email">USERNAME</label>
+                        <label class="form-label" for="email">EMAIL</label>
                         <input
                             type="email"
                             id="email"
@@ -320,13 +320,8 @@
                 </form>
 
                 <div class="divider">
-                    <span>or</span>
                 </div>
 
-                <button class="btn-google">
-                    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" style="width: 20px; height: 20px;">
-                    Sign in with Google
-                </button>
 
                 <div class="footer-links">
                     <a href="#">Customer Support</a>
