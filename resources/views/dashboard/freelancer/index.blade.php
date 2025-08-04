@@ -205,7 +205,7 @@ body {
     background: #ffffff;
     border-right: 1px solid #e2e8f0;
     z-index: 1000;
-    
+
 }
 
 .nav-item {
@@ -438,11 +438,11 @@ body {
         transform: translateX(-100%);
         transition: transform 0.3s ease;
     }
-    
+
     .sidebar.show {
         transform: translateX(0);
     }
-    
+
     .sidebar-toggle {
         display: flex !important;
         flex-direction: column;
@@ -452,7 +452,7 @@ body {
         justify-content: space-between;
         margin-right: 1rem;
     }
-    
+
     .sidebar-toggle span {
         width: 100%;
         height: 2px;
@@ -460,20 +460,20 @@ body {
         border-radius: 2px;
         transition: all 0.3s ease;
     }
-    
+
     .main-content {
         margin-left: 0;
         width: 100vw;
         padding: 1rem;
         padding-top: 2rem;
     }
-    
+
     .order-card {
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
     }
-    
+
     .order-actions {
         align-self: flex-end;
     }
@@ -483,28 +483,28 @@ body {
     .navbar-title {
         display: none;
     }
-    
+
     .navbar-center {
         flex: 2;
         max-width: 280px;
     }
-    
+
     .search-container {
         max-width: 250px;
     }
-    
+
     .orders-section {
         padding: 1.5rem;
         max-width: 100%;
         margin: 0;
         width: 100%;
     }
-    
+
     .order-card {
         max-width: 100%;
         margin: 0;
     }
-    
+
     .order-card {
         padding: 1rem;
     }
@@ -514,16 +514,16 @@ body {
     .navbar-brand span:last-child {
         display: none;
     }
-    
+
     .navbar-center {
         display: none;
     }
-    
+
     .order-actions {
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .details-btn {
         width: 100%;
         text-align: center;
@@ -568,12 +568,15 @@ body {
         <div class="navbar-profile" onclick="goToProfile()">
             <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Profile">
         </div>
-        
-        <!-- Logout Button - Now comes after profile, replacing settings -->
-        <a href="{{ route('landing') }}" class="navbar-logout" onclick="return confirmLogout()">
-            <span>🚪</span>
-            Log Out
-        </a>
+
+       <!-- Logout Form - Using Laravel's proper logout method -->
+        <form method="POST" action="{{ route('logout') }}" class="navbar-logout-form">
+            @csrf
+            <button type="submit" class="navbar-logout" onclick="return confirmLogout()">
+                <span>🚪</span>
+                Log Out
+            </button>
+        </form>
     </div>
 </div>
 
@@ -674,7 +677,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var searchInput = document.getElementById('globalSearch');
     var sidebar = document.getElementById('sidebar');
     var sidebarToggle = document.getElementById('sidebarToggle');
-    
+
     // Create sidebar overlay for mobile
     var sidebarOverlay = document.createElement('div');
     sidebarOverlay.style.cssText = `
@@ -689,7 +692,7 @@ document.addEventListener('DOMContentLoaded', function() {
         backdrop-filter: blur(4px);
     `;
     document.body.appendChild(sidebarOverlay);
-    
+
     // Toggle sidebar on mobile
     if (sidebarToggle) {
         sidebarToggle.addEventListener('click', function() {
@@ -697,27 +700,27 @@ document.addEventListener('DOMContentLoaded', function() {
             sidebarOverlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
         });
     }
-    
+
     // Close sidebar when clicking overlay
     sidebarOverlay.addEventListener('click', function() {
         sidebar.classList.remove('show');
         sidebarOverlay.style.display = 'none';
     });
-    
+
     // Search functionality
     if (searchInput) {
         searchInput.addEventListener('input', function() {
             var query = this.value.toLowerCase();
             searchOrders(query);
         });
-        
+
         // Search button functionality
         document.querySelector('.search-btn').addEventListener('click', function() {
             var query = searchInput.value.toLowerCase();
             searchOrders(query);
         });
     }
-    
+
     // Event delegation for all interactions
     document.addEventListener('click', function(e) {
         // Details button functionality
@@ -726,25 +729,25 @@ document.addEventListener('DOMContentLoaded', function() {
             var client = orderCard.getAttribute('data-client');
             var skill = orderCard.getAttribute('data-skill');
             var date = orderCard.querySelector('.order-date').textContent;
-            
+
             alert('Order Details:\nClient: ' + client + '\nSkill: ' + skill + '\nDate: ' + date);
             // Here you would typically redirect to order details page
         }
     });
-    
+
     // Navigation functionality
     document.querySelectorAll('.nav-item').forEach(function(item) {
         item.addEventListener('click', function(e) {
             e.preventDefault();
-            
+
             // Remove active class from all nav items
             document.querySelectorAll('.nav-item').forEach(function(navItem) {
                 navItem.classList.remove('active');
             });
-            
+
             // Add active class to clicked item
             this.classList.add('active');
-            
+
             // Here you would typically handle navigation
             var navText = this.querySelector('.nav-text').textContent;
             console.log('Navigating to: ' + navText);
@@ -767,18 +770,18 @@ function goToProfile() {
 function searchOrders(query) {
     var cards = document.querySelectorAll('.order-card');
     var hasResults = false;
-    
+
     cards.forEach(function(card) {
         var client = card.getAttribute('data-client').toLowerCase();
         var skill = card.getAttribute('data-skill').toLowerCase();
         var date = card.querySelector('.order-date').textContent.toLowerCase();
         var description = card.querySelector('.order-description').textContent.toLowerCase();
-        
-        var hasMatch = client.includes(query) || 
-                      skill.includes(query) || 
-                      date.includes(query) || 
+
+        var hasMatch = client.includes(query) ||
+                      skill.includes(query) ||
+                      date.includes(query) ||
                       description.includes(query);
-        
+
         if (hasMatch || query === '') {
             card.style.display = 'flex';
             hasResults = true;
@@ -786,7 +789,7 @@ function searchOrders(query) {
             card.style.display = 'none';
         }
     });
-    
+
     // Show/hide no results message
     showNoResultsMessage(!hasResults && query !== '');
 }
@@ -794,7 +797,7 @@ function searchOrders(query) {
 // Show no results message
 function showNoResultsMessage(show) {
     var existingMessage = document.querySelector('.no-results');
-    
+
     if (show && !existingMessage) {
         var noResultsDiv = document.createElement('div');
         noResultsDiv.className = 'no-results empty-state';
@@ -850,7 +853,7 @@ window.showAllOrders = function() {
     orderCards.forEach(function(card) {
         card.style.display = 'flex';
     });
-    
+
     // Remove no results message if exists
     var noResults = document.querySelector('.no-results');
     if (noResults) {
