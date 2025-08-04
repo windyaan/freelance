@@ -4,6 +4,12 @@
 
 @section('content')
 <style>
+/* Prevent horizontal overflow globally */
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -29,6 +35,8 @@ body {
     padding: 0 2rem;
     z-index: 1001;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    max-width: 100vw;
+    overflow: hidden;
 }
 
 .navbar-left {
@@ -328,6 +336,9 @@ body {
     min-height: calc(100vh - 70px);
     padding: 2rem;
     background: #f8fafc;
+    max-width: calc(100vw - 240px);
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 .skills-section {
@@ -337,12 +348,47 @@ body {
     margin-bottom: 2rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     border: 1px solid #f1f5f9;
+    overflow-x: hidden;
+    position: relative;
 }
 
+/* New scrollable skills container */
+.skills-scroll-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 1rem;
+    margin: -0.5rem;
+    padding: 0.5rem;
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar styling */
+.skills-scroll-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.skills-scroll-container::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+    margin: 0 1rem;
+}
+
+.skills-scroll-container::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.skills-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Updated skills grid to be horizontal scrollable */
 .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
+    display: flex;
     gap: 1.5rem;
+    min-width: fit-content;
+    padding: 0.5rem 0;
 }
 
 .skill-card {
@@ -354,6 +400,8 @@ body {
     border-radius: 12px;
     transition: all 0.3s ease;
     text-align: center;
+    min-width: 120px;
+    flex-shrink: 0;
 }
 
 .skill-card:hover {
@@ -458,12 +506,14 @@ body {
     padding: 2rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     border: 1px solid #f1f5f9;
+    overflow-x: hidden;
 }
 
 .talent-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
+    max-width: 100%;
 }
 
 .talent-card {
@@ -627,6 +677,19 @@ body {
     background: #334155;
 }
 
+/* Scroll indicators */
+.skills-section::after {
+    
+    position: absolute;
+    bottom: 0.5rem;
+    right: 1rem;
+    color: #94a3b8;
+    font-size: 0.7rem;
+    font-weight: 500;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 1024px) {
     .sidebar {
@@ -658,16 +721,22 @@ body {
     
     .main-content {
         margin-left: 0;
+        max-width: 100vw;
+        padding: 1.5rem;
     }
     
     .talent-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 1.5rem;
     }
     
     .skills-grid {
-        grid-template-columns: repeat(6, 1fr);
         gap: 1rem;
+    }
+    
+    .skill-card {
+        min-width: 100px;
+        padding: 1rem 0.8rem;
     }
     
     .navbar-center {
@@ -704,14 +773,10 @@ body {
         font-size: 0.8rem;
     }
     
-    .skills-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1rem;
-    }
-    
     .skills-section,
     .talents-section {
         padding: 1.5rem;
+        margin-bottom: 1.5rem;
     }
     
     .main-content {
@@ -719,8 +784,17 @@ body {
     }
     
     .talent-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         gap: 1rem;
+    }
+    
+    .skill-card {
+        min-width: 90px;
+        padding: 1rem 0.5rem;
+    }
+    
+    .skills-grid {
+        gap: 0.8rem;
     }
 }
 
@@ -733,19 +807,28 @@ body {
         display: none;
     }
     
-    .skills-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0.8rem;
+    .main-content {
+        padding: 0.8rem;
     }
     
     .skill-card {
-        padding: 1rem 0.5rem;
+        min-width: 80px;
+        padding: 0.8rem 0.4rem;
     }
     
     .skill-icon {
         width: 50px;
         height: 50px;
         font-size: 1.2rem;
+    }
+    
+    .talent-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .skills-grid {
+        gap: 0.6rem;
     }
 }
 
@@ -833,56 +916,58 @@ body {
 
 <!-- Main Content -->
 <div class="main-content">
-    <!-- Skills Grid -->
+    <!-- Skills Grid - Updated with scrollable container -->
     <div class="skills-section">
-        <div class="skills-grid">
-            <div class="skill-card" data-skill="videographer">
-                <div class="skill-icon">📹</div>
-                <div class="skill-name">video<br>grapher</div>
-            </div>
-            <div class="skill-card" data-skill="video editor">
-                <div class="skill-icon">▶️</div>
-                <div class="skill-name">video<br>editor</div>
-            </div>
-            <div class="skill-card" data-skill="photographer">
-                <div class="skill-icon">📷</div>
-                <div class="skill-name">photo<br>grapher</div>
-            </div>
-            <div class="skill-card" data-skill="content writing">
-                <div class="skill-icon">✍️</div>
-                <div class="skill-name">content<br>writing</div>
-            </div>
-            <div class="skill-card" data-skill="copywriting">
-                <div class="skill-icon">📝</div>
-                <div class="skill-name">copy<br>writing</div>
-            </div>
-            <div class="skill-card" data-skill="translator">
-                <div class="skill-icon">🌐</div>
-                <div class="skill-name">translator</div>
-            </div>
-            <div class="skill-card" data-skill="ui design">
-                <div class="skill-icon">🎨</div>
-                <div class="skill-name">UI<br>design</div>
-            </div>
-            <div class="skill-card" data-skill="front-end">
-                <div class="skill-icon">💻</div>
-                <div class="skill-name">front-end</div>
-            </div>
-            <div class="skill-card" data-skill="back-end">
-                <div class="skill-icon">🗄️</div>
-                <div class="skill-name">back-end</div>
-            </div>
-            <div class="skill-card" data-skill="fullstack">
-                <div class="skill-icon">⚡</div>
-                <div class="skill-name">fullstack</div>
-            </div>
-            <div class="skill-card" data-skill="graphic design">
-                <div class="skill-icon">🎯</div>
-                <div class="skill-name">graphic<br>design</div>
-            </div>
-            <div class="skill-card" data-skill="illustrator">
-                <div class="skill-icon">🖼️</div>
-                <div class="skill-name">illustrator</div>
+        <div class="skills-scroll-container">
+            <div class="skills-grid">
+                <div class="skill-card" data-skill="videographer">
+                    <div class="skill-icon">📹</div>
+                    <div class="skill-name">video<br>grapher</div>
+                </div>
+                <div class="skill-card" data-skill="video editor">
+                    <div class="skill-icon">▶️</div>
+                    <div class="skill-name">video<br>editor</div>
+                </div>
+                <div class="skill-card" data-skill="photographer">
+                    <div class="skill-icon">📷</div>
+                    <div class="skill-name">photo<br>grapher</div>
+                </div>
+                <div class="skill-card" data-skill="content writing">
+                    <div class="skill-icon">✍️</div>
+                    <div class="skill-name">content<br>writing</div>
+                </div>
+                <div class="skill-card" data-skill="copywriting">
+                    <div class="skill-icon">📝</div>
+                    <div class="skill-name">copy<br>writing</div>
+                </div>
+                <div class="skill-card" data-skill="translator">
+                    <div class="skill-icon">🌐</div>
+                    <div class="skill-name">translator</div>
+                </div>
+                <div class="skill-card" data-skill="ui design">
+                    <div class="skill-icon">🎨</div>
+                    <div class="skill-name">UI<br>design</div>
+                </div>
+                <div class="skill-card" data-skill="front-end">
+                    <div class="skill-icon">💻</div>
+                    <div class="skill-name">front-end</div>
+                </div>
+                <div class="skill-card" data-skill="back-end">
+                    <div class="skill-icon">🗄️</div>
+                    <div class="skill-name">back-end</div>
+                </div>
+                <div class="skill-card" data-skill="fullstack">
+                    <div class="skill-icon">⚡</div>
+                    <div class="skill-name">fullstack</div>
+                </div>
+                <div class="skill-card" data-skill="graphic design">
+                    <div class="skill-icon">🎯</div>
+                    <div class="skill-name">graphic<br>design</div>
+                </div>
+                <div class="skill-card" data-skill="illustrator">
+                    <div class="skill-icon">🖼️</div>
+                    <div class="skill-name">illustrator</div>
+                </div>
             </div>
         </div>
     </div>
@@ -1008,6 +1093,89 @@ document.addEventListener('DOMContentLoaded', function() {
     var sidebar = document.getElementById('sidebar');
     var sidebarToggle = document.getElementById('sidebarToggle');
     
+    // Prevent horizontal scroll on the entire page
+    document.body.style.overflowX = 'hidden';
+    document.documentElement.style.overflowX = 'hidden';
+    
+    // Add skills scrolling functionality
+    const skillsContainer = document.querySelector('.skills-scroll-container');
+    const skillsGrid = document.querySelector('.skills-grid');
+    
+    if (skillsContainer && skillsGrid) {
+        // Add mouse wheel horizontal scrolling
+        skillsContainer.addEventListener('wheel', function(e) {
+            if (e.deltaY !== 0) {
+                e.preventDefault();
+                this.scrollLeft += e.deltaY > 0 ? 50 : -50;
+            }
+        });
+        
+        // Add touch scrolling for mobile
+        let isScrolling = false;
+        let startX = 0;
+        let scrollLeft = 0;
+        
+        skillsContainer.addEventListener('touchstart', function(e) {
+            isScrolling = true;
+            startX = e.touches[0].pageX - this.offsetLeft;
+            scrollLeft = this.scrollLeft;
+        });
+        
+        skillsContainer.addEventListener('touchmove', function(e) {
+            if (!isScrolling) return;
+            e.preventDefault();
+            const x = e.touches[0].pageX - this.offsetLeft;
+            const walk = (x - startX) * 2;
+            this.scrollLeft = scrollLeft - walk;
+        });
+        
+        skillsContainer.addEventListener('touchend', function() {
+            isScrolling = false;
+        });
+        
+        // Keyboard navigation for skills
+        document.addEventListener('keydown', function(e) {
+            if (document.activeElement && document.activeElement.closest('.skills-section')) {
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    skillsContainer.scrollLeft -= 120;
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    skillsContainer.scrollLeft += 120;
+                }
+            }
+        });
+        
+        // Auto-scroll to show active skill
+        function scrollToActiveSkill() {
+            const activeSkill = document.querySelector('.skill-card.active');
+            if (activeSkill) {
+                const containerRect = skillsContainer.getBoundingClientRect();
+                const skillRect = activeSkill.getBoundingClientRect();
+                
+                if (skillRect.left < containerRect.left || skillRect.right > containerRect.right) {
+                    const scrollAmount = skillRect.left - containerRect.left - (containerRect.width / 2) + (skillRect.width / 2);
+                    skillsContainer.scrollBy({
+                        left: scrollAmount,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        }
+        
+        // Update scroll indicators
+        function updateScrollIndicators() {
+            const canScrollLeft = skillsContainer.scrollLeft > 0;
+            const canScrollRight = skillsContainer.scrollLeft < (skillsContainer.scrollWidth - skillsContainer.clientWidth);
+            
+            skillsContainer.setAttribute('data-can-scroll-left', canScrollLeft);
+            skillsContainer.setAttribute('data-can-scroll-right', canScrollRight);
+        }
+        
+        skillsContainer.addEventListener('scroll', updateScrollIndicators);
+        updateScrollIndicators(); // Initial check
+    }
+    
     // Create sidebar overlay for mobile
     var sidebarOverlay = document.createElement('div');
     sidebarOverlay.style.cssText = `
@@ -1110,6 +1278,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Filter talents by skill
             filterTalentsBySkill(skillName);
+            
+            // Auto-scroll to show active skill
+            setTimeout(scrollToActiveSkill, 100);
         }
     });
     
@@ -1295,5 +1466,8 @@ function initializeTooltips() {
         card.title = 'Click to filter talents by ' + card.querySelector('.skill-name').textContent;
     });
 }
+
+// Initialize tooltips on page load
+initializeTooltips();
 </script>
 @endsection
