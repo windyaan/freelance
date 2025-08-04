@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\FreelancerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
@@ -11,15 +12,18 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-
-
 // ROUTE LOGOUT MANUAL - TAMBAHAN BARU
-Route::get('/keluar', function () {
-    Auth::logout();
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
-    return redirect()->route('login')->with('status', 'Berhasil logout!');
-});
+// Route::post('/logout', function () {
+//     Auth::logout();
+//     request()->session()->invalidate();
+//     request()->session()->regenerateToken();
+//     return redirect()->route('login')->with('status', 'Berhasil logout!');
+// });
+
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('logout');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -40,17 +44,17 @@ Route::middleware('auth')->group(function () {
     // Route::get('/client', [UserController::class, 'index'])->name('client.index');
 
     // Tambahkan route baru ini
-    Route::get('/client-dashboard', [UserController::class, 'index'])->name('client.dashboard');
-    Route::get('/freelancer-dashboard', [FreelancerController::class, 'index'])->name('freelancer.dashboard');
+    // Route::get('/client-dashboard', [UserController::class, 'index'])->name('client.dashboard');
+    // Route::get('/freelancer-dashboard', [FreelancerController::class, 'index'])->name('freelancer.dashboard');
 
 
-    Route::get('ini-untuk-client',function(){
-    return "Ini client";
-})->name('ini.client')->middleware('role:client');
+    Route::get('client-dashboard',function(){
+    return view('dashboard.client.index');
+})->name('client.dashboard')->middleware('role:client');
 
-Route::get('ini-freelancer',function(){
-    return "ini freelancer";
-})->name('ini.freelancer')->middleware('role:freelancer');
+Route::get('freelancer-dashboard',function(){
+    return view('dashboard.freelancer.index');
+})->name('freelancer.dashboard')->middleware('role:freelancer');
 });
 
 

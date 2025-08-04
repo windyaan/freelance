@@ -345,16 +345,16 @@ body {
         transform: translateX(-100%);
         transition: transform 0.3s ease;
     }
-    
+
     .main-content {
         margin-left: 0;
     }
-    
+
     .profile-header {
         flex-direction: column;
         text-align: center;
     }
-    
+
     .avatar-img {
         width: 150px;
         height: 150px;
@@ -365,23 +365,23 @@ body {
     .main-content {
         padding: 1rem;
     }
-    
+
     .profile-container {
         border-radius: 12px;
     }
-    
+
     .profile-header {
         padding: 1.5rem;
     }
-    
+
     .profile-form {
         padding: 1.5rem;
     }
-    
+
     .profile-name {
         font-size: 1.5rem;
     }
-    
+
     .avatar-img {
         width: 120px;
         height: 120px;
@@ -450,6 +450,11 @@ body {
                 <p class="profile-bio">
                     {{ $user->bio ?? 'I am a publishing professional at Gramedia Pustaka, responsible for managing the editing and design process throughout book production. With experience in ensuring visual and content quality, I focus on detail, aesthetics, and design consistency to create engaging and professional publications. My expertise includes coordinating with editorial teams, designers, and printers to deliver works that meet the highest publishing standards.' }}
                 </p>
+
+                @if ($user->role === 'freelancer' && $user->skills)
+                <p class="profile-bio"><strong>Skills:</strong> {{ $user->skills }}</p>
+                @endif
+
                 <button class="edit-btn" onclick="toggleEditMode()">Edit</button>
             </div>
             <div class="profile-avatar">
@@ -461,7 +466,7 @@ body {
         <form class="profile-form" id="profileForm" method="POST" action="{{ route('profile.update') }}">
             @csrf
             @method('patch')
-            
+
             <div class="form-group">
                 <label class="form-label" for="name">Name</label>
                 <input type="text" id="name" name="name" class="form-input" value="{{ old('name', $user->name ?? 'Ifa Maria') }}" required>
@@ -471,7 +476,7 @@ body {
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="email">Email</label>  
+                <label class="form-label" for="email">Email</label>
                 <input type="email" id="email" name="email" class="form-input" value="{{ old('email', $user->email ?? 'ifamaria@gmail.com') }}" required>
                 @error('email')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -486,6 +491,34 @@ body {
                 @enderror
             </div>
 
+            <div class="form-group">
+                <label class="form-label" for="avatar_url">Avatar URL</label>
+                <input type="url" id="avatar_url" name="avatar_url" class="form-input" value="{{ old('avatar_url', $user->avatar_url) }}">
+                @error('avatar_url')
+                <span class="text-red-500 text-sm">{{ $message }}</span>
+                @enderror
+            </div>
+
+            @if ($user->role === 'freelancer')
+            <div class="form-group">
+            <label class="form-label" for="skills">Skills</label>
+            @php
+            $skills = old('skills', explode(',', $user->skills ?? ''));
+            @endphp
+
+            @foreach ($skills as $index => $skill)
+            <input type="text" name="skills[]" class="form-input mb-2" value="{{ trim($skill) }}" placeholder="Skill {{ $index + 1 }}">
+            @endforeach
+
+            {{-- Optional: Tambah field kosong agar bisa nambah skill baru --}}
+            <input type="text" name="skills[]" class="form-input mb-2" placeholder="Add new skill...">
+
+            @error('skills')
+            <span class="text-red-500 text-sm">{{ $message }}</span>
+            @enderror
+            </div>
+            @endif
+
             <div class="form-actions">
                 <button type="button" class="btn-secondary" onclick="toggleEditMode()">Cancel</button>
                 <button type="submit" class="btn-primary">Save Changes</button>
@@ -498,7 +531,7 @@ body {
 function toggleEditMode() {
     const profileDisplay = document.getElementById('profileDisplay');
     const profileForm = document.getElementById('profileForm');
-    
+
     if (profileForm.classList.contains('active')) {
         // Switch to view mode
         profileForm.classList.remove('active');

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->text('bio')->nullable();
             $table->string('avatar_url')->nullable();
-            $table->json('skills'); // langsung simpan array JSON
+            $table->json('skills')->nullable(); // langsung simpan array JSON
             $table->timestamps();
         });
     }

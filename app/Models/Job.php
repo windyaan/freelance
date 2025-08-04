@@ -20,7 +20,7 @@ class Job extends Model
         return $this->belongsTo(User::class, 'freelancer_id');
     }
 
-    //relasi many to one ke tabel category
+    //relasi one to one ke tabel category
     public function category() {
         return $this->belongsTo(Category::class);
     }

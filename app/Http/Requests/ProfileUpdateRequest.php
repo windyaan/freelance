@@ -16,6 +16,7 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            //untuk model user
             'name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
@@ -23,8 +24,12 @@ class ProfileUpdateRequest extends FormRequest
                 'lowercase',
                 'email',
                 'max:255',
-                Rule::unique(User::class)->ignore($this->user()->id),
-            ],
+                Rule::unique(User::class)->ignore($this->user()->id)],
+            //untuk model profile
+            'bio' => ['nullable', 'string', 'max:1000'],
+            'avatar_url' => ['nullable', 'url'],
+            'skills' => ['nullable', 'array'],
+            'skills.*' => ['string', 'max:255'],
         ];
     }
 }

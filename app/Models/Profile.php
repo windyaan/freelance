@@ -11,7 +11,7 @@ class Profile extends Model
         'user_id',
         'bio',
         'avatar_url',
-        'skills',// untuk freelancer
+        'skills'=>'array',// untuk freelancer berupa json
     ];
 
     protected $casts = [
