@@ -12,10 +12,10 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    {{-- <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
-                    </x-nav-link> --}}
-                    <x-nav-link :href="route('client.index')" :active="request()->routeIs('client.index')">
+                    </x-nav-link>
+                    <x-nav-link :href="route('client.dashboard')" :active="request()->routeIs('client.dashboard')">
                     {{ __('Dashboard Client') }}
                     </x-nav-link>
                 </div>

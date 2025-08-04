@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'SkillMatch - Freelance Dashboard')</title>
-    
+
     <!-- Base Styles -->
     <style>
         * {
@@ -290,7 +290,7 @@
             .sidebar.show {
                 transform: translateX(0);
             }
-            
+
             .main-content {
                 margin-left: 0;
                 width: 100vw;
@@ -332,11 +332,11 @@
                 align-self: flex-start;
                 font-size: 1.5rem;
             }
-            
+
             .search-container {
                 max-width: none;
             }
-            
+
             .content-area {
                 padding: 1rem;
             }
@@ -369,7 +369,7 @@
             display: block;
         }
     </style>
-    
+
     @stack('styles')
 </head>
 <body>
@@ -384,7 +384,7 @@
             </div>
             <ul class="nav-menu">
                 <li class="nav-item">
-                    <a href="{{ route('freelance.dashboard') }}" class="nav-link {{ request()->routeIs('freelance.dashboard') ? 'active' : '' }}">
+                    <a href="{{ route('freelancer.dashboard') }}" class="nav-link {{ request()->routeIs('freelance.dashboard') ? 'active' : '' }}">
                         <div class="nav-icon">📊</div>
                         Dashboard
                     </a>
@@ -427,8 +427,8 @@
         <main class="main-content">
             <!-- Header -->
             <header class="header">
-               
-                
+
+
 
             </header>
 
@@ -465,7 +465,7 @@
             // Global search functionality
             const searchInput = document.getElementById('globalSearch');
             const searchBtn = document.getElementById('searchBtn');
-            
+
             function performSearch() {
                 const query = searchInput.value.trim();
                 if (query) {
@@ -479,11 +479,11 @@
                     }
                 }
             }
-            
+
             if (searchBtn) {
                 searchBtn.addEventListener('click', performSearch);
             }
-            
+
             if (searchInput) {
                 searchInput.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
@@ -515,7 +515,7 @@
             // Navigation active state
             const currentUrl = window.location.pathname;
             const navLinks = document.querySelectorAll('.nav-link');
-            
+
             navLinks.forEach(link => {
                 if (link.getAttribute('href') === currentUrl) {
                     link.classList.add('active');
@@ -529,7 +529,7 @@
             orderCards.forEach(card => {
                 card.style.display = 'block';
             });
-            
+
             // Remove no results message if exists
             const noResults = document.querySelector('.no-results');
             if (noResults) {

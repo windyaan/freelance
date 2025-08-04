@@ -677,30 +677,17 @@ body {
     background: #334155;
 }
 
-/* Scroll indicators */
-.skills-section::after {
-    
-    position: absolute;
-    bottom: 0.5rem;
-    right: 1rem;
-    color: #94a3b8;
-    font-size: 0.7rem;
-    font-weight: 500;
-    opacity: 0.7;
-    pointer-events: none;
-}
-
 /* Mobile Responsiveness */
 @media (max-width: 1024px) {
     .sidebar {
         transform: translateX(-100%);
         transition: transform 0.3s ease;
     }
-    
+
     .sidebar.show {
         transform: translateX(0);
     }
-    
+
     .sidebar-toggle {
         display: flex !important;
         flex-direction: column;
@@ -710,7 +697,7 @@ body {
         justify-content: space-between;
         margin-right: 1rem;
     }
-    
+
     .sidebar-toggle span {
         width: 100%;
         height: 2px;
@@ -718,32 +705,27 @@ body {
         border-radius: 2px;
         transition: all 0.3s ease;
     }
-    
+
     .main-content {
         margin-left: 0;
         max-width: 100vw;
         padding: 1.5rem;
     }
-    
+
     .talent-grid {
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 1.5rem;
     }
-    
+
     .skills-grid {
         gap: 1rem;
-    }
-    
-    .skill-card {
-        min-width: 100px;
-        padding: 1rem 0.8rem;
     }
     
     .navbar-center {
         flex: 1.5;
         max-width: 350px;
     }
-    
+
     .search-container {
         max-width: 320px;
     }
@@ -753,24 +735,29 @@ body {
     .navbar-title {
         display: none;
     }
-    
+
     .navbar-center {
         flex: 2;
         max-width: 280px;
     }
-    
+
     .search-container {
         max-width: 250px;
     }
-    
+
     .search-container input {
         font-size: 0.85rem;
         padding: 0.6rem 0.8rem 0.6rem 2.5rem;
     }
-    
+
     .search-container .search-btn {
         padding: 0.4rem 0.8rem;
         font-size: 0.8rem;
+    }
+    
+    .skills-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
     }
     
     .skills-section,
@@ -778,23 +765,14 @@ body {
         padding: 1.5rem;
         margin-bottom: 1.5rem;
     }
-    
+
     .main-content {
         padding: 1rem;
     }
-    
+
     .talent-grid {
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         gap: 1rem;
-    }
-    
-    .skill-card {
-        min-width: 90px;
-        padding: 1rem 0.5rem;
-    }
-    
-    .skills-grid {
-        gap: 0.8rem;
     }
 }
 
@@ -802,33 +780,25 @@ body {
     .navbar-brand span:last-child {
         display: none;
     }
-    
+
     .navbar-center {
         display: none;
     }
     
-    .main-content {
-        padding: 0.8rem;
+    .skills-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.8rem;
     }
-    
+
     .skill-card {
         min-width: 80px;
         padding: 0.8rem 0.4rem;
     }
-    
+
     .skill-icon {
         width: 50px;
         height: 50px;
         font-size: 1.2rem;
-    }
-    
-    .talent-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-    
-    .skills-grid {
-        gap: 0.6rem;
     }
 }
 
@@ -870,7 +840,7 @@ body {
         <div class="navbar-profile" onclick="goToProfile()">
             <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Profile">
         </div>
-        
+
         <!-- Logout Form - Using Laravel's proper logout method -->
         <form method="POST" action="{{ route('logout') }}" class="navbar-logout-form">
             @csrf
@@ -898,7 +868,7 @@ body {
             <div class="nav-icon">📋</div>
             <span class="nav-text">Orders</span>
         </a>
-      
+
     </nav>
 </div>
 
@@ -1093,89 +1063,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var sidebar = document.getElementById('sidebar');
     var sidebarToggle = document.getElementById('sidebarToggle');
     
-    // Prevent horizontal scroll on the entire page
-    document.body.style.overflowX = 'hidden';
-    document.documentElement.style.overflowX = 'hidden';
-    
-    // Add skills scrolling functionality
-    const skillsContainer = document.querySelector('.skills-scroll-container');
-    const skillsGrid = document.querySelector('.skills-grid');
-    
-    if (skillsContainer && skillsGrid) {
-        // Add mouse wheel horizontal scrolling
-        skillsContainer.addEventListener('wheel', function(e) {
-            if (e.deltaY !== 0) {
-                e.preventDefault();
-                this.scrollLeft += e.deltaY > 0 ? 50 : -50;
-            }
-        });
-        
-        // Add touch scrolling for mobile
-        let isScrolling = false;
-        let startX = 0;
-        let scrollLeft = 0;
-        
-        skillsContainer.addEventListener('touchstart', function(e) {
-            isScrolling = true;
-            startX = e.touches[0].pageX - this.offsetLeft;
-            scrollLeft = this.scrollLeft;
-        });
-        
-        skillsContainer.addEventListener('touchmove', function(e) {
-            if (!isScrolling) return;
-            e.preventDefault();
-            const x = e.touches[0].pageX - this.offsetLeft;
-            const walk = (x - startX) * 2;
-            this.scrollLeft = scrollLeft - walk;
-        });
-        
-        skillsContainer.addEventListener('touchend', function() {
-            isScrolling = false;
-        });
-        
-        // Keyboard navigation for skills
-        document.addEventListener('keydown', function(e) {
-            if (document.activeElement && document.activeElement.closest('.skills-section')) {
-                if (e.key === 'ArrowLeft') {
-                    e.preventDefault();
-                    skillsContainer.scrollLeft -= 120;
-                } else if (e.key === 'ArrowRight') {
-                    e.preventDefault();
-                    skillsContainer.scrollLeft += 120;
-                }
-            }
-        });
-        
-        // Auto-scroll to show active skill
-        function scrollToActiveSkill() {
-            const activeSkill = document.querySelector('.skill-card.active');
-            if (activeSkill) {
-                const containerRect = skillsContainer.getBoundingClientRect();
-                const skillRect = activeSkill.getBoundingClientRect();
-                
-                if (skillRect.left < containerRect.left || skillRect.right > containerRect.right) {
-                    const scrollAmount = skillRect.left - containerRect.left - (containerRect.width / 2) + (skillRect.width / 2);
-                    skillsContainer.scrollBy({
-                        left: scrollAmount,
-                        behavior: 'smooth'
-                    });
-                }
-            }
-        }
-        
-        // Update scroll indicators
-        function updateScrollIndicators() {
-            const canScrollLeft = skillsContainer.scrollLeft > 0;
-            const canScrollRight = skillsContainer.scrollLeft < (skillsContainer.scrollWidth - skillsContainer.clientWidth);
-            
-            skillsContainer.setAttribute('data-can-scroll-left', canScrollLeft);
-            skillsContainer.setAttribute('data-can-scroll-right', canScrollRight);
-        }
-        
-        skillsContainer.addEventListener('scroll', updateScrollIndicators);
-        updateScrollIndicators(); // Initial check
-    }
-    
     // Create sidebar overlay for mobile
     var sidebarOverlay = document.createElement('div');
     sidebarOverlay.style.cssText = `
@@ -1190,7 +1077,7 @@ document.addEventListener('DOMContentLoaded', function() {
         backdrop-filter: blur(4px);
     `;
     document.body.appendChild(sidebarOverlay);
-    
+
     // Toggle sidebar on mobile
     if (sidebarToggle) {
         sidebarToggle.addEventListener('click', function() {
@@ -1198,34 +1085,34 @@ document.addEventListener('DOMContentLoaded', function() {
             sidebarOverlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
         });
     }
-    
+
     // Close sidebar when clicking overlay
     sidebarOverlay.addEventListener('click', function() {
         sidebar.classList.remove('show');
         sidebarOverlay.style.display = 'none';
     });
-    
+
     // Search functionality
     if (searchInput) {
         searchInput.addEventListener('input', function() {
             var query = this.value.toLowerCase();
             searchTalents(query);
         });
-        
+
         // Search button functionality
         document.querySelector('.search-btn').addEventListener('click', function() {
             var query = searchInput.value.toLowerCase();
             searchTalents(query);
         });
     }
-    
+
     // Profile modal functionality - close when clicking outside
     profileModal.addEventListener('click', function(e) {
         if (e.target === profileModal) {
             profileModal.classList.remove('active');
         }
     });
-    
+
     // Event delegation for all interactions
     document.addEventListener('click', function(e) {
         // Chat button functionality
@@ -1239,64 +1126,61 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Starting chat with ' + name + '...');
             // Here you would typically redirect to chat page or open chat interface
         }
-        
+
         // Talent avatar click - open modal
         if (e.target.closest('.talent-avatar')) {
             var card = e.target.closest('.talent-card');
             var name = card.querySelector('.talent-name').textContent;
             var img = card.querySelector('.talent-avatar img').src;
-            
+
             document.getElementById('modalName').textContent = name;
             document.getElementById('modalAvatar').src = img;
-            
+
             var skills = card.querySelectorAll('.skill-tag');
             var modalSkills = document.getElementById('modalSkills');
             modalSkills.innerHTML = '';
-            
+
             skills.forEach(function(skill) {
                 var skillTag = document.createElement('span');
                 skillTag.className = 'skill-tag';
                 skillTag.textContent = skill.textContent;
                 modalSkills.appendChild(skillTag);
             });
-            
+
             profileModal.classList.add('active');
         }
-        
+
         // Skill card filtering
         if (e.target.closest('.skill-card')) {
             var skillCard = e.target.closest('.skill-card');
             var skillName = skillCard.getAttribute('data-skill');
-            
+
             // Remove active class from all skill cards
             document.querySelectorAll('.skill-card').forEach(function(card) {
                 card.classList.remove('active');
             });
-            
+
             // Add active state to clicked card
             skillCard.classList.add('active');
-            
+
             // Filter talents by skill
             filterTalentsBySkill(skillName);
-            
-            // Auto-scroll to show active skill
-            setTimeout(scrollToActiveSkill, 100);
         }
     });
-    
+
     // Navigation functionality
     document.querySelectorAll('.nav-item').forEach(function(item) {
         item.addEventListener('click', function(e) {
             e.preventDefault();
-            
+
             // Remove active class from all nav items
             document.querySelectorAll('.nav-item').forEach(function(navItem) {
                 navItem.classList.remove('active');
             });
-            
+
             // Add active class to clicked item
             this.classList.add('active');
-            
+
             // Here you would typically handle navigation
             var navText = this.querySelector('.nav-text').textContent;
             console.log('Navigating to: ' + navText);
@@ -1319,12 +1203,12 @@ function goToProfile() {
 function searchTalents(query) {
     var cards = document.querySelectorAll('.talent-card');
     var hasResults = false;
-    
+
     cards.forEach(function(card) {
         var name = card.querySelector('.talent-name').textContent.toLowerCase();
         var skills = card.querySelectorAll('.skill-tag');
         var hasMatch = name.includes(query);
-        
+
         if (!hasMatch) {
             skills.forEach(function(skill) {
                 if (skill.textContent.toLowerCase().includes(query)) {
@@ -1332,7 +1216,7 @@ function searchTalents(query) {
                 }
             });
         }
-        
+
         if (hasMatch || query === '') {
             card.style.display = 'block';
             hasResults = true;
@@ -1340,7 +1224,7 @@ function searchTalents(query) {
             card.style.display = 'none';
         }
     });
-    
+
     // Show/hide no results message
     showNoResultsMessage(!hasResults && query !== '');
 }
@@ -1349,11 +1233,11 @@ function searchTalents(query) {
 function filterTalentsBySkill(skillName) {
     var cards = document.querySelectorAll('.talent-card');
     var hasResults = false;
-    
+
     cards.forEach(function(card) {
         var cardSkills = card.getAttribute('data-skills').toLowerCase();
         var hasSkill = cardSkills.includes(skillName.toLowerCase());
-        
+
         if (hasSkill) {
             card.style.display = 'block';
             hasResults = true;
@@ -1361,7 +1245,7 @@ function filterTalentsBySkill(skillName) {
             card.style.display = 'none';
         }
     });
-    
+
     // Show/hide no results message
     showNoResultsMessage(!hasResults);
 }
@@ -1369,7 +1253,7 @@ function filterTalentsBySkill(skillName) {
 // Show no results message
 function showNoResultsMessage(show) {
     var existingMessage = document.querySelector('.no-results');
-    
+
     if (show && !existingMessage) {
         var noResultsDiv = document.createElement('div');
         noResultsDiv.className = 'no-results';
@@ -1397,18 +1281,18 @@ function clearAllFilters() {
     document.querySelectorAll('.skill-card').forEach(function(card) {
         card.classList.remove('active');
     });
-    
+
     // Show all talent cards
     document.querySelectorAll('.talent-card').forEach(function(card) {
         card.style.display = 'block';
     });
-    
+
     // Clear search input
     var searchInput = document.getElementById('globalSearch');
     if (searchInput) {
         searchInput.value = '';
     }
-    
+
     // Remove no results message
     showNoResultsMessage(false);
 }
@@ -1429,7 +1313,7 @@ document.addEventListener('keydown', function(e) {
             modal.classList.remove('active');
         }
     }
-    
+
     // Ctrl/Cmd + K to focus search
     if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
