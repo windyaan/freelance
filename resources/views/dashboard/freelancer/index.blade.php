@@ -630,44 +630,6 @@ body {
                 </div>
             </div>
 
-            <!-- Order Card 3 -->
-            <div class="order-card" data-client="Tito Hanum" data-skill="illustrator">
-                <div class="order-skill">illustrator</div>
-                <div class="order-info">
-                    <div class="order-date">Wednesday, 24 September 2025</div>
-                    <div class="order-client">Client : Tito Hanum</div>
-                    <div class="order-description">Buku mewarnai tema bermain di Pantai</div>
-                </div>
-                <div class="order-actions">
-                    <button class="details-btn">Details</button>
-                </div>
-            </div>
-
-            <!-- Order Card 4 -->
-            <div class="order-card" data-client="Sarah Kumar" data-skill="ui design">
-                <div class="order-skill">ui design</div>
-                <div class="order-info">
-                    <div class="order-date">Friday, 26 September 2025</div>
-                    <div class="order-client">Client : Sarah Kumar</div>
-                    <div class="order-description">Design aplikasi mobile untuk e-commerce fashion</div>
-                </div>
-                <div class="order-actions">
-                    <button class="details-btn">Details</button>
-                </div>
-            </div>
-
-            <!-- Order Card 5 -->
-            <div class="order-card" data-client="Ahmad Rizki" data-skill="content writing">
-                <div class="order-skill">content writing</div>
-                <div class="order-info">
-                    <div class="order-date">Monday, 29 September 2025</div>
-                    <div class="order-client">Client : Ahmad Rizki</div>
-                    <div class="order-description">Artikel blog tentang teknologi blockchain untuk website startup</div>
-                </div>
-                <div class="order-actions">
-                    <button class="details-btn">Details</button>
-                </div>
-            </div>
         </div>
     </div>
 </div>
