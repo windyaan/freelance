@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\JobController; 
-use App\Http\Controllers\ChatController; // Import ChatController
-use App\Http\Controllers\OrderController; // Import OrderController
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -41,7 +41,7 @@ Route::middleware('auth')->group(function () {
 
     // Client routes group
     Route::prefix('client')->name('client.')->middleware('role:client')->group(function () {
-        // Client dashboard - gunakan method dashboardIndex
+        // Client dashboard
         Route::get('/dashboard', [JobController::class, 'dashboardIndex'])->name('dashboard');
         
         // Client chat routes
@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/chat/{user}/send', [ChatController::class, 'send'])->name('chat.send');
         Route::get('/chat/{user}/messages', [ChatController::class, 'getMessages'])->name('chat.messages');
         
-        // Client orders routes
+        // Client orders routes - FIXED
         Route::get('/orders', [OrderController::class, 'clientIndex'])->name('orders');
         Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
         Route::post('/orders/{order}/pay', [OrderController::class, 'makePayment'])->name('orders.pay');
@@ -60,6 +60,7 @@ Route::middleware('auth')->group(function () {
 
     // Freelancer routes group
     Route::prefix('freelancer')->name('freelancer.')->middleware('role:freelancer')->group(function () {
+        // Freelancer dashboard
         Route::get('/dashboard', function(){
             return view('dashboard.freelancer.index');
         })->name('dashboard');
@@ -83,7 +84,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/orders/create/{job}', [OrderController::class, 'create'])->name('orders.create');
 
-    // Legacy route untuk backward compatibility
+    // Legacy routes untuk backward compatibility
     Route::get('/client-dashboard', [JobController::class, 'dashboardIndex'])->name('client.dashboard.legacy')->middleware('role:client');
     Route::get('/freelancer-dashboard', function(){
         return view('dashboard.freelancer.index');

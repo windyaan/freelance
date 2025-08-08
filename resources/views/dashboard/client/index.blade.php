@@ -917,12 +917,15 @@ body {
             <span></span>
             <span></span>
         </div>
+        
         <!-- Updated navbar brand with Laravel route -->
-        <a href="{{ route('client.dashboard') }}" class="navbar-brand">
-            <div class="logo" style="margin-top: 60px;">
-                <h1>Skill<span>Match</span></h1>
-            </div>
-        </a>
+        <a href="{{ route('client.orders') }}" class="nav-item {{ request()->routeIs('client.orders*') ? 'active' : '' }}">
+    <div class="nav-icon">
+        <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
+    </div>
+    <span class="nav-text">Orders</span>
+</a>
+
         <h1 class="navbar-title">Dashboard</h1>
     </div>
     <div class="navbar-center">
