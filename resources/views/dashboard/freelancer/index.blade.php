@@ -599,7 +599,7 @@ body {
     <div class="navbar-center">
         <div class="search-container">
             <iconify-icon icon="material-symbols:search" class="search-icon"></iconify-icon>
-            <input type="text" class="search-input" placeholder="Search orders, clients..." id="globalSearch">
+            <input type="text" class="search-input" placeholder="Search order, clients..." id="globalSearch">
             <button class="search-btn" id="searchBtn">Search</button>
         </div>
     </div>
@@ -637,20 +637,21 @@ body {
             <span class="nav-badge">3</span>
         </a>
         
-        <a href="#" class="nav-item">
-            <div class="nav-icon">
-                <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
-            </div>
-            <span class="nav-text">Orders</span>
-        </a>
+               <!-- Updated navbar brand with Laravel route -->
+    <a href="{{ route('freelancer.order') }}" class="nav-item {{ request()->routeIs('freelancer.order*') ? 'active' : '' }}">
+    <div class="nav-icon">
+        <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
+    </div>
+    <span class="nav-text">Order</span>
+</a>
     </nav>
 </div>
 
 <!-- Main Content -->
 <div class="main-content">
     <!-- Orders Section -->
-    <div class="orders-section">
-        <div class="orders-list">
+    <div class="order-section">
+        <div class="order-list">
             <!-- Order Card 1 -->
             <div class="order-card" data-client="Denada F" data-skill="illustrator">
                 <div class="order-skill">illustrator</div>
@@ -728,14 +729,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (searchInput) {
         searchInput.addEventListener('input', function() {
             const query = this.value.toLowerCase();
-            searchOrders(query);
+            searchOrder(query);
         });
 
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 const query = this.value.toLowerCase();
-                searchOrders(query);
+                searchOrder(query);
             }
         });
     }
@@ -747,7 +748,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             if (searchInput) {
                 const query = searchInput.value.toLowerCase();
-                searchOrders(query);
+                searchOrder(query);
             }
         });
     }

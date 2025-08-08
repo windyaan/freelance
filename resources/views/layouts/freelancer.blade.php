@@ -495,7 +495,7 @@
                     <span class="nav-text">Chat</span>
                     <span class="nav-badge">3</span>
                 </a>
-                <a href="{{ route('freelancer.orders') }}" class="nav-item {{ request()->routeIs('freelancer.orders*') ? 'active' : '' }}">
+                <a href="{{ route('freelancer.order') }}" class="nav-item {{ request()->routeIs('freelancer.order*') ? 'active' : '' }}">
                     <div class="nav-icon">
                         <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
                     </div>

@@ -1,4 +1,4 @@
-@extends('layouts.client')
+@extends('layouts.freelancer')
 
 @section('title', 'Order - SkillMatch')
 
@@ -785,7 +785,7 @@ body {
             <span></span>
         </div>
         <!-- Updated navbar brand with Laravel route -->
-        <a href="{{ route('client.dashboard') }}" class="navbar-brand">
+        <a href="{{ route('freelancer.dashboard') }}" class="navbar-brand">
             <div class="logo" style="margin-top: 60px;">
                 <h1>Skill<span>Match</span></h1>
             </div>
@@ -818,20 +818,20 @@ body {
 <div class="sidebar" id="sidebar">
     <nav>
         <!-- Updated sidebar navigation with Laravel routes -->
-        <a href="{{ route('client.dashboard') }}" class="nav-item {{ request()->routeIs('client.dashboard') ? 'active' : '' }}">
+        <a href="{{ route('freelancer.dashboard') }}" class="nav-item {{ request()->routeIs('freelancer.dashboard') ? 'active' : '' }}">
             <div class="nav-icon">
                 <iconify-icon icon="material-symbols:dashboard"></iconify-icon>
             </div>
             <span class="nav-text">Dashboard</span>
         </a>
-        <a href="{{ route('client.chat') }}" class="nav-item {{ request()->routeIs('client.chat') ? 'active' : '' }}">
+        <a href="{{ route('freelancer.chat') }}" class="nav-item {{ request()->routeIs('freelancer.chat') ? 'active' : '' }}">
             <div class="nav-icon">
                 <iconify-icon icon="material-symbols:chat"></iconify-icon>
             </div>
             <span class="nav-text">Chat</span>
             <span class="nav-badge">3</span>
         </a>
-        <a href="#" class="nav-item {{ request()->routeIs('client.order') ? 'active' : '' }}">
+        <a href="#" class="nav-item {{ request()->routeIs('freelancer.order') ? 'active' : '' }}">
             <div class="nav-icon">
                 <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
             </div>
@@ -950,7 +950,7 @@ body {
             <iconify-icon icon="material-symbols:inbox"></iconify-icon>
             <h3>No order found</h3>
             <p>You don't have any order matching the current filter.</p>
-            <a href="{{ route('client.dashboard') }}" class="btn-primary">
+            <a href="{{ route('freelancer.dashboard') }}" class="btn-primary">
                 <iconify-icon icon="material-symbols:add"></iconify-icon>
                 Browse Talents
             </a>

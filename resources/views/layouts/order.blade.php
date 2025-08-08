@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Orders - SkillMatch')</title>
+    <title>@yield('title', 'Order - SkillMatch')</title>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -265,7 +265,7 @@
             background: #f8fafc;
         }
 
-        .orders-section {
+        .order-section {
             background: white;
             border-radius: 16px;
             padding: 2rem;
@@ -325,7 +325,7 @@
         }
 
         /* Order Cards */
-        .orders-grid {
+        .order-grid {
             display: grid;
             gap: 1.5rem;
         }
@@ -479,7 +479,7 @@
                 max-width: 280px;
             }
             
-            .orders-section {
+            .order-section {
                 padding: 1.5rem;
             }
             
@@ -593,12 +593,12 @@
                 <span class="nav-text">Chat</span>
                 <span class="nav-badge">3</span>
             </a>
-            <a href="{{ route('client.orders') }}" class="nav-item {{ request()->routeIs('client.orders') ? 'active' : '' }}">
-                <div class="nav-icon">
-                    <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
-                </div>
-                <span class="nav-text">Orders</span>
-            </a>
+    <a href="{{ route('client.order') }}" class="nav-item {{ request()->routeIs('client.order*') ? 'active' : '' }}">
+    <div class="nav-icon">
+        <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
+    </div>
+    <span class="nav-text">Order</span>
+</a>
         </nav>
     </div>
 
@@ -678,13 +678,13 @@
         function viewOrderDetails(orderId) {
             console.log('Viewing details for order:', orderId);
             // Navigate to order details page
-            window.location.href = `/orders/${orderId}`;
+            window.location.href = `/order/${orderId}`;
         }
 
         function makePayment(orderId) {
             console.log('Making payment for order:', orderId);
             if (confirm(`Proceed to payment for order ${orderId}?`)) {
-                window.location.href = `/orders/${orderId}/payment`;
+                window.location.href = `/order/${orderId}/payment`;
             }
         }
     </script>
