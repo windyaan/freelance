@@ -2,79 +2,165 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
 use App\Models\User;
+use App\Models\Profile;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
     /**
-     * Display the user's profile form.
+     * Display the specified user's profile.
      */
-    public function edit(Request $request): View
+    public function show($id)
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-            'profile' => $request->user()->profile,
+        // Ambil user beserta profile dan jobs-nya
+        $user = User::with(['profile', 'jobs.category'])->findOrFail($id);
+
+        // Jika user belum punya profile, buat profile kosong
+        if (!$user->profile) {
+            $user->profile = new Profile([
+                'bio' => '',
+                'skills' => [],
+                'avatar_url' => null
+            ]);
+        }
+
+        return view('profile.show', compact('user'));
+    }
+
+    /**
+     * Show the form for editing current user's profile.
+     */
+    public function edit()
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $user->load(['profile', 'jobs.category']);
+
+        // Jika user belum punya profile, buat profile kosong
+        if (!$user->profile) {
+            $user->profile = new Profile([
+                'bio' => '',
+                'skills' => [],
+                'avatar_url' => null
+            ]);
+        }
+
+        return view('profile.edit', compact('user'));
+    }
+
+    /**
+     * Show the form for editing specified user's profile (dengan ID).
+     */
+    public function editWithId($id)
+    {
+        $user = User::with(['profile', 'jobs.category'])->findOrFail($id);
+
+        // Pastikan user hanya bisa edit profile sendiri (kecuali admin)
+        if (Auth::id() !== (int)$id && !$this->isCurrentUserAdmin()) {
+            abort(403, 'Unauthorized to edit this profile.');
+        }
+
+        // Jika user belum punya profile, buat profile kosong
+        if (!$user->profile) {
+            $user->profile = new Profile([
+                'bio' => '',
+                'skills' => [],
+                'avatar_url' => null
+            ]);
+        }
+
+        return view('profile.edit', compact('user'));
+    }
+
+    /**
+     * Update current user's profile.
+     */
+    public function update(Request $request)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'bio' => 'nullable|string|max:1000',
+            'skills' => 'nullable|array',
+            'skills.*' => 'string|max:50',
+            'avatar_url' => 'nullable|url|max:255',
+            'achievement' => 'nullable|string|max:1000'
         ]);
+
+        // Update user data
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+        ]);
+
+        // Update atau create profile
+        $user->profile()->updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'bio' => $request->bio,
+                'skills' => $request->skills ?? [],
+                'avatar_url' => $request->avatar_url,
+                'achievement' => $request->achievement
+            ]
+        );
+
+        return redirect()->route('profile.edit')
+                        ->with('success', 'Profile updated successfully!');
     }
 
     /**
-     * Update the user's profile information.
+     * Update specified user's profile (dengan ID).
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function updateWithId(Request $request, $id)
     {
-        // $request->user()->fill($request->validated());
+        $user = User::findOrFail($id);
 
-        // if ($request->user()->isDirty('email')) {
-        //     $request->user()->email_verified_at = null;
-        // }
+        // Pastikan user hanya bisa edit profile sendiri (kecuali admin)
+        if (Auth::id() !== (int)$id && !$this->isCurrentUserAdmin()) {
+            abort(403, 'Unauthorized to edit this profile.');
+        }
 
-        // $request->user()->save();
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'bio' => 'nullable|string|max:1000',
+            'skills' => 'nullable|array',
+            'skills.*' => 'string|max:50',
+            'avatar_url' => 'nullable|url|max:255',
+            'achievement' => 'nullable|string|max:1000'
+        ]);
 
-        // return Redirect::route('profile.edit')->with('status', 'profile-updated');
-        $user = $request->user();
-        $data = $request->validated();
+        // Update user data
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+        ]);
 
-    // Update User name/email
-    $user->name = $data['name'];
-    if ($user->email !== $data['email']) {
-        $user->email = $data['email'];
-        $user->email_verified_at = null; // reset verifikasi jika email berubah
-    }
-    $user->save();
+        // Update atau create profile
+        $user->profile()->updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'bio' => $request->bio,
+                'skills' => $request->skills ?? [],
+                'avatar_url' => $request->avatar_url,
+                'achievement' => $request->achievement
+            ]
+        );
 
-    // Siapkan data untuk Profile
-    $profileData = $request->only(['bio', 'avatar_url', 'skills']);
-
-    // Jika bukan freelancer, jangan simpan skills
-    if ($user->role !== 'freelancer') {
-        unset($profileData['skills']);
-    }
-
-    // penggabungan
-//     if (isset($profileData['skills']) && is_string($profileData['skills'])) {
-//     $profileData['skills'] = array_map('trim', explode(',', $profileData['skills']));
-// }
-
-    // Update profile
-    if (!$user->profile) {
-    $user->profile()->create();
-    }
-
-    $user->profile->update($profileData);
-
-    return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return redirect()->route('profile.show', $user->id)
+                        ->with('success', 'Profile updated successfully!');
     }
 
     /**
-     * Delete the user's account.
+     * Delete current user's profile.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request)
     {
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
@@ -89,20 +175,37 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return redirect('/');
     }
 
-    //show a freelancer's public profile
-    //   public function show($freelancerId): View
-    // {
-    //     $freelancer = User::where('id', $freelancerId)
-    //                     ->where('role', 'freelancer')
-    //                     ->with('profile')
-    //                     ->firstOrFail();
+    /**
+     * Check if current authenticated user is admin
+     *
+     * @return bool
+     */
+    private function isCurrentUserAdmin()
+    {
+        $user = Auth::user();
 
-    //     return view('profile.show', [
-    //         'freelancer' => $freelancer,
-    //         'profile' => $freelancer->profile,
-    //     ]);
-    // }
+        if (!$user) {
+            return false;
+        }
+
+        // Option 1: Check by role field (uncomment if you have 'role' column in users table)
+        // return $user->role === 'admin';
+
+        // Option 2: Check by specific admin emails
+        $adminEmails = [
+            'admin@freelance.com',
+            'superadmin@freelance.com',
+            // Add more admin emails as needed
+        ];
+        return in_array($user->email, $adminEmails);
+
+        // Option 3: Check by user_type field (uncomment if you have 'user_type' column)
+        // return $user->user_type === 'admin';
+
+        // Option 4: Check by is_admin boolean field (uncomment if you have 'is_admin' column)
+        // return $user->is_admin === true;
+    }
 }

@@ -67,6 +67,12 @@ class User extends Authenticatable
     return $this->hasMany(Notification::class, 'user_id');
     }
 
+    // Tambahkan method ini di dalam class User
+public function profiles()
+{
+    return $this->hasOne(Profile::class);
+}
+
     // // Role check helper
     // public function isAdmin()
     // {
