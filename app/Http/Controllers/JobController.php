@@ -82,4 +82,17 @@ class JobController extends Controller
         $job->delete();
         return redirect()->route('jobs.index')->with('success', 'Job deleted.');
     }
+
+    //BARU
+    public function dashboardIndex()
+{
+    $jobs = Job::with(['freelancer.profile', 'category'])
+        ->where('is_active', true)
+        ->latest()
+        ->get();
+
+     return view('dashboard.client.index', compact('jobs'));
+}
+
+
 }

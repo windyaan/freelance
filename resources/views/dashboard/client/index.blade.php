@@ -3,8 +3,25 @@
 @section('title', 'Dashboard - SkillMatch')
 
 @section('content')
+<!-- Embed jobs data in a script tag for JavaScript access -->
+<script id="jobs-data" type="application/json">
+{!! json_encode($jobs->map(function($job) {
+    return [
+        'id' => $job->id,
+        'title' => $job->title,
+        'description' => $job->description,
+        'starting_price' => $job->starting_price,
+        'category' => $job->category->name ?? 'General',
+        'freelancer' => [
+            'id' => $job->freelancer->id ?? 0,
+            'name' => $job->freelancer->name ?? 'Unknown User'
+        ]
+    ];
+})) !!}
+</script>
+
 <style>
-/* Prevent horizontal overflow globally */
+/* Previous CSS remains the same - keeping it short for space */
 html, body {
     overflow-x: hidden;
     max-width: 100vw;
@@ -147,7 +164,6 @@ body {
     box-shadow: 0 4px 12px rgba(56, 193, 185, 0.3);
 }
 
-/* Search Results Dropdown */
 .search-results {
     position: absolute;
     top: 100%;
@@ -198,7 +214,6 @@ body {
     justify-content: flex-end;
 }
 
-/* Updated logout button styling - now for form submission */
 .navbar-logout-form {
     margin: 0;
     padding: 0;
@@ -275,6 +290,7 @@ body {
 .nav-item:hover {
     background: #f8fafc;
     color: #1e293b;
+    text-decoration: none;
 }
 
 .nav-item.active {
@@ -344,7 +360,6 @@ body {
     position: relative;
 }
 
-/* Skills slider container */
 .skills-slider-container {
     position: relative;
     overflow: hidden;
@@ -365,7 +380,6 @@ body {
     padding: 1rem 0;
 }
 
-/* Navigation buttons */
 .slider-nav {
     position: absolute;
     top: 50%;
@@ -410,7 +424,6 @@ body {
     right: -22px;
 }
 
-/* Slide indicators */
 .slide-indicators {
     display: flex;
     justify-content: center;
@@ -462,7 +475,6 @@ body {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-/* Video & Photography Skills */
 .skill-card[data-skill="videographer"]:hover,
 .skill-card[data-skill="videographer"].active,
 .skill-card[data-skill="video editor"]:hover,
@@ -480,7 +492,6 @@ body {
     box-shadow: 0 4px 12px rgba(116, 204, 205, 0.3);
 }
 
-/* Writing & Translation Skills */
 .skill-card[data-skill="content writing"]:hover,
 .skill-card[data-skill="content writing"].active,
 .skill-card[data-skill="copywriting"]:hover,
@@ -498,7 +509,6 @@ body {
     box-shadow: 0 4px 12px rgba(40, 160, 148, 0.3);
 }
 
-/* UI & Development Skills */
 .skill-card[data-skill="ui design"]:hover,
 .skill-card[data-skill="ui design"].active,
 .skill-card[data-skill="front-end"]:hover,
@@ -519,7 +529,6 @@ body {
     box-shadow: 0 4px 12px rgba(31, 112, 102, 0.3);
 }
 
-/* Graphic Design & Illustration Skills */
 .skill-card[data-skill="graphic design"]:hover,
 .skill-card[data-skill="graphic design"].active,
 .skill-card[data-skill="illustrator"]:hover,
@@ -554,7 +563,6 @@ body {
     line-height: 1.3;
 }
 
-/* Updated Talents Section - Modified Card Design */
 .talents-section {
     background: white;
     border-radius: 16px;
@@ -602,7 +610,6 @@ body {
     border-color: #38C1B9;
 }
 
-/* Modified talent header layout */
 .talent-header {
     display: flex;
     justify-content: space-between;
@@ -620,7 +627,6 @@ body {
     text-transform: capitalize;
 }
 
-/* Position name in top right */
 .talent-name {
     font-size: 1.1rem;
     font-weight: 700;
@@ -657,7 +663,6 @@ body {
     text-decoration: underline;
 }
 
-/* Modified talent price positioning - above profile button on the right */
 .talent-price {
     color: #38C1B9;
     font-size: 0.9rem;
@@ -690,12 +695,10 @@ body {
     transform: translateY(-1px);
 }
 
-/* REMOVED: Talent Navigation - Hide talent arrows */
 .talent-nav {
     display: none !important;
 }
 
-/* Talent Pagination */
 .talent-pagination {
     display: flex;
     justify-content: center;
@@ -733,7 +736,6 @@ body {
     pointer-events: none;
 }
 
-/* No results message */
 .no-results {
     text-align: center;
     padding: 3rem;
@@ -742,7 +744,6 @@ body {
     grid-column: 1 / -1;
 }
 
-/* Mobile Responsiveness */
 @media (max-width: 1024px) {
     .sidebar {
         transform: translateX(-100%);
@@ -905,6 +906,9 @@ body {
 }
 </style>
 
+<!-- Load Iconify -->
+<script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
+
 <!-- Top Navigation -->
 <div class="top-navbar">
     <div class="navbar-left">
@@ -913,32 +917,31 @@ body {
             <span></span>
             <span></span>
         </div>
-       <a href="#" class="navbar-brand">
-    <div class="logo" style="margin-top: 60px;">
-        <h1>skill<span>Match</span></h1>
-    </div>
-</a>
+        <!-- Updated navbar brand with Laravel route -->
+        <a href="{{ route('client.dashboard') }}" class="navbar-brand">
+            <div class="logo" style="margin-top: 60px;">
+                <h1>Skill<span>Match</span></h1>
+            </div>
+        </a>
         <h1 class="navbar-title">Dashboard</h1>
     </div>
     <div class="navbar-center">
         <div class="search-container">
-            <span class="search-icon">🔍</span>
+            <iconify-icon icon="material-symbols:search" class="search-icon"></iconify-icon>
             <input type="text" class="search-input" placeholder="Search talents, skills..." id="globalSearch">
             <button class="search-btn" id="searchBtn">Search</button>
             <div class="search-results" id="searchResults"></div>
         </div>
     </div>
     <div class="navbar-right">
-        <!-- Profile Button -->
         <div class="navbar-profile" onclick="goToProfile()">
             <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Profile">
         </div>
         
-        <!-- Logout Form -->
         <form method="POST" action="{{ route('logout') }}" class="navbar-logout-form">
             @csrf
             <button type="submit" class="navbar-logout" onclick="return confirmLogout()">
-                <span>🚪</span>
+                <iconify-icon icon="material-symbols:logout"></iconify-icon>
                 Log Out
             </button>
         </form>
@@ -948,17 +951,24 @@ body {
 <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
     <nav>
-        <a href="#" class="nav-item active">
-            <div class="nav-icon">📊</div>
+        <!-- Updated sidebar navigation with Laravel routes -->
+        <a href="{{ route('client.dashboard') }}" class="nav-item {{ request()->routeIs('client.dashboard') ? 'active' : '' }}">
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:dashboard"></iconify-icon>
+            </div>
             <span class="nav-text">Dashboard</span>
         </a>
-        <a href="#" class="nav-item">
-            <div class="nav-icon">💬</div>
+        <a href="{{ route('client.chat') }}" class="nav-item {{ request()->routeIs('client.chat') ? 'active' : '' }}">
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:chat"></iconify-icon>
+            </div>
             <span class="nav-text">Chat</span>
             <span class="nav-badge">3</span>
         </a>
         <a href="#" class="nav-item">
-            <div class="nav-icon">📋</div>
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
+            </div>
             <span class="nav-text">Orders</span>
         </a>
     </nav>
@@ -969,35 +979,50 @@ body {
     <!-- Skills Grid -->
     <div class="skills-section">
         <div class="skills-slider-container">
-            <!-- Navigation buttons -->
-            <button class="slider-nav prev" id="prevSlide">‹</button>
-            <button class="slider-nav next" id="nextSlide">›</button>
+            <button class="slider-nav prev" id="prevSlide">
+                <iconify-icon icon="material-symbols:chevron-left"></iconify-icon>
+            </button>
+            <button class="slider-nav next" id="nextSlide">
+                <iconify-icon icon="material-symbols:chevron-right"></iconify-icon>
+            </button>
             
             <div class="skills-slider-wrapper" id="skillsSlider">
                 <!-- Slide 1 -->
                 <div class="skills-slide">
                     <div class="skill-card" data-skill="videographer">
-                        <div class="skill-icon">📹</div>
+                        <div class="skill-icon">
+                            <iconify-icon icon="material-symbols:videocam"></iconify-icon>
+                        </div>
                         <div class="skill-name">video<br>grapher</div>
                     </div>
                     <div class="skill-card" data-skill="video editor">
-                        <div class="skill-icon">▶️</div>
+                        <div class="skill-icon">
+                            <iconify-icon icon="material-symbols:video-camera-back"></iconify-icon>
+                        </div>
                         <div class="skill-name">video<br>editor</div>
                     </div>
                     <div class="skill-card" data-skill="photographer">
-                        <div class="skill-icon">📷</div>
+                        <div class="skill-icon">
+                            <iconify-icon icon="material-symbols:photo-camera"></iconify-icon>
+                        </div>
                         <div class="skill-name">photo<br>grapher</div>
                     </div>
                     <div class="skill-card" data-skill="content writing">
-                        <div class="skill-icon">✍️</div>
+                        <div class="skill-icon">
+                            <iconify-icon icon="material-symbols:edit"></iconify-icon>
+                        </div>
                         <div class="skill-name">content<br>writing</div>
                     </div>
                     <div class="skill-card" data-skill="copywriting">
-                        <div class="skill-icon">📝</div>
+                        <div class="skill-icon">
+                            <iconify-icon icon="material-symbols:description"></iconify-icon>
+                        </div>
                         <div class="skill-name">copy<br>writing</div>
                     </div>
                     <div class="skill-card" data-skill="translator">
-                        <div class="skill-icon">🌐</div>
+                        <div class="skill-icon">
+                            <iconify-icon icon="material-symbols:translate"></iconify-icon>
+                        </div>
                         <div class="skill-name">translator</div>
                     </div>
                 </div>
@@ -1005,27 +1030,39 @@ body {
                 <!-- Slide 2 -->
                 <div class="skills-slide">
                     <div class="skill-card" data-skill="ui design">
-                        <div class="skill-icon">🎨</div>
+                        <div class="skill-icon">
+                            <iconify-icon icon="material-symbols:palette"></iconify-icon>
+                        </div>
                         <div class="skill-name">UI<br>design</div>
                     </div>
                     <div class="skill-card" data-skill="front-end">
-                        <div class="skill-icon">💻</div>
+                        <div class="skill-icon">
+                            <iconify-icon icon="material-symbols:monitor"></iconify-icon>
+                        </div>
                         <div class="skill-name">front-end</div>
                     </div>
                     <div class="skill-card" data-skill="back-end">
-                        <div class="skill-icon">🗄️</div>
+                        <div class="skill-icon">
+                            <iconify-icon icon="material-symbols:dns"></iconify-icon>
+                        </div>
                         <div class="skill-name">back-end</div>
                     </div>
                     <div class="skill-card" data-skill="fullstack">
-                        <div class="skill-icon">⚡</div>
+                        <div class="skill-icon">
+                            <iconify-icon icon="material-symbols:layers"></iconify-icon>
+                        </div>
                         <div class="skill-name">fullstack</div>
                     </div>
                     <div class="skill-card" data-skill="graphic design">
-                        <div class="skill-icon">🎯</div>
+                        <div class="skill-icon">
+                            <iconify-icon icon="material-symbols:brush"></iconify-icon>
+                        </div>
                         <div class="skill-name">graphic<br>design</div>
                     </div>
                     <div class="skill-card" data-skill="illustrator">
-                        <div class="skill-icon">🖼️</div>
+                        <div class="skill-icon">
+                            <iconify-icon icon="material-symbols:draw"></iconify-icon>
+                        </div>
                         <div class="skill-name">illustrator</div>
                     </div>
                 </div>
@@ -1039,244 +1076,144 @@ body {
         </div>
     </div>
 
-    <!-- Talent Grid with Modified Card Design (NO ARROWS) -->
+    <!-- Talent Grid with Data from Jobs -->
     <div class="talents-section">
         <div class="talent-slider-container">
-            <!-- REMOVED: Navigation buttons for talents -->
-            
             <div class="talent-slider-wrapper" id="talentSlider">
-                <!-- Slide 1 -->
-                <div class="talent-slide">
-                    <div class="talent-card" data-name="Samantha William" data-skills="ui design">
-                        <div class="talent-header">
-                            <div class="talent-skill-badge">UI design</div>
-                            <h3 class="talent-name">Samantha William</h3>
-                        </div>
-                        <p class="talent-description">Pembuatan prototype menggunakan figma dan sketch.</p>
-                        <a href="#" class="talent-project-link">contoh project : https://link-project-prototype-figma</a>
-                        <div class="talent-price">Rp400.000-Rp600.000</div>
-                        <button class="talent-profile-btn">profile</button>
+                @php
+                    $jobsPerSlide = 3;
+                    $totalSlides = ceil($jobs->count() / $jobsPerSlide);
+                @endphp
+                
+                @for ($slideIndex = 0; $slideIndex < $totalSlides; $slideIndex++)
+                    <div class="talent-slide">
+                        @php
+                            $startIndex = $slideIndex * $jobsPerSlide;
+                            $slideJobs = $jobs->slice($startIndex, $jobsPerSlide);
+                        @endphp
+                        
+                        @foreach ($slideJobs as $job)
+                            <div class="talent-card" 
+                                 data-name="{{ $job->freelancer->name ?? 'Unknown' }}" 
+                                 data-user-id="{{ $job->freelancer->id ?? 0 }}" 
+                                 data-skills="{{ strtolower($job->category->name ?? 'general') }}"
+                                 data-job-id="{{ $job->id }}">
+                                <div class="talent-header">
+                                    <div class="talent-skill-badge">{{ $job->category->name ?? 'General' }}</div>
+                                    <h3 class="talent-name">{{ $job->freelancer->name ?? 'Unknown User' }}</h3>
+                                </div>
+                                <p class="talent-description">{{ Str::limit($job->description, 100) }}</p>
+                                <a href="#" class="talent-project-link">{{ $job->title }}</a>
+                                <div class="talent-price">Rp{{ number_format($job->starting_price, 0, ',', '.') }}</div>
+                                <button class="talent-profile-btn" data-freelancer-id="{{ $job->freelancer->id ?? 0 }}">profile</button>
+                            </div>
+                        @endforeach
+                        
+                        @if ($slideJobs->count() < $jobsPerSlide)
+                            @for ($i = $slideJobs->count(); $i < $jobsPerSlide; $i++)
+                                <div class="talent-card" style="opacity: 0; pointer-events: none;">
+                                    <!-- Empty placeholder to maintain grid layout -->
+                                </div>
+                            @endfor
+                        @endif
                     </div>
-
-                    <div class="talent-card" data-name="Dea Nisa" data-skills="fullstack">
-                        <div class="talent-header">
-                            <div class="talent-skill-badge">Fullstack</div>
-                            <h3 class="talent-name">Dea Nisa</h3>
+                @endfor
+                
+                @if ($jobs->count() == 0)
+                    <div class="talent-slide">
+                        <div class="no-results">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">
+                                <iconify-icon icon="material-symbols:work-off"></iconify-icon>
+                            </div>
+                            <h3 style="margin-bottom: 0.5rem; color: #1e293b;">No jobs available</h3>
+                            <p>There are currently no jobs to display</p>
                         </div>
-                        <p class="talent-description">Pembuatan website KOMINFO JOGJA</p>
-                        <a href="#" class="talent-project-link">contoh project : https://link-project-web</a>
-                        <div class="talent-price">Rp800.000-Rp1.000.000</div>
-                        <button class="talent-profile-btn">profile</button>
                     </div>
-
-                    <div class="talent-card" data-name="Eko Kurniawan" data-skills="back-end">
-                        <div class="talent-header">
-                            <div class="talent-skill-badge">Back-end</div>
-                            <h3 class="talent-name">Eko Kurniawan</h3>
-                        </div>
-                        <p class="talent-description">Pembuatan database RS.</p>
-                        <a href="#" class="talent-project-link">contoh project : https://link-project-db</a>
-                        <div class="talent-price">Rp1.000.000-Rp2.000.000</div>
-                        <button class="talent-profile-btn">profile</button>
-                    </div>
-                </div>
-
-                <!-- Slide 2 -->
-                <div class="talent-slide">
-                    <div class="talent-card" data-name="Joseph Kareem" data-skills="ui design">
-                        <div class="talent-header">
-                            <div class="talent-skill-badge">UI design</div>
-                            <h3 class="talent-name">Joseph Kareem</h3>
-                        </div>
-                        <p class="talent-description">Pembuatan prototype menggunakan figma dan sketch.</p>
-                        <a href="#" class="talent-project-link">contoh project : https://link-project-prototype-figma</a>
-                        <div class="talent-price">Rp400.000-Rp600.000</div>
-                        <button class="talent-profile-btn">profile</button>
-                    </div>
-
-                    <div class="talent-card" data-name="Fitri Daiva" data-skills="ui design">
-                        <div class="talent-header">
-                            <div class="talent-skill-badge">UI design</div>
-                            <h3 class="talent-name">Fitri Daiva</h3>
-                        </div>
-                        <p class="talent-description">Pembuatan prototype menggunakan figma dan sketch.</p>
-                        <a href="#" class="talent-project-link">contoh project : https://link-project-prototype-figma</a>
-                        <div class="talent-price">Rp400.000-Rp600.000</div>
-                        <button class="talent-profile-btn">profile</button>
-                    </div>
-
-                    <div class="talent-card" data-name="Tiara Hasna" data-skills="translator">
-                        <div class="talent-header">
-                            <div class="talent-skill-badge">Translator</div>
-                            <h3 class="talent-name">Tiara Hasna</h3>
-                        </div>
-                        <p class="talent-description">Alih bahasa buku anak</p>
-                        <a href="#" class="talent-project-link">contoh project : https://link-project-baru</a>
-                        <div class="talent-price">Rp400.000-Rp600.000</div>
-                        <button class="talent-profile-btn">profile</button>
-                    </div>
-                </div>
-
-                <!-- Slide 3 -->
-                <div class="talent-slide">
-                    <div class="talent-card" data-name="Ihwan Ahsan" data-skills="videographer">
-                        <div class="talent-header">
-                            <div class="talent-skill-badge">Videographer</div>
-                            <h3 class="talent-name">Ihwan Ahsan</h3>
-                        </div>
-                        <p class="talent-description">Pembuatan video cinematic graduation SMA</p>
-                        <a href="#" class="talent-project-link">contoh project : https://link-video-yt</a>
-                        <div class="talent-price">Rp400.000-Rp600.000</div>
-                        <button class="talent-profile-btn">profile</button>
-                    </div>
-
-                    <div class="talent-card" data-name="Hanin Anug" data-skills="model">
-                        <div class="talent-header">
-                            <div class="talent-skill-badge">Model</div>
-                            <h3 class="talent-name">Hanin Anug</h3>
-                        </div>
-                        <p class="talent-description">Foto model busana</p>
-                        <a href="#" class="talent-project-link">contoh project : https://link-portfolio</a>
-                        <div class="talent-price">Rp400.000-Rp600.000</div>
-                        <button class="talent-profile-btn">profile</button>
-                    </div>
-
-                    <div class="talent-card" data-name="Hazla Hanza" data-skills="fullstack">
-                        <div class="talent-header">
-                            <div class="talent-skill-badge">Fullstack</div>
-                            <h3 class="talent-name">Hazla Hanza</h3>
-                        </div>
-                        <p class="talent-description">Pembuatan website toko pakaian</p>
-                        <a href="#" class="talent-project-link">contoh project : https://link-project-toko</a>
-                        <div class="talent-price">Rp400.000-Rp600.000</div>
-                        <button class="talent-profile-btn">profile</button>
-                    </div>
-                </div>
+                @endif
             </div>
         </div>
 
-        <!-- Talent Pagination -->
-        <div class="talent-pagination">
-            <button id="prevPageBtn">‹</button>
-            <button class="active" data-page="0">1</button>
-            <button data-page="1">2</button>
-            <button data-page="2">3</button>
-            <button id="nextPageBtn">›</button>
-        </div>
+        <!-- Dynamic Talent Pagination -->
+        @if ($totalSlides > 1)
+            <div class="talent-pagination">
+                <button id="prevPageBtn">
+                    <iconify-icon icon="material-symbols:chevron-left"></iconify-icon>
+                </button>
+                @for ($i = 0; $i < $totalSlides; $i++)
+                    <button data-page="{{ $i }}" class="{{ $i == 0 ? 'active' : '' }}">{{ $i + 1 }}</button>
+                @endfor
+                <button id="nextPageBtn">
+                    <iconify-icon icon="material-symbols:chevron-right"></iconify-icon>
+                </button>
+            </div>
+        @endif
     </div>
 </div>
 
 <script>
-// Data struktur untuk talents
-const talentsData = [
-    {
-        name: "Samantha William",
-        skills: ["ui design", "ux design"],
-        description: "Pembuatan prototype menggunakan figma dan sketch.",
-        project: "https://link-project-prototype-figma",
-        price: "Rp400.000-Rp600.000",
-        category: "UI design"
-    },
-    {
-        name: "Dea Nisa",
-        skills: ["fullstack", "web development"],
-        description: "Pembuatan website KOMINFO JOGJA",
-        project: "https://link-project-web",
-        price: "Rp800.000-Rp1.000.000",
-        category: "Fullstack"
-    },
-    {
-        name: "Eko Kurniawan",
-        skills: ["back-end", "database"],
-        description: "Pembuatan database RS.",
-        project: "https://link-project-db",
-        price: "Rp1.000.000-Rp2.000.000",
-        category: "Back-end"
-    },
-    {
-        name: "Joseph Kareem",
-        skills: ["ui design", "figma"],
-        description: "Pembuatan prototype menggunakan figma dan sketch.",
-        project: "https://link-project-prototype-figma",
-        price: "Rp400.000-Rp600.000",
-        category: "UI design"
-    },
-    {
-        name: "Fitri Daiva",
-        skills: ["ui design", "sketch"],
-        description: "Pembuatan prototype menggunakan figma dan sketch.",
-        project: "https://link-project-prototype-figma",
-        price: "Rp400.000-Rp600.000",
-        category: "UI design"
-    },
-    {
-        name: "Tiara Hasna",
-        skills: ["translator", "language"],
-        description: "Alih bahasa buku anak",
-        project: "https://link-project-baru",
-        price: "Rp400.000-Rp600.000",
-        category: "Translator"
-    },
-    {
-        name: "Ihwan Ahsan",
-        skills: ["videographer", "cinematography"],
-        description: "Pembuatan video cinematic graduation SMA",
-        project: "https://link-video-yt",
-        price: "Rp400.000-Rp600.000",
-        category: "Videographer"
-    },
-    {
-        name: "Hanin Anug",
-        skills: ["model", "photography"],
-        description: "Foto model busana",
-        project: "https://link-portfolio",
-        price: "Rp400.000-Rp600.000",
-        category: "Model"
-    },
-    {
-        name: "Hazla Hanza",
-        skills: ["fullstack", "e-commerce"],
-        description: "Pembuatan website toko pakaian",
-        project: "https://link-project-toko",
-        price: "Rp400.000-Rp600.000",
-        category: "Fullstack"
-    }
-];
-
+// Fixed JavaScript code for Dashboard
 document.addEventListener('DOMContentLoaded', function() {
-    var searchInput = document.getElementById('globalSearch');
-    var searchResults = document.getElementById('searchResults');
-    var sidebar = document.getElementById('sidebar');
-    var sidebarToggle = document.getElementById('sidebarToggle');
+    // Get jobs data from the embedded JSON script
+    let jobsData = [];
+    try {
+        const jobsScript = document.getElementById('jobs-data');
+        if (jobsScript && jobsScript.textContent) {
+            jobsData = JSON.parse(jobsScript.textContent);
+        }
+    } catch (error) {
+        console.error('Failed to parse jobs data:', error);
+        jobsData = [];
+    }
+    
+    // Cache DOM elements
+    const searchInput = document.getElementById('globalSearch');
+    const searchResults = document.getElementById('searchResults');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
     
     // Skills slider functionality
-    var currentSlide = 0;
-    var totalSlides = document.querySelectorAll('.skills-slide').length;
-    var skillsSlider = document.getElementById('skillsSlider');
-    var prevBtn = document.getElementById('prevSlide');
-    var nextBtn = document.getElementById('nextSlide');
-    var indicators = document.querySelectorAll('.slide-indicator');
+    let currentSlide = 0;
+    const skillsSlides = document.querySelectorAll('.skills-slide');
+    const totalSlides = skillsSlides.length;
+    const skillsSlider = document.getElementById('skillsSlider');
+    const prevBtn = document.getElementById('prevSlide');
+    const nextBtn = document.getElementById('nextSlide');
+    const indicators = document.querySelectorAll('.slide-indicator');
     
     // Talent slider functionality
-    var currentTalentSlide = 0;
-    var totalTalentSlides = document.querySelectorAll('.talent-slide').length;
-    var talentSlider = document.getElementById('talentSlider');
-    // REMOVED: Talent navigation buttons
+    let currentTalentSlide = 0;
+    const talentSlides = document.querySelectorAll('.talent-slide');
+    const totalTalentSlides = talentSlides.length;
+    const talentSlider = document.getElementById('talentSlider');
     
     // Prevent horizontal scroll
-    document.body.style.overflowX = 'hidden';
-    document.documentElement.style.overflowX = 'hidden';
+    if (document.body) {
+        document.body.style.overflowX = 'hidden';
+    }
+    if (document.documentElement) {
+        document.documentElement.style.overflowX = 'hidden';
+    }
     
     // Skills slider functions
     function updateSkillsSlider() {
+        if (!skillsSlider) return;
+        
         const translateX = -currentSlide * 100;
         skillsSlider.style.transform = `translateX(${translateX}%)`;
         
-        prevBtn.classList.toggle('disabled', currentSlide === 0);
-        nextBtn.classList.toggle('disabled', currentSlide === totalSlides - 1);
+        // Update navigation buttons
+        if (prevBtn) {
+            prevBtn.classList.toggle('disabled', currentSlide === 0);
+        }
+        if (nextBtn) {
+            nextBtn.classList.toggle('disabled', currentSlide === totalSlides - 1);
+        }
         
+        // Update indicators
         indicators.forEach((indicator, index) => {
-            indicator.classList.toggle('active', index === currentSlide);
+            if (indicator) {
+                indicator.classList.toggle('active', index === currentSlide);
+            }
         });
     }
     
@@ -1294,18 +1231,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // fr functions
+    // Talent slider functions
     function updateTalentSlider() {
+        if (!talentSlider) return;
+        
         const translateX = -currentTalentSlide * 100;
         talentSlider.style.transform = `translateX(${translateX}%)`;
         
         // Update pagination buttons
-        document.querySelectorAll('.talent-pagination button[data-page]').forEach((btn, index) => {
-            btn.classList.toggle('active', index === currentTalentSlide);
+        const paginationBtns = document.querySelectorAll('.talent-pagination button[data-page]');
+        paginationBtns.forEach((btn, index) => {
+            if (btn) {
+                btn.classList.toggle('active', index === currentTalentSlide);
+            }
         });
         
-        document.getElementById('prevPageBtn').disabled = currentTalentSlide === 0;
-        document.getElementById('nextPageBtn').disabled = currentTalentSlide === totalTalentSlides - 1;
+        // Update prev/next buttons
+        const prevPageBtn = document.getElementById('prevPageBtn');
+        const nextPageBtn = document.getElementById('nextPageBtn');
+        if (prevPageBtn) {
+            prevPageBtn.disabled = currentTalentSlide === 0;
+        }
+        if (nextPageBtn) {
+            nextPageBtn.disabled = currentTalentSlide === totalTalentSlides - 1;
+        }
     }
     
     function nextTalentSlide() {
@@ -1323,65 +1272,116 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function goToTalentSlide(slideIndex) {
-        currentTalentSlide = slideIndex;
-        updateTalentSlider();
+        if (slideIndex >= 0 && slideIndex < totalTalentSlides) {
+            currentTalentSlide = slideIndex;
+            updateTalentSlider();
+        }
     }
     
     // Event listeners for skills slider
-    nextBtn.addEventListener('click', nextSkillsSlide);
-    prevBtn.addEventListener('click', prevSkillsSlide);
+    if (nextBtn) {
+        nextBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            nextSkillsSlide();
+        });
+    }
     
+    if (prevBtn) {
+        prevBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            prevSkillsSlide();
+        });
+    }
+    
+    // Indicator event listeners
     indicators.forEach((indicator, index) => {
-        indicator.addEventListener('click', () => {
-            currentSlide = index;
-            updateSkillsSlider();
-        });
+        if (indicator) {
+            indicator.addEventListener('click', function(e) {
+                e.preventDefault();
+                currentSlide = index;
+                updateSkillsSlider();
+            });
+        }
     });
     
-    // REMOVED: Event listeners for talent slider arrows
-    
-    // Pagination event listeners (ONLY pagination buttons remain)
-    document.querySelectorAll('.talent-pagination button[data-page]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const page = parseInt(btn.getAttribute('data-page'));
-            goToTalentSlide(page);
-        });
+    // Pagination event listeners
+    const paginationBtns = document.querySelectorAll('.talent-pagination button[data-page]');
+    paginationBtns.forEach(btn => {
+        if (btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const page = parseInt(this.getAttribute('data-page'));
+                if (!isNaN(page)) {
+                    goToTalentSlide(page);
+                }
+            });
+        }
     });
     
-    document.getElementById('prevPageBtn').addEventListener('click', prevTalentSlide);
-    document.getElementById('nextPageBtn').addEventListener('click', nextTalentSlide);
+    // Prev/Next pagination buttons
+    const prevPageBtn = document.getElementById('prevPageBtn');
+    const nextPageBtn = document.getElementById('nextPageBtn');
     
-    // Search functionality with live results
+    if (prevPageBtn) {
+        prevPageBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            prevTalentSlide();
+        });
+    }
+    
+    if (nextPageBtn) {
+        nextPageBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            nextTalentSlide();
+        });
+    }
+    
+    // Search functionality
     function performSearch(query) {
-        if (query.length < 2) {
-            searchResults.classList.remove('show');
+        if (!query || query.length < 2) {
+            if (searchResults) {
+                searchResults.classList.remove('show');
+            }
             return;
         }
         
-        const filtered = talentsData.filter(talent => {
-            return talent.name.toLowerCase().includes(query.toLowerCase()) ||
-                   talent.skills.some(skill => skill.toLowerCase().includes(query.toLowerCase())) ||
-                   talent.category.toLowerCase().includes(query.toLowerCase());
+        const filtered = jobsData.filter(job => {
+            const freelancerName = job.freelancer && job.freelancer.name ? job.freelancer.name.toLowerCase() : '';
+            const category = job.category ? job.category.toLowerCase() : '';
+            const title = job.title ? job.title.toLowerCase() : '';
+            const searchTerm = query.toLowerCase();
+            
+            return freelancerName.includes(searchTerm) || 
+                   category.includes(searchTerm) || 
+                   title.includes(searchTerm);
         });
         
         displaySearchResults(filtered);
     }
     
     function displaySearchResults(results) {
+        if (!searchResults) return;
+        
         if (results.length === 0) {
             searchResults.innerHTML = '<div class="search-result-item">No results found</div>';
         } else {
-            searchResults.innerHTML = results.map(talent => `
-                <div class="search-result-item" onclick="selectSearchResult('${talent.name}')">
-                    <div class="search-result-name">${talent.name}</div>
-                    <div class="search-result-skills">${talent.skills.join(', ')}</div>
-                </div>
-            `).join('');
+            searchResults.innerHTML = results.map(job => {
+                const freelancerName = job.freelancer && job.freelancer.name ? job.freelancer.name : 'Unknown';
+                const category = job.category || 'General';
+                const title = job.title || 'Untitled';
+                
+                return `
+                    <div class="search-result-item" onclick="selectSearchResult('${freelancerName}')">
+                        <div class="search-result-name">${freelancerName}</div>
+                        <div class="search-result-skills">${category} - ${title}</div>
+                    </div>
+                `;
+            }).join('');
         }
         searchResults.classList.add('show');
     }
     
-    // Search event listeners
+    // Search input event listeners
     if (searchInput) {
         searchInput.addEventListener('input', function() {
             const query = this.value.trim();
@@ -1389,38 +1389,52 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         searchInput.addEventListener('focus', function() {
-            if (this.value.trim().length >= 2) {
-                performSearch(this.value.trim());
-            }
-        });
-        
-        // Hide search results when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('.search-container')) {
-                searchResults.classList.remove('show');
-            }
-        });
-        
-        // Search button functionality
-        document.querySelector('.search-btn').addEventListener('click', function() {
-            const query = searchInput.value.trim();
-            if (query) {
-                filterTalentsBySearch(query);
-                searchResults.classList.remove('show');
+            const query = this.value.trim();
+            if (query.length >= 2) {
+                performSearch(query);
             }
         });
         
         // Enter key search
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
+                e.preventDefault();
                 const query = this.value.trim();
                 if (query) {
                     filterTalentsBySearch(query);
-                    searchResults.classList.remove('show');
+                    if (searchResults) {
+                        searchResults.classList.remove('show');
+                    }
                 }
             }
         });
     }
+    
+    // Search button functionality
+    const searchBtn = document.getElementById('searchBtn');
+    if (searchBtn) {
+        searchBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (searchInput) {
+                const query = searchInput.value.trim();
+                if (query) {
+                    filterTalentsBySearch(query);
+                    if (searchResults) {
+                        searchResults.classList.remove('show');
+                    }
+                }
+            }
+        });
+    }
+    
+    // Hide search results when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.search-container')) {
+            if (searchResults) {
+                searchResults.classList.remove('show');
+            }
+        }
+    });
     
     // Filter talents by search query
     function filterTalentsBySearch(query) {
@@ -1428,9 +1442,10 @@ document.addEventListener('DOMContentLoaded', function() {
         let hasResults = false;
         
         cards.forEach(card => {
-            const name = card.getAttribute('data-name').toLowerCase();
-            const skills = card.getAttribute('data-skills').toLowerCase();
-            const hasMatch = name.includes(query.toLowerCase()) || skills.includes(query.toLowerCase());
+            const name = (card.getAttribute('data-name') || '').toLowerCase();
+            const skills = (card.getAttribute('data-skills') || '').toLowerCase();
+            const searchTerm = query.toLowerCase();
+            const hasMatch = name.includes(searchTerm) || skills.includes(searchTerm);
             
             if (hasMatch || query === '') {
                 card.style.display = 'block';
@@ -1443,39 +1458,16 @@ document.addEventListener('DOMContentLoaded', function() {
         showNoResultsMessage(!hasResults && query !== '');
     }
     
-    // Select search result
+    // Global function for search result selection
     window.selectSearchResult = function(name) {
-        searchInput.value = name;
-        filterTalentsBySearch(name);
-        searchResults.classList.remove('show');
-    }
-    
-    // Skill card filtering
-    document.addEventListener('click', function(e) {
-        if (e.target.closest('.skill-card')) {
-            const skillCard = e.target.closest('.skill-card');
-            const skillName = skillCard.getAttribute('data-skill');
-            
-            // Remove active class from all skill cards
-            document.querySelectorAll('.skill-card').forEach(card => {
-                card.classList.remove('active');
-            });
-            
-            // Add active state to clicked card
-            skillCard.classList.add('active');
-            
-            // Filter talents by skill
-            filterTalentsBySkill(skillName);
+        if (searchInput) {
+            searchInput.value = name;
+            filterTalentsBySearch(name);
         }
-        
-        // Profile button functionality
-        if (e.target.classList.contains('talent-profile-btn')) {
-            const card = e.target.closest('.talent-card');
-            const name = card.getAttribute('data-name');
-            alert('Opening profile for ' + name + '...');
-            // Here you would typically redirect to profile page
+        if (searchResults) {
+            searchResults.classList.remove('show');
         }
-    });
+    };
     
     // Filter talents by skill
     function filterTalentsBySkill(skillName) {
@@ -1483,7 +1475,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let hasResults = false;
         
         cards.forEach(card => {
-            const cardSkills = card.getAttribute('data-skills').toLowerCase();
+            const cardSkills = (card.getAttribute('data-skills') || '').toLowerCase();
             const hasSkill = cardSkills.includes(skillName.toLowerCase());
             
             if (hasSkill) {
@@ -1505,26 +1497,33 @@ document.addEventListener('DOMContentLoaded', function() {
             const noResultsDiv = document.createElement('div');
             noResultsDiv.className = 'no-results';
             noResultsDiv.innerHTML = `
-                <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+                <div style="font-size: 3rem; margin-bottom: 1rem;">
+                    <iconify-icon icon="material-symbols:search-off"></iconify-icon>
+                </div>
                 <h3 style="margin-bottom: 0.5rem; color: #1e293b;">No talents found</h3>
                 <p>Try adjusting your search or filter criteria</p>
                 <button onclick="clearAllFilters()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #38C1B9; color: white; border: none; border-radius: 6px; cursor: pointer;">Clear Filters</button>
             `;
-            document.querySelector('.talent-slider-container').appendChild(noResultsDiv);
+            const container = document.querySelector('.talent-slider-container');
+            if (container) {
+                container.appendChild(noResultsDiv);
+            }
         } else if (!show && existingMessage) {
             existingMessage.remove();
         }
     }
     
-    // Clear all filters
+    // Global function to clear all filters
     window.clearAllFilters = function() {
         // Remove active state from skill cards
-        document.querySelectorAll('.skill-card').forEach(card => {
+        const skillCards = document.querySelectorAll('.skill-card');
+        skillCards.forEach(card => {
             card.classList.remove('active');
         });
         
         // Show all talent cards
-        document.querySelectorAll('.talent-card').forEach(card => {
+        const talentCards = document.querySelectorAll('.talent-card');
+        talentCards.forEach(card => {
             card.style.display = 'block';
         });
         
@@ -1535,10 +1534,48 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Remove no results message
         showNoResultsMessage(false);
-    }
+    };
+    
+    // Skill card and profile button event delegation
+    document.addEventListener('click', function(e) {
+        // Handle skill card clicks
+        const skillCard = e.target.closest('.skill-card');
+        if (skillCard) {
+            e.preventDefault();
+            const skillName = skillCard.getAttribute('data-skill');
+            
+            if (skillName) {
+                // Remove active class from all skill cards
+                document.querySelectorAll('.skill-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                
+                // Add active state to clicked card
+                skillCard.classList.add('active');
+                
+                // Filter talents by skill
+                filterTalentsBySkill(skillName);
+            }
+        }
+        
+        // Handle profile button clicks
+        if (e.target.classList.contains('talent-profile-btn')) {
+            e.preventDefault();
+            const freelancerId = e.target.getAttribute('data-freelancer-id');
+            
+            if (freelancerId && freelancerId !== '0') {
+                // Redirect to profile page with freelancer ID
+                window.location.href = `/profile/${freelancerId}`;
+            } else {
+                console.error('Freelancer ID not found');
+                alert('Cannot open profile - Freelancer ID not found');
+            }
+        }
+    });
     
     // Sidebar functionality
-    if (sidebarToggle) {
+    if (sidebarToggle && sidebar) {
+        // Create overlay
         const sidebarOverlay = document.createElement('div');
         sidebarOverlay.style.cssText = `
             display: none;
@@ -1553,7 +1590,8 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         document.body.appendChild(sidebarOverlay);
         
-        sidebarToggle.addEventListener('click', function() {
+        sidebarToggle.addEventListener('click', function(e) {
+            e.preventDefault();
             sidebar.classList.toggle('show');
             sidebarOverlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
         });
@@ -1566,7 +1604,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Keyboard shortcuts
     document.addEventListener('keydown', function(e) {
-        // Arrow keys for skills slider
+        // Arrow keys for skills slider when focused
         if (e.target.closest('.skills-section')) {
             if (e.key === 'ArrowLeft') {
                 e.preventDefault();
@@ -1579,8 +1617,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Escape to clear search
         if (e.key === 'Escape') {
-            searchResults.classList.remove('show');
-            if (searchInput.value) {
+            if (searchResults) {
+                searchResults.classList.remove('show');
+            }
+            if (searchInput && searchInput.value) {
                 searchInput.value = '';
                 clearAllFilters();
             }
@@ -1598,16 +1638,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize sliders
     updateSkillsSlider();
     updateTalentSlider();
+    
+    console.log('Dashboard initialized successfully');
 });
 
-// Logout confirmation
+// Logout confirmation function
 function confirmLogout() {
     return confirm('Are you sure you want to log out?');
 }
 
-// Profile navigation
+// Profile navigation function
 function goToProfile() {
-    window.location.href = "{{ route('profile.edit') }}";
+    // This function will be handled by the Blade template
+    window.location.href = "/profile";
 }
 </script>
 @endsection
+    

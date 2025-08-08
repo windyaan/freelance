@@ -35,8 +35,6 @@ body {
     padding: 0 2rem;
     z-index: 1001;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    max-width: 100vw;
-    overflow: hidden;
 }
 
 .navbar-left {
@@ -72,11 +70,6 @@ body {
     gap: 1rem;
     flex: 1;
     justify-content: flex-end;
-}
-
-.navbar-logout-form {
-    margin: 0;
-    padding: 0;
 }
 
 .navbar-logout {
@@ -150,6 +143,7 @@ body {
 .nav-item:hover {
     background: #f8fafc;
     color: #1e293b;
+    text-decoration: none;
 }
 
 .nav-item.active {
@@ -208,6 +202,24 @@ body {
     box-sizing: border-box;
 }
 
+.sidebar-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    width: 24px;
+    height: 18px;
+    justify-content: space-between;
+    margin-right: 1rem;
+}
+
+.sidebar-toggle span {
+    width: 100%;
+    height: 2px;
+    background: #64748b;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
 /* Back Button */
 .back-button {
     display: flex;
@@ -223,132 +235,101 @@ body {
 
 .back-button:hover {
     color: #38C1B9;
+    text-decoration: none;
 }
 
-.back-button svg {
-    width: 20px;
-    height: 20px;
-}
-
-/* Profile Layout */
+/* Profile Layout - FIXED */
 .profile-container {
     display: flex;
     gap: 2rem;
-    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: start;
 }
 
 .profile-left {
     flex: 1;
+    min-width: 0;
 }
 
 .profile-right {
-    flex: 1;
-    max-width: 500px;
+    width: 350px;
+    flex-shrink: 0;
 }
 
-/* Services Section */
-.services-section {
+/* Profile Info Card */
+.profile-info-card {
     background: white;
     border-radius: 16px;
     padding: 2rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     border: 1px solid #f1f5f9;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+    width: 100%;
 }
 
-.services-title {
-    font-size: 1.5rem;
+.profile-header {
+    margin-bottom: 1.5rem;
+}
+
+.profile-name-large {
+    font-size: 2rem;
     font-weight: 700;
     color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.profile-contact-info {
     margin-bottom: 2rem;
 }
 
-.service-item {
-    padding: 1.5rem 0;
-    border-bottom: 1px solid #f1f5f9;
-}
-
-.service-item:last-child {
-    border-bottom: none;
-}
-
-.service-header {
+.contact-item {
     display: flex;
-    justify-content: between;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-}
-
-.service-info {
-    flex: 1;
-}
-
-.service-name {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #1e293b;
-    margin-bottom: 0.5rem;
-}
-
-.service-status {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.service-status.available {
-    background: rgba(34, 197, 94, 0.1);
-    color: #16a34a;
-}
-
-.service-status.not-available {
-    background: rgba(239, 68, 68, 0.1);
-    color: #dc2626;
-}
-
-.service-price {
-    color: #38C1B9;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-
-.service-description {
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
     color: #64748b;
     font-size: 0.9rem;
-    line-height: 1.5;
-    margin-bottom: 0.5rem;
 }
 
-.service-project {
+.contact-item strong {
+    color: #1e293b;
+    min-width: 60px;
+    font-weight: 600;
+}
+
+.profile-bio-section {
     color: #64748b;
-    font-size: 0.85rem;
-    word-break: break-all;
+    line-height: 1.6;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
 }
 
-.service-chat-btn {
-    background: #64748b;
+.edit-profile-btn {
+    background: #475569;
     color: white;
     border: none;
-    padding: 0.5rem 1.5rem;
+    padding: 0.75rem 2rem;
     border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     transition: all 0.2s ease;
-    margin-left: auto;
-    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: auto;
+    max-width: 200px;
 }
 
-.service-chat-btn:hover {
-    background: #475569;
+.edit-profile-btn:hover {
+    background: #334155;
     transform: translateY(-1px);
 }
 
-/* Profile Card */
-.profile-card {
+/* Profile Picture Card - FIXED */
+.profile-picture-card {
     background: white;
     border-radius: 16px;
     padding: 2rem;
@@ -357,67 +338,238 @@ body {
     text-align: center;
     position: sticky;
     top: 90px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .profile-image {
-    width: 200px;
-    height: 200px;
+    width: 280px;
+    height: 350px;
     border-radius: 16px;
     object-fit: cover;
-    margin: 0 auto 1.5rem;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    display: block;
+    background: #f3f4f6;
 }
 
-.profile-name {
-    font-size: 1.75rem;
+/* Fallback untuk gambar yang tidak load */
+.profile-image[src=""], 
+.profile-image:not([src]) {
+    background: #f3f4f6 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%239ca3af' d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E") center/60% no-repeat;
+}
+
+/* Edit Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(4px);
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.modal-title {
+    font-size: 1.5rem;
     font-weight: 700;
     color: #1e293b;
-    margin-bottom: 1rem;
 }
 
-.profile-skills {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-}
-
-.skill-tag {
-    background: #38C1B9;
-    color: white;
-    padding: 0.4rem 1rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-.profile-contact {
-    margin-bottom: 1.5rem;
-}
-
-.contact-item {
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #64748b;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-    color: #64748b;
-    font-size: 0.9rem;
+    border-radius: 50%;
+    transition: all 0.2s ease;
 }
 
-.contact-item strong {
+.modal-close:hover {
+    background: #f1f5f9;
     color: #1e293b;
 }
 
-.profile-bio {
-    text-align: left;
-    color: #64748b;
-    line-height: 1.6;
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
     font-size: 0.9rem;
 }
 
-/* Mobile Responsiveness */
+.form-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #38C1B9;
+    box-shadow: 0 0 0 3px rgba(56, 193, 185, 0.1);
+}
+
+.form-textarea {
+    min-height: 120px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.file-upload-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.file-upload-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.file-upload-button {
+    background: #f8fafc;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #64748b;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.file-upload-button:hover {
+    background: #f1f5f9;
+    border-color: #38C1B9;
+}
+
+.file-name {
+    color: #64748b;
+    font-size: 0.85rem;
+    flex: 1;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-cancel {
+    flex: 1;
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #d1d5db;
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-cancel:hover {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+.btn-save {
+    flex: 1;
+    background: #475569;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-save:hover {
+    background: #334155;
+    transform: translateY(-1px);
+}
+
+.logo h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #38C1B9;
+}
+
+.logo span {
+    color: #1e293b;
+}
+
+/* Success/Error Messages */
+.alert {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border: 1px solid;
+}
+
+.alert-success {
+    background-color: #d1fae5;
+    border-color: #a7f3d0;
+    color: #065f46;
+}
+
+.alert-error {
+    background-color: #fee2e2;
+    border-color: #fecaca;
+    color: #991b1b;
+}
+
+/* Mobile Responsiveness - IMPROVED */
 @media (max-width: 1024px) {
     .sidebar {
         transform: translateX(-100%);
@@ -430,20 +582,6 @@ body {
     
     .sidebar-toggle {
         display: flex !important;
-        flex-direction: column;
-        cursor: pointer;
-        width: 24px;
-        height: 18px;
-        justify-content: space-between;
-        margin-right: 1rem;
-    }
-    
-    .sidebar-toggle span {
-        width: 100%;
-        height: 2px;
-        background: #64748b;
-        border-radius: 2px;
-        transition: all 0.3s ease;
     }
     
     .main-content {
@@ -453,11 +591,23 @@ body {
     }
     
     .profile-container {
-        flex-direction: column-reverse;
+        flex-direction: column;
+        gap: 1rem;
     }
     
-    .profile-card {
+    .profile-right {
+        width: 100%;
+        order: -1;
+        margin-bottom: 1rem;
+    }
+    
+    .profile-picture-card {
         position: static;
+    }
+    
+    .profile-image {
+        width: 200px;
+        height: 250px;
     }
 }
 
@@ -466,10 +616,9 @@ body {
         display: none;
     }
     
-    .services-section,
-    .profile-card {
+    .profile-info-card,
+    .profile-picture-card {
         padding: 1.5rem;
-        margin-bottom: 1.5rem;
     }
     
     .main-content {
@@ -478,22 +627,16 @@ body {
     
     .profile-image {
         width: 150px;
-        height: 150px;
+        height: 200px;
     }
     
-    .profile-name {
+    .profile-name-large {
         font-size: 1.5rem;
     }
     
-    .service-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-    
-    .service-chat-btn {
-        margin-left: 0;
-        width: 100%;
+    .modal-content {
+        padding: 1.5rem;
+        width: 95%;
     }
 }
 
@@ -508,31 +651,41 @@ body {
     
     .profile-image {
         width: 120px;
-        height: 120px;
+        height: 160px;
+    }
+    
+    .modal-buttons {
+        flex-direction: column;
     }
 }
 
-.logo h1 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #38C1B9;
+/* Debug styles - remove after fixing */
+.debug .profile-container {
+    border: 2px dashed red;
 }
 
-.logo span {
-    color: #1e293b;
+.debug .profile-left {
+    border: 1px dashed blue;
+}
+
+.debug .profile-right {
+    border: 1px dashed green;
 }
 </style>
+
+<!-- Load Iconify -->
+<script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
 
 <!-- Top Navigation -->
 <div class="top-navbar">
     <div class="navbar-left">
-        <div class="sidebar-toggle" id="sidebarToggle" style="display: none;">
+        <div class="sidebar-toggle" id="sidebarToggle">
             <span></span>
             <span></span>
             <span></span>
         </div>
         <a href="{{ route('dashboard') }}" class="navbar-brand">
-            <div class="logo" style="margin-top: 60px;">
+            <div class="logo">
                 <h1>skill<span>Match</span></h1>
             </div>
         </a>
@@ -541,14 +694,16 @@ body {
     <div class="navbar-right">
         <!-- Profile Button -->
         <div class="navbar-profile" onclick="goToProfile()">
-            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Profile">
+            <img src="{{ Auth::user()->profile_image ?? 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face' }}" 
+                 alt="Profile"
+                 onerror="this.src='https://via.placeholder.com/40x40/f3f4f6/9ca3af?text=👤'">
         </div>
         
         <!-- Logout Form -->
         <form method="POST" action="{{ route('logout') }}" class="navbar-logout-form">
             @csrf
             <button type="submit" class="navbar-logout" onclick="return confirmLogout()">
-                <span>🚪</span>
+                <iconify-icon icon="material-symbols:logout"></iconify-icon>
                 Log Out
             </button>
         </form>
@@ -559,16 +714,22 @@ body {
 <div class="sidebar" id="sidebar">
     <nav>
         <a href="{{ route('dashboard') }}" class="nav-item">
-            <div class="nav-icon">📊</div>
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:dashboard"></iconify-icon>
+            </div>
             <span class="nav-text">Dashboard</span>
         </a>
         <a href="#" class="nav-item">
-            <div class="nav-icon">💬</div>
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:chat"></iconify-icon>
+            </div>
             <span class="nav-text">Chat</span>
             <span class="nav-badge">3</span>
         </a>
         <a href="#" class="nav-item">
-            <div class="nav-icon">📋</div>
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
+            </div>
             <span class="nav-text">Orders</span>
         </a>
     </nav>
@@ -576,116 +737,161 @@ body {
 
 <!-- Main Content -->
 <div class="main-content">
+    <!-- Display Success/Error Messages -->
+    @if(session('success'))
+        <div class="alert alert-success" id="successMessage">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-error" id="errorMessage">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="alert alert-error" id="validationErrors">
+            <ul style="margin: 0; padding-left: 1rem;">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <!-- Back Button -->
     <a href="{{ route('dashboard') }}" class="back-button">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-        </svg>
+        <iconify-icon icon="material-symbols:chevron-left"></iconify-icon>
         Back
     </a>
 
+    <!-- Profile Container with Flexbox Layout -->
     <div class="profile-container">
-        <!-- Left Side - Services -->
+        <!-- Left Side - Profile Info -->
         <div class="profile-left">
-            <div class="services-section">
-                <h2 class="services-title">Services</h2>
+            <div class="profile-info-card">
+                <div class="profile-header">
+                    <h1 class="profile-name-large" id="profileName">{{ Auth::user()->name }}</h1>
+                    
+                    <div class="profile-contact-info">
+                        <div class="contact-item">
+                            <strong>EMAIL :</strong> <span id="profileEmail">{{ Auth::user()->email }}</span>
+                        </div>
+                    </div>
+                </div>
                 
-                <!-- Service Item 1 -->
-                <div class="service-item">
-                    <div class="service-header">
-                        <div class="service-info">
-                            <h3 class="service-name">UI Design</h3>
-                            <span class="service-status available">Available</span>
-                            <div class="service-price">Rp400.000-Rp600.000</div>
-                        </div>
-                        <button class="service-chat-btn">Chat</button>
-                    </div>
-                    <p class="service-description">Pembuatan prototype menggunakan figma dan sketch.</p>
-                    <p class="service-project">contoh project : https://link-project-prototype-figma</p>
+                <div class="profile-bio-section">
+                    <p id="profileBio">{{ Auth::user()->bio ?? "I am a publishing professional at Gramedia Pustaka, responsible for managing the editing and design process throughout book production. With experience in ensuring visual and content quality, I focus on detail, aesthetics, and design consistency to create engaging and professional publications. My expertise includes coordinating with editorial teams, designers, and printers to deliver works that meet the highest publishing standards." }}</p>
                 </div>
 
-                <!-- Service Item 2 -->
-                <div class="service-item">
-                    <div class="service-header">
-                        <div class="service-info">
-                            <h3 class="service-name">Front-End</h3>
-                            <span class="service-status available">Available</span>
-                            <div class="service-price">Rp700.000-Rp900.000</div>
-                        </div>
-                        <button class="service-chat-btn">Chat</button>
-                    </div>
-                    <p class="service-description">Jasa pembuatan website toko pakaiaan dengan menggunakan laravel.</p>
-                    <p class="service-project">contoh project : https://link-project-website-toko-pakaian</p>
-                </div>
-
-                <!-- Service Item 3 -->
-                <div class="service-item">
-                    <div class="service-header">
-                        <div class="service-info">
-                            <h3 class="service-name">Front-End</h3>
-                            <span class="service-status not-available">Not Available</span>
-                            <div class="service-price">Rp700.000-Rp900.000</div>
-                        </div>
-                        <button class="service-chat-btn" disabled>Chat</button>
-                    </div>
-                    <p class="service-description">Jasa pembuatan website toko furniture dengan menggunakan laravel.</p>
-                    <p class="service-project">contoh project : https://link-project-website-toko-furniture</p>
-                </div>
-
-                <!-- Service Item 4 -->
-                <div class="service-item">
-                    <div class="service-header">
-                        <div class="service-info">
-                            <h3 class="service-name">Front-End</h3>
-                            <span class="service-status not-available">Not Available</span>
-                            <div class="service-price">Rp700.000-Rp900.000</div>
-                        </div>
-                        <button class="service-chat-btn" disabled>Chat</button>
-                    </div>
-                    <p class="service-description">Jasa pembuatan website toko barang dengan menggunakan laravel.</p>
-                    <p class="service-project">contoh project : https://link-project-website-toko-barang</p>
-                </div>
+                <button class="edit-profile-btn" onclick="openEditModal()">
+                    <iconify-icon icon="material-symbols:edit"></iconify-icon>
+                    Edit
+                </button>
             </div>
         </div>
 
-        <!-- Right Side - Profile Info -->
+        <!-- Right Side - Profile Picture -->
         <div class="profile-right">
-            <div class="profile-card">
-                <img src="{{ $profileImage ?? 'https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=200&h=200&fit=crop&crop=face' }}" 
-                     alt="Profile" class="profile-image">
-                
-                <h1 class="profile-name">{{ $profileName ?? 'Nadia Ima' }}</h1>
-                
-                <div class="profile-skills">
-                    <span class="skill-tag">UI Design</span>
-                    <span class="skill-tag">Front-End</span>
-                </div>
-                
-                <div class="profile-contact">
-                    <div class="contact-item">
-                        <strong>EMAIL :</strong> {{ $profileEmail ?? 'namira@gmail.com' }}
-                    </div>
-                    <div class="contact-item">
-                        <strong>SKILLS :</strong> photoshop, canva, laravel
-                    </div>
-                </div>
-                
-                <div class="profile-bio">
-                    <p>{{ $profileBio ?? "I'm a third-year IT student at Airlangga University passionate about software development, UI design, and data analytics. I've gained practical experience through building and optimizing web apps and contributing to student tech projects, strengthening my technical and teamwork skills." }}</p>
-                    
-                    <p style="margin-top: 1rem;">{{ $profileAchievement ?? "As a Top 200 Finalist in the 2023 National UI Design Competition, I demonstrated my ability to create intuitive, visually appealing digital experiences by combining design thinking with technical execution." }}</p>
-                </div>
+            <div class="profile-picture-card">
+                <img src="{{ Auth::user()->profile_image ?? 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=280&h=350&fit=crop&crop=faces' }}" 
+                     alt="Profile" 
+                     class="profile-image" 
+                     id="profileImage"
+                     onerror="this.src='https://via.placeholder.com/280x350/f3f4f6/9ca3af?text=Profile'">
             </div>
         </div>
     </div>
 </div>
 
+<!-- Edit Profile Modal -->
+<div class="modal-overlay" id="editProfileModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Edit Profile</h2>
+            <button class="modal-close" onclick="closeEditModal()">
+                <iconify-icon icon="material-symbols:close"></iconify-icon>
+            </button>
+        </div>
+
+        <form id="editProfileForm" method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+            
+            <div class="form-group">
+                <label class="form-label">Profile Picture</label>
+                <div class="file-upload-container">
+                    <input type="file" id="profilePictureInput" name="profile_image" class="file-upload-input" accept="image/*" onchange="handleFileSelect(this)">
+                    <label for="profilePictureInput" class="file-upload-button">
+                        <iconify-icon icon="material-symbols:add"></iconify-icon>
+                        Choose File
+                    </label>
+                    <span class="file-name" id="fileName">{{ Auth::user()->profile_image ? basename(Auth::user()->profile_image) : 'No file selected' }}</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-input" id="editName" name="name" value="{{ Auth::user()->name }}" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" id="editEmail" name="email" value="{{ Auth::user()->email }}" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Bio</label>
+                <textarea class="form-input form-textarea" id="editBio" name="bio" rows="6">{{ Auth::user()->bio ?? "I am a publishing professional at Gramedia Pustaka, responsible for managing the editing and design process throughout book production. With experience in ensuring visual and content quality, I focus on detail, aesthetics, and design consistency to create engaging and professional publications. My expertise includes coordinating with editorial teams, designers, and printers to deliver works that meet the highest publishing standards." }}</textarea>
+            </div>
+
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+                <button type="submit" class="btn-save">
+                    <iconify-icon icon="material-symbols:save"></iconify-icon>
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var sidebar = document.getElementById('sidebar');
-    var sidebarToggle = document.getElementById('sidebarToggle');
+    // Debug mode - uncomment to see layout borders
+    // document.body.classList.add('debug');
     
+    // Auto-hide success/error messages after 5 seconds
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+    const validationErrors = document.getElementById('validationErrors');
+    
+    if (successMessage) {
+        setTimeout(() => {
+            successMessage.style.opacity = '0';
+            setTimeout(() => successMessage.remove(), 300);
+        }, 5000);
+    }
+    
+    if (errorMessage) {
+        setTimeout(() => {
+            errorMessage.style.opacity = '0';
+            setTimeout(() => errorMessage.remove(), 300);
+        }, 5000);
+    }
+    
+    if (validationErrors) {
+        setTimeout(() => {
+            validationErrors.style.opacity = '0';
+            setTimeout(() => validationErrors.remove(), 300);
+        }, 7000);
+    }
+
     // Sidebar functionality
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    
     if (sidebarToggle) {
         const sidebarOverlay = document.createElement('div');
         sidebarOverlay.style.cssText = `
@@ -711,16 +917,121 @@ document.addEventListener('DOMContentLoaded', function() {
             sidebarOverlay.style.display = 'none';
         });
     }
-    
-    // Chat button functionality
-    document.querySelectorAll('.service-chat-btn:not([disabled])').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const serviceItem = this.closest('.service-item');
-            const serviceName = serviceItem.querySelector('.service-name').textContent;
-            alert(`Starting chat for ${serviceName} service...`);
-            // Here you would typically redirect to chat page or open chat modal
+
+    // Form validation
+    const editForm = document.getElementById('editProfileForm');
+    if (editForm) {
+        editForm.addEventListener('submit', function(e) {
+            const name = document.getElementById('editName').value.trim();
+            const email = document.getElementById('editEmail').value.trim();
+            
+            if (!name) {
+                e.preventDefault();
+                alert('Name is required');
+                return;
+            }
+            
+            if (!email) {
+                e.preventDefault();
+                alert('Email is required');
+                return;
+            }
+            
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                e.preventDefault();
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            // Show loading state
+            const submitButton = editForm.querySelector('.btn-save');
+            if (submitButton) {
+                const originalText = submitButton.innerHTML;
+                submitButton.innerHTML = '<iconify-icon icon="material-symbols:hourglass-empty"></iconify-icon> Saving...';
+                submitButton.disabled = true;
+            }
         });
+    }
+});
+
+// Modal functions
+function openEditModal() {
+    const modal = document.getElementById('editProfileModal');
+    if (modal) {
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeEditModal() {
+    const modal = document.getElementById('editProfileModal');
+    if (modal) {
+        modal.classList.remove('show');
+        document.body.style.overflow = 'auto';
+        
+        // Reset form if needed
+        const form = document.getElementById('editProfileForm');
+        const submitButton = form?.querySelector('.btn-save');
+        if (submitButton) {
+            submitButton.innerHTML = '<iconify-icon icon="material-symbols:save"></iconify-icon> Save';
+            submitButton.disabled = false;
+        }
+    }
+}
+
+// File upload handler
+function handleFileSelect(input) {
+    const file = input.files[0];
+    if (file) {
+        // Validate file type
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+        if (!allowedTypes.includes(file.type)) {
+            alert('Please select a valid image file (JPEG, PNG, or GIF)');
+            input.value = '';
+            return;
+        }
+        
+        // Validate file size (max 2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            alert('File size must be less than 2MB');
+            input.value = '';
+            return;
+        }
+        
+        const fileNameElement = document.getElementById('fileName');
+        if (fileNameElement) {
+            fileNameElement.textContent = file.name;
+        }
+        
+        // Preview image
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const profileImage = document.getElementById('profileImage');
+            if (profileImage) {
+                profileImage.src = e.target.result;
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+// Close modal when clicking outside
+const editModal = document.getElementById('editProfileModal');
+if (editModal) {
+    editModal.addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeEditModal();
+        }
     });
+}
+
+// Escape key to close modal
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeEditModal();
+    }
 });
 
 // Logout confirmation
@@ -730,8 +1041,26 @@ function confirmLogout() {
 
 // Profile navigation
 function goToProfile() {
-    // Already on profile page, do nothing or refresh
     window.location.reload();
 }
+
+// Prevent form resubmission on page refresh
+if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
+}
+
+// Image error handling
+document.addEventListener('DOMContentLoaded', function() {
+    const profileImages = document.querySelectorAll('.profile-image, .navbar-profile img');
+    profileImages.forEach(img => {
+        img.addEventListener('error', function() {
+            if (this.classList.contains('profile-image')) {
+                this.src = 'https://via.placeholder.com/280x350/f3f4f6/9ca3af?text=Profile';
+            } else {
+                this.src = 'https://via.placeholder.com/40x40/f3f4f6/9ca3af?text=👤';
+            }
+        });
+    });
+});
 </script>
 @endsection
