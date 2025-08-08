@@ -5,6 +5,9 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Profile;
 use App\Models\Job;
+use App\Models\Offer;
+use App\Models\Order;
+use App\Models\Milestone;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -26,8 +29,8 @@ class DatabaseSeeder extends Seeder
 
         // Admin manual
         User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@skillmatch.com',
+            'name' => 'Admin Skillmatch',
+            'email' => 'admin@gmail.com',
             'password' => Hash::make('admin123'),
             'role' => 'admin',
         ]);
@@ -48,15 +51,55 @@ class DatabaseSeeder extends Seeder
             $user->profile()->create(Profile::factory()->make()->toArray());
         });
 
+        //seeder category
          $this->call([
             CategorySeeder::class,
         ]);
 
-        // Tambahkan setelah seeding client
+        // membuat 2 job per freelancer
         User::where('role', 'freelancer')->get()->each(function ($freelancer) {
         Job::factory()->count(2)->create([
         'freelancer_id' => $freelancer->id
         ]);
     });
-    }
+
+     // Buat offer dari setiap client ke setiap job yang ada
+        $clients = User::where('role', 'client')->get();
+        $jobs = Job::all();
+
+        foreach ($clients as $client) {
+            foreach ($jobs as $job) {
+                $offerStatus = fake()->randomElement(['pending', 'accepted', 'declined']);
+
+        $offer = Offer::factory()->create([
+            'client_id' => $client->id,
+            'freelancer_id' => $job->freelancer_id,
+            'job_id' => $job->id,
+            'status' => $offerStatus, // supaya bisa langsung dibuat order dan milestone
+        ]);
+
+        // jika accepted Buat order dari offer
+         if ($offerStatus === 'accepted') {
+                    $orderStatus = fake()->randomElement(['pending', 'paid', 'failed']);
+
+        Order::factory()->create([
+            'offer_id' => $offer->id,
+            'amount' => $offer->final_price,
+            'status' => $orderStatus,
+        ]);
+
+        // Buat milestone dari offer
+         for ($i = 0; $i < 2; $i++) {
+                        $milestoneStatus = fake()->randomElement(['Start', 'Progress', 'Done', 'revisi_request', 'approved']);
+
+                        Milestone::factory()->create([
+                            'offer_id' => $offer->id,
+                            'status' => $milestoneStatus,
+                            'completed_at' => $milestoneStatus === 'Done' ? now() : null,
+                        ]);
+                        }
+                     }
+                }
+            }
+        }
 }

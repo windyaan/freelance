@@ -17,7 +17,7 @@ class ProfileController extends Controller
     {
         // Ambil user beserta profile dan jobs-nya
         $user = User::with(['profile', 'jobs.category'])->findOrFail($id);
-        
+
         // Jika user belum punya profile, buat profile kosong
         if (!$user->profile) {
             $user->profile = new Profile([
@@ -26,10 +26,10 @@ class ProfileController extends Controller
                 'avatar_url' => null
             ]);
         }
-        
+
         return view('profile.show', compact('user'));
     }
-    
+
     /**
      * Show the form for editing current user's profile.
      */
@@ -38,7 +38,7 @@ class ProfileController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $user->load(['profile', 'jobs.category']);
-        
+
         // Jika user belum punya profile, buat profile kosong
         if (!$user->profile) {
             $user->profile = new Profile([
@@ -47,22 +47,22 @@ class ProfileController extends Controller
                 'avatar_url' => null
             ]);
         }
-        
+
         return view('profile.edit', compact('user'));
     }
-    
+
     /**
      * Show the form for editing specified user's profile (dengan ID).
      */
     public function editWithId($id)
     {
         $user = User::with(['profile', 'jobs.category'])->findOrFail($id);
-        
+
         // Pastikan user hanya bisa edit profile sendiri (kecuali admin)
         if (Auth::id() !== (int)$id && !$this->isCurrentUserAdmin()) {
             abort(403, 'Unauthorized to edit this profile.');
         }
-        
+
         // Jika user belum punya profile, buat profile kosong
         if (!$user->profile) {
             $user->profile = new Profile([
@@ -71,10 +71,10 @@ class ProfileController extends Controller
                 'avatar_url' => null
             ]);
         }
-        
+
         return view('profile.edit', compact('user'));
     }
-    
+
     /**
      * Update current user's profile.
      */
@@ -82,7 +82,7 @@ class ProfileController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
-        
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
@@ -92,13 +92,13 @@ class ProfileController extends Controller
             'avatar_url' => 'nullable|url|max:255',
             'achievement' => 'nullable|string|max:1000'
         ]);
-        
+
         // Update user data
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
         ]);
-        
+
         // Update atau create profile
         $user->profile()->updateOrCreate(
             ['user_id' => $user->id],
@@ -109,23 +109,23 @@ class ProfileController extends Controller
                 'achievement' => $request->achievement
             ]
         );
-        
+
         return redirect()->route('profile.edit')
                         ->with('success', 'Profile updated successfully!');
     }
-    
+
     /**
      * Update specified user's profile (dengan ID).
      */
     public function updateWithId(Request $request, $id)
     {
         $user = User::findOrFail($id);
-        
+
         // Pastikan user hanya bisa edit profile sendiri (kecuali admin)
         if (Auth::id() !== (int)$id && !$this->isCurrentUserAdmin()) {
             abort(403, 'Unauthorized to edit this profile.');
         }
-        
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
@@ -135,13 +135,13 @@ class ProfileController extends Controller
             'avatar_url' => 'nullable|url|max:255',
             'achievement' => 'nullable|string|max:1000'
         ]);
-        
+
         // Update user data
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
         ]);
-        
+
         // Update atau create profile
         $user->profile()->updateOrCreate(
             ['user_id' => $user->id],
@@ -152,11 +152,11 @@ class ProfileController extends Controller
                 'achievement' => $request->achievement
             ]
         );
-        
+
         return redirect()->route('profile.show', $user->id)
                         ->with('success', 'Profile updated successfully!');
     }
-    
+
     /**
      * Delete current user's profile.
      */
@@ -177,23 +177,23 @@ class ProfileController extends Controller
 
         return redirect('/');
     }
-    
+
     /**
      * Check if current authenticated user is admin
-     * 
+     *
      * @return bool
      */
     private function isCurrentUserAdmin()
     {
         $user = Auth::user();
-        
+
         if (!$user) {
             return false;
         }
-        
+
         // Option 1: Check by role field (uncomment if you have 'role' column in users table)
         // return $user->role === 'admin';
-        
+
         // Option 2: Check by specific admin emails
         $adminEmails = [
             'admin@freelance.com',
@@ -201,10 +201,10 @@ class ProfileController extends Controller
             // Add more admin emails as needed
         ];
         return in_array($user->email, $adminEmails);
-        
+
         // Option 3: Check by user_type field (uncomment if you have 'user_type' column)
         // return $user->user_type === 'admin';
-        
+
         // Option 4: Check by is_admin boolean field (uncomment if you have 'is_admin' column)
         // return $user->is_admin === true;
     }

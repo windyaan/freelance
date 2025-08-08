@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('chat_id')->constrained('chats')->onDelete('cascade');
             $table->foreignId('sender_id')->constrained('users')->onDelete('cascade');
             $table->text('content');
+            $table->boolean('is_system')->default(false); // penanda ini chat sistem (misal: revisi otomatis)
             $table->timestamp('read_at')->nullable();
             $table->timestamps();
         });

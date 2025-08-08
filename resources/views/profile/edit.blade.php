@@ -318,11 +318,11 @@ body {
 }
 
 @keyframes slideUp {
-    from { 
+    from {
         opacity: 0;
         transform: translateY(30px);
     }
-    to { 
+    to {
         opacity: 1;
         transform: translateY(0);
     }
@@ -501,12 +501,12 @@ body {
         grid-template-columns: 1fr;
         gap: 2rem;
     }
-    
+
     .profile-image-card {
         order: -1;
         position: static;
     }
-    
+
     .profile-image {
         height: 300px;
     }
@@ -528,15 +528,15 @@ body {
     .top-navbar {
         padding: 0 1rem;
     }
-    
+
     .navbar-brand {
         font-size: 1.5rem;
     }
-    
+
     .page-title {
         font-size: 1.25rem;
     }
-    
+
     .main-content {
         padding: 1.5rem;
     }
@@ -544,7 +544,7 @@ body {
     .profile-info {
         padding: 2rem;
     }
-    
+
     .profile-name {
         font-size: 2rem;
     }
@@ -553,7 +553,7 @@ body {
         padding: 2rem;
         width: 95%;
     }
-    
+
     .modal-title {
         font-size: 1.5rem;
     }
@@ -568,10 +568,14 @@ body {
         </a>
         <h1 class="page-title">Profile</h1>
     </div>
-    <div class="navbar-right">
-        <a href="{{ route('landing') }}" class="logout-btn" onclick="return confirmLogout()">
-            🚪 Log Out
-        </a>
+       <!-- Logout Form - Using Laravel's proper logout method -->
+        <form method="POST" action="{{ route('logout') }}" class="navbar-logout-form">
+            @csrf
+            <button type="submit" class="navbar-logout" onclick="return confirmLogout()">
+                <span>🚪</span>
+                Log Out
+            </button>
+        </form>
     </div>
 </div>
 
@@ -595,9 +599,19 @@ body {
 
 <!-- Main Content -->
 <div class="main-content">
+    @php
+        $dashboardRoute = match(auth()->user()->role) {
+            'client' => route('client.dashboard'),
+            'freelancer' => route('freelancer.dashboard'),
+            'admin' => route('admin.dashboard'),
+            // default => route('landing'),
+        };
+    @endphp
+
     <!-- Back Button -->
-    <a href="{{ route('client.dashboard') }}" class="back-button">
-        ← Back
+    <a href="{{ $dashboardRoute }}" class="back-btn">
+        <span>←</span>
+        Back
     </a>
 
     <!-- Success Message -->
@@ -612,11 +626,11 @@ body {
         <!-- Profile Information -->
         <div class="profile-info">
             <h1 class="profile-name">{{ $user->name ?? 'Ifa Maria' }}</h1>
-            
+
             <div class="profile-email">
                 EMAIL : {{ $user->email ?? 'ifamaria@gmail.com' }}
             </div>
-            
+
             <div class="profile-bio">
                 {{ $user->bio ?? 'I am a publishing professional at Gramedia Pustaka, responsible for managing the editing and design process throughout book production. With experience in ensuring visual and content quality, I focus on detail, aesthetics, and design consistency to create engaging and professional publications. My expertise includes coordinating with editorial teams, designers, and printers to deliver works that meet the highest publishing standards.' }}
             </div>
@@ -634,8 +648,8 @@ body {
 
         <!-- Profile Image -->
         <div class="profile-image-card">
-            <img src="{{ $user->avatar_url ?? 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=350&h=400&fit=crop&crop=face' }}" 
-                 alt="Profile Picture" 
+            <img src="{{ $user->avatar_url ?? 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=350&h=400&fit=crop&crop=face' }}"
+                 alt="Profile Picture"
                  class="profile-image"
                  onerror="this.src='https://via.placeholder.com/350x400/f3f4f6/9ca3af?text=Profile'">
         </div>
@@ -653,7 +667,7 @@ body {
         <form id="editProfileForm" method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
             @csrf
             @method('patch')
-            
+
             <div class="form-group">
                 <label class="form-label">Profile Picture</label>
                 <div class="file-upload-container">
@@ -740,7 +754,7 @@ function handleFileSelect(input) {
         if (fileNameElement) {
             fileNameElement.textContent = file.name;
         }
-        
+
         // Preview image
         const reader = new FileReader();
         reader.onload = function(e) {

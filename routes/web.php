@@ -2,18 +2,19 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\FreelancerController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\JobController; 
-use App\Http\Controllers\ChatController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ChatController; // Import ChatController
+use App\Http\Controllers\OrderController; // Import OrderController
 
 Route::get('/', function () {
     return redirect()->route('login');
-})->name('landing');
+})->name('');
 
 // Logout route
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
@@ -27,12 +28,12 @@ Route::get('/dashboard', function () {
 
 // Protected routes
 Route::middleware('auth')->group(function () {
-    
+
     // Profile routes - TANPA PARAMETER (untuk user yang sedang login)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     // Profile routes - DENGAN PARAMETER (untuk melihat/edit profile orang lain)
     Route::get('/profile/{id}', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/{id}/edit', [ProfileController::class, 'editWithId'])->name('profile.edit.id');
@@ -43,14 +44,14 @@ Route::middleware('auth')->group(function () {
     Route::prefix('client')->name('client.')->middleware('role:client')->group(function () {
         // Client dashboard
         Route::get('/dashboard', [JobController::class, 'dashboardIndex'])->name('dashboard');
-        
+
         // Client chat routes
         Route::get('/chat', [ChatController::class, 'index'])->name('chat');
         Route::get('/chat/{user}', [ChatController::class, 'show'])->name('chat.show');
         Route::post('/chat/{user}/send', [ChatController::class, 'send'])->name('chat.send');
         Route::get('/chat/{user}/messages', [ChatController::class, 'getMessages'])->name('chat.messages');
         
-        // Client orders routes - FIXED
+        // Client orders routes
         Route::get('/orders', [OrderController::class, 'clientIndex'])->name('orders');
         Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
         Route::post('/orders/{order}/pay', [OrderController::class, 'makePayment'])->name('orders.pay');
@@ -60,7 +61,6 @@ Route::middleware('auth')->group(function () {
 
     // Freelancer routes group
     Route::prefix('freelancer')->name('freelancer.')->middleware('role:freelancer')->group(function () {
-        // Freelancer dashboard
         Route::get('/dashboard', function(){
             return view('dashboard.freelancer.index');
         })->name('dashboard');
@@ -70,7 +70,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/chat/{user}', [ChatController::class, 'show'])->name('chat.show');
         Route::post('/chat/{user}/send', [ChatController::class, 'send'])->name('chat.send');
         Route::get('/chat/{user}/messages', [ChatController::class, 'getMessages'])->name('chat.messages');
-        
+
         // Freelancer orders routes
         Route::get('/orders', [OrderController::class, 'freelancerIndex'])->name('orders');
         Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
@@ -86,9 +86,10 @@ Route::middleware('auth')->group(function () {
 
     // Legacy routes untuk backward compatibility
     Route::get('/client-dashboard', [JobController::class, 'dashboardIndex'])->name('client.dashboard.legacy')->middleware('role:client');
-    Route::get('/freelancer-dashboard', function(){
-        return view('dashboard.freelancer.index');
-    })->name('freelancer.dashboard.legacy')->middleware('role:freelancer');
+    Route::get('/freelancer-dashboard', function(){return view('dashboard.freelancer.index');})->name('freelancer.dashboard.legacy')->middleware('role:freelancer');
 });
+
+    Route::get('/admin-dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+
 
 require __DIR__.'/auth.php';

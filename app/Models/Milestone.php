@@ -16,7 +16,7 @@ class Milestone extends Model
         'completed_at'//optional
     ];
 
-    //relasi many to one ke tabel offers
+    //relasi one to one ke tabel offers
     public function offer() {
         return $this->belongsTo(Offer::class, 'offer_id');
     }

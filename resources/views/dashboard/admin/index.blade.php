@@ -451,11 +451,11 @@ body {
         transform: translateX(-100%);
         transition: transform 0.3s ease;
     }
-    
+
     .sidebar.show {
         transform: translateX(0);
     }
-    
+
     .sidebar-toggle {
         display: flex !important;
         flex-direction: column;
@@ -465,7 +465,7 @@ body {
         justify-content: space-between;
         margin-right: 1rem;
     }
-    
+
     .sidebar-toggle span {
         width: 100%;
         height: 2px;
@@ -473,21 +473,21 @@ body {
         border-radius: 2px;
         transition: all 0.3s ease;
     }
-    
+
     .main-content {
         margin-left: 0;
     }
-    
+
     .stats-section {
         flex-direction: column;
         gap: 1rem;
     }
-    
+
     .search-container {
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .search-input {
         width: 100%;
     }
@@ -497,19 +497,19 @@ body {
     .navbar-title {
         display: none;
     }
-    
+
     .users-section {
         padding: 1rem;
     }
-    
+
     .main-content {
         padding: 1rem;
     }
-    
+
     .users-table {
         font-size: 0.85rem;
     }
-    
+
     .users-table th,
     .users-table td {
         padding: 0.75rem 0.5rem;
@@ -546,12 +546,16 @@ body {
         <div class="navbar-profile" onclick="goToProfile()">
             <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" alt="Admin Profile">
         </div>
-        
-        <a href="{{ route('landing') }}" class="navbar-logout" onclick="return confirmLogout()">
-            Log Out
-        </a>
+
+        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+    @csrf
+    <button type="submit" class="navbar-logout" onclick="return confirmLogout()" style="background: none; border: none; color: inherit; cursor: pointer;">
+        Log Out
+    </button>
+    </form>
     </div>
 </div>
+
 
 <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
@@ -577,29 +581,32 @@ body {
                 <div class="stat-title">Freelance</div>
             </div>
             <div class="stat-content">
-                <div class="stat-number">200</div>
+                {{-- <div class="stat-number">200</div> --}}
+                <div class="stat-number">{{ $totalFreelancers }}</div>
                 <div class="stat-label">Person</div>
             </div>
         </div>
-        
+
         <div class="stat-card client">
             <div class="stat-header">
                 <div class="stat-icon">👥</div>
                 <div class="stat-title">Client</div>
             </div>
             <div class="stat-content">
-                <div class="stat-number">135</div>
+                {{-- <div class="stat-number">135</div> --}}
+                <div class="stat-number">{{ $totalClients }}</div>
                 <div class="stat-label">Person</div>
             </div>
         </div>
-        
+
         <div class="stat-card order">
             <div class="stat-header">
                 <div class="stat-icon">📦</div>
                 <div class="stat-title">Order</div>
             </div>
             <div class="stat-content">
-                <div class="stat-number">120</div>
+                {{-- <div class="stat-number">120</div> --}}
+                <div class="stat-number">{{ $totalOrders }}</div>
                 <div class="stat-label">Orders</div>
             </div>
         </div>
@@ -614,141 +621,41 @@ body {
                 <button class="search-btn" onclick="searchUsers()">Search</button>
             </div>
         </div>
-        
+
         <div class="users-table-container">
             <table class="users-table">
                 <thead>
                     <tr>
                         <th>User Role</th>
-                        <th>Candidates</th>
-                        <th>Username</th>
+                        <th>Nama</th>
                         <th>Email</th>
-                        <th>Application ↑</th>
-                        <th>Category ↑</th>
+                        <th>Application</th>
                         <th>Edit</th>
                         <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody id="usersTableBody">
-                    <tr data-role="freelancer" data-name="Adam Johnson" data-username="KAMeaw27" data-email="adam@gmail.com">
-                        <td><span class="user-role freelancer">Freelancer</span></td>
-                        <td>Adam Johnson</td>
-                        <td>KAMeaw27</td>
-                        <td>adam@gmail.com</td>
-                        <td>Sept 4, 2023</td>
-                        <td><span class="user-category illustrator">Illustrator</span></td>
-                        <td>
-                            <button class="edit-btn" onclick="editUser(this)">✏️</button>
-                        </td>
-                        <td>
-                            <button class="delete-btn" onclick="deleteUser(this)">🗑️</button>
-                        </td>
-                    </tr>
-                    
-                    <tr data-role="freelancer" data-name="Charlie Brooke" data-username="SungK4RH0" data-email="charlieB@gmail.com">
-                        <td><span class="user-role freelancer">Freelancer</span></td>
-                        <td>Charlie Brooke</td>
-                        <td>SungK4RH0</td>
-                        <td>charlieB@gmail.com</td>
-                        <td>Sept 2, 2023</td>
-                        <td><span class="user-category graphic-design">graphic design</span></td>
-                        <td>
-                            <button class="edit-btn" onclick="editUser(this)">✏️</button>
-                        </td>
-                        <td>
-                            <button class="delete-btn" onclick="deleteUser(this)">🗑️</button>
-                        </td>
-                    </tr>
-                    
-                    <tr data-role="freelancer" data-name="Jacob Brown" data-username="alanASl" data-email="jacob@gmail.com">
-                        <td><span class="user-role freelancer">Freelancer</span></td>
-                        <td>Jacob Brown</td>
-                        <td>alanASl</td>
-                        <td>jacob@gmail.com</td>
-                        <td>Aug 31, 2023</td>
-                        <td><span class="user-category illustrator">Illustrator</span></td>
-                        <td>
-                            <button class="edit-btn" onclick="editUser(this)">✏️</button>
-                        </td>
-                        <td>
-                            <button class="delete-btn" onclick="deleteUser(this)">🗑️</button>
-                        </td>
-                    </tr>
-                    
-                    <tr data-role="client" data-name="Darrell Steward" data-username="darrel123" data-email="steward23@gmail.com">
-                        <td><span class="user-role client">Client</span></td>
-                        <td>Darrell Steward</td>
-                        <td>darrel123</td>
-                        <td>steward23@gmail.com</td>
-                        <td>Aug 28, 2023</td>
-                        <td>-</td>
-                        <td>
-                            <button class="edit-btn" onclick="editUser(this)">✏️</button>
-                        </td>
-                        <td>
-                            <button class="delete-btn" onclick="deleteUser(this)">🗑️</button>
-                        </td>
-                    </tr>
-                    
-                    <tr data-role="freelancer" data-name="Eleanor Pena" data-username="ALEj" data-email="eleanor@gmail.com">
-                        <td><span class="user-role freelancer">Freelancer</span></td>
-                        <td>Eleanor Pena</td>
-                        <td>ALEj</td>
-                        <td>eleanor@gmail.com</td>
-                        <td>Aug 26, 2023</td>
-                        <td><span class="user-category fullstack">fullstack</span></td>
-                        <td>
-                            <button class="edit-btn" onclick="editUser(this)">✏️</button>
-                        </td>
-                        <td>
-                            <button class="delete-btn" onclick="deleteUser(this)">🗑️</button>
-                        </td>
-                    </tr>
-                    
-                    <tr data-role="client" data-name="Courtney Henry" data-username="sacarUpbake100" data-email="courtney@gmail.com">
-                        <td><span class="user-role client">Client</span></td>
-                        <td>Courtney Henry</td>
-                        <td>sacarUpbake100</td>
-                        <td>courtney@gmail.com</td>
-                        <td>Aug 23, 2023</td>
-                        <td>-</td>
-                        <td>
-                            <button class="edit-btn" onclick="editUser(this)">✏️</button>
-                        </td>
-                        <td>
-                            <button class="delete-btn" onclick="deleteUser(this)">🗑️</button>
-                        </td>
-                    </tr>
-                    
-                    <tr data-role="freelancer" data-name="Robert Fox" data-username="raflessischafmod" data-email="robertfox98@gmail.com">
-                        <td><span class="user-role freelancer">Freelancer</span></td>
-                        <td>Robert Fox</td>
-                        <td>raflessischafmod</td>
-                        <td>robertfox98@gmail.com</td>
-                        <td>Aug 20, 2023</td>
-                        <td><span class="user-category fullstack">fullstack</span></td>
-                        <td>
-                            <button class="edit-btn" onclick="editUser(this)">✏️</button>
-                        </td>
-                        <td>
-                            <button class="delete-btn" onclick="deleteUser(this)">🗑️</button>
-                        </td>
-                    </tr>
-                    
-                    <tr data-role="client" data-name="Jenny Wilson" data-username="123456" data-email="jennywilson01@gmail.com">
-                        <td><span class="user-role client">Client</span></td>
-                        <td>Jenny Wilson</td>
-                        <td>123456</td>
-                        <td>jennywilson01@gmail.com</td>
-                        <td>Aug 19, 2023</td>
-                        <td>-</td>
-                        <td>
-                            <button class="edit-btn" onclick="editUser(this)">✏️</button>
-                        </td>
-                        <td>
-                            <button class="delete-btn" onclick="deleteUser(this)">🗑️</button>
-                        </td>
-                    </tr>
+                    @foreach ($users as $user)
+        <tr
+            data-role="{{ $user->role }}"
+            data-name="{{ $user->name }}"
+            data-username="{{ $user->username }}"
+            data-email="{{ $user->email }}"
+        >
+            <td>
+                <span class="user-role {{ $user->role }}">{{ ucfirst($user->role) }}</span>
+            </td>
+            <td>{{ $user->name }}</td>
+            <td>{{ $user->email }}</td>
+            <td>{{ $user->created_at->format('M d, Y') }}</td>
+            <td>
+                <button class="edit-btn" onclick="editUser(this)">✏️</button>
+            </td>
+            <td>
+                <button class="delete-btn" onclick="deleteUser(this)">🗑️</button>
+            </td>
+        </tr>
+    @endforeach
                 </tbody>
             </table>
         </div>
@@ -759,7 +666,7 @@ body {
 document.addEventListener('DOMContentLoaded', function() {
     var sidebar = document.getElementById('sidebar');
     var sidebarToggle = document.getElementById('sidebarToggle');
-    
+
     // Create sidebar overlay for mobile
     var sidebarOverlay = document.createElement('div');
     sidebarOverlay.style.cssText = `
@@ -774,7 +681,7 @@ document.addEventListener('DOMContentLoaded', function() {
         backdrop-filter: blur(4px);
     `;
     document.body.appendChild(sidebarOverlay);
-    
+
     // Toggle sidebar on mobile
     if (sidebarToggle) {
         sidebarToggle.addEventListener('click', function() {
@@ -782,31 +689,31 @@ document.addEventListener('DOMContentLoaded', function() {
             sidebarOverlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
         });
     }
-    
+
     // Close sidebar when clicking overlay
     sidebarOverlay.addEventListener('click', function() {
         sidebar.classList.remove('show');
         sidebarOverlay.style.display = 'none';
     });
-    
+
     // Navigation functionality
     document.querySelectorAll('.nav-item').forEach(function(item) {
         item.addEventListener('click', function(e) {
             e.preventDefault();
-            
+
             // Remove active class from all nav items
             document.querySelectorAll('.nav-item').forEach(function(navItem) {
                 navItem.classList.remove('active');
             });
-            
+
             // Add active class to clicked item
             this.classList.add('active');
-            
+
             var navText = this.querySelector('.nav-text').textContent;
             console.log('Navigating to: ' + navText);
         });
     });
-    
+
     // Search functionality
     var searchInput = document.getElementById('userSearch');
     if (searchInput) {
@@ -824,7 +731,7 @@ function confirmLogout() {
 
 // Profile navigation function
 function goToProfile() {
-    window.location.href = "{{ route('admin.profile') }}";
+    window.location.href = "{{ route('profile.edit') }}";
 }
 
 // Search users function
@@ -832,21 +739,21 @@ function searchUsers(query = null) {
     if (query === null) {
         query = document.getElementById('userSearch').value.toLowerCase();
     }
-    
+
     var rows = document.querySelectorAll('#usersTableBody tr');
     var hasResults = false;
-    
+
     rows.forEach(function(row) {
         var role = row.getAttribute('data-role').toLowerCase();
         var name = row.getAttribute('data-name').toLowerCase();
         var username = row.getAttribute('data-username').toLowerCase();
         var email = row.getAttribute('data-email').toLowerCase();
-        
-        var hasMatch = role.includes(query) || 
-                      name.includes(query) || 
-                      username.includes(query) || 
+
+        var hasMatch = role.includes(query) ||
+                      name.includes(query) ||
+                      username.includes(query) ||
                       email.includes(query);
-        
+
         if (hasMatch || query === '') {
             row.style.display = 'table-row';
             hasResults = true;
@@ -854,7 +761,7 @@ function searchUsers(query = null) {
             row.style.display = 'none';
         }
     });
-    
+
     // Show/hide no results message
     showNoResultsMessage(!hasResults && query !== '');
 }
@@ -862,7 +769,7 @@ function searchUsers(query = null) {
 // Show no results message
 function showNoResultsMessage(show) {
     var existingMessage = document.querySelector('.no-results');
-    
+
     if (show && !existingMessage) {
         var noResultsRow = document.createElement('tr');
         noResultsRow.className = 'no-results';
@@ -884,7 +791,7 @@ function editUser(button) {
     var row = button.closest('tr');
     var name = row.getAttribute('data-name');
     var role = row.getAttribute('data-role');
-    
+
     alert('Edit User: ' + name + ' (' + role + ')');
     // Here you would typically open an edit modal or redirect to edit page
 }
@@ -893,18 +800,18 @@ function editUser(button) {
 function deleteUser(button) {
     var row = button.closest('tr');
     var name = row.getAttribute('data-name');
-    
+
     if (confirm('Are you sure you want to delete user: ' + name + '?')) {
         // Add loading state
         button.disabled = true;
         button.innerHTML = '⏳';
-        
+
         // Simulate API call
         setTimeout(function() {
             row.remove();
             alert('User deleted successfully!');
         }, 1000);
-        
+
         // Here you would typically make an API call to delete the user
     }
 }
@@ -913,18 +820,18 @@ function deleteUser(button) {
 function sortTable(columnIndex, ascending = true) {
     var table = document.querySelector('.users-table tbody');
     var rows = Array.from(table.querySelectorAll('tr:not(.no-results)'));
-    
+
     rows.sort(function(a, b) {
         var aText = a.cells[columnIndex].textContent.trim();
         var bText = b.cells[columnIndex].textContent.trim();
-        
+
         if (ascending) {
             return aText.localeCompare(bText);
         } else {
             return bText.localeCompare(aText);
         }
     });
-    
+
     // Re-append sorted rows
     rows.forEach(function(row) {
         table.appendChild(row);
@@ -941,7 +848,7 @@ document.addEventListener('keydown', function(e) {
             searchInput.focus();
         }
     }
-    
+
     // Escape key to clear search
     if (e.key === 'Escape') {
         var searchInput = document.getElementById('userSearch');
@@ -957,7 +864,7 @@ function updateStats() {
     var freelancerCount = document.querySelectorAll('[data-role="freelancer"]').length;
     var clientCount = document.querySelectorAll('[data-role="client"]').length;
     var totalUsers = freelancerCount + clientCount;
-    
+
     // Update the numbers (you would typically get these from your backend)
     document.querySelector('.stat-card.freelance .stat-number').textContent = freelancerCount;
     document.querySelector('.stat-card.client .stat-number').textContent = clientCount;
@@ -968,7 +875,7 @@ function updateStats() {
 function exportUsers() {
     var users = [];
     var rows = document.querySelectorAll('#usersTableBody tr:not(.no-results)');
-    
+
     rows.forEach(function(row) {
         if (row.style.display !== 'none') {
             users.push({
@@ -979,7 +886,7 @@ function exportUsers() {
             });
         }
     });
-    
+
     console.log('Exported users:', users);
     // Here you would typically generate and download a CSV or Excel file
 }
@@ -990,11 +897,11 @@ function initializeFeatures() {
     document.querySelectorAll('.edit-btn').forEach(function(btn) {
         btn.title = 'Edit user';
     });
-    
+
     document.querySelectorAll('.delete-btn').forEach(function(btn) {
         btn.title = 'Delete user';
     });
-    
+
     // Add click handlers for sortable headers
     document.querySelectorAll('.users-table th').forEach(function(th, index) {
         if (th.textContent.includes('↑')) {
@@ -1029,10 +936,10 @@ function removeLoadingState(button) {
 function filterByRole(role) {
     var rows = document.querySelectorAll('#usersTableBody tr:not(.no-results)');
     var hasResults = false;
-    
+
     rows.forEach(function(row) {
         var userRole = row.getAttribute('data-role');
-        
+
         if (role === 'all' || userRole === role) {
             row.style.display = 'table-row';
             hasResults = true;
@@ -1040,7 +947,7 @@ function filterByRole(role) {
             row.style.display = 'none';
         }
     });
-    
+
     showNoResultsMessage(!hasResults && role !== 'all');
 }
 

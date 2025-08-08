@@ -17,7 +17,7 @@ class Chat extends Model
         return $this->hasMany(Message::class,'chat_id');
     }
 
-    //relasi many to one ke tabel user
+    //relasi one to one ke tabel user
     public function client(){
         return $this->belongsTo(User::class,'client_id');
     }

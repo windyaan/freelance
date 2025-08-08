@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('offer_id')->constrained('offers')->onDelete('cascade');
             $table->string('title');
             $table->text('description');
-            $table->enum('status', ['Start', 'Progress', 'Done', 'ACC'])->default('Progress');
+            $table->enum('status', ['Start', 'Progress', 'Done', 'revisi_request','approved'])->default('Progress');
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();
         });

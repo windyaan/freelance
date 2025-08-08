@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -119,12 +119,12 @@
             .logo {
                 font-size: 2.5rem;
             }
-            
+
             .cta-buttons {
                 flex-direction: column;
                 align-items: center;
             }
-            
+
             .features {
                 grid-template-columns: 1fr;
                 margin-top: 2rem;
@@ -135,30 +135,30 @@
 <body>
     <div class="landing-container">
         <h1 class="logo">skill<span>Match</span></h1>
-        
+
         <p class="tagline">
-            Connect with talented freelancers and find the perfect match for your projects. 
+            Connect with talented freelancers and find the perfect match for your projects.
             From developers to designers, writers to videographers - discover your next collaboration.
         </p>
-        
+
         <div class="cta-buttons">
             <a href="{{ route('dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
             <a href="#" class="btn btn-secondary">Learn More</a>
         </div>
-        
+
         <div class="features">
             <div class="feature">
                 <div class="feature-icon">🎯</div>
                 <h3>Find Perfect Matches</h3>
                 <p>Advanced filtering to find exactly the skills you need</p>
             </div>
-            
+
             <div class="feature">
                 <div class="feature-icon">💬</div>
                 <h3>Easy Communication</h3>
                 <p>Built-in chat system for seamless collaboration</p>
             </div>
-            
+
             <div class="feature">
                 <div class="feature-icon">⚡</div>
                 <h3>Fast & Reliable</h3>
@@ -167,4 +167,4 @@
         </div>
     </div>
 </body>
-</html>
+</html> --}}

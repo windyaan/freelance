@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Profile extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'user_id',
         'bio',
@@ -28,7 +28,7 @@ class Profile extends Model
     /**
      * Relasi one to one ke table users
      */
-    public function user() 
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
