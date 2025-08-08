@@ -14,7 +14,7 @@ use App\Http\Controllers\OrderController; // Import OrderController
 
 Route::get('/', function () {
     return redirect()->route('login');
-})->name('landing');
+})->name('');
 
 // Logout route
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
@@ -61,9 +61,7 @@ Route::middleware('auth')->group(function () {
 
     // Freelancer routes group
     Route::prefix('freelancer')->name('freelancer.')->middleware('role:freelancer')->group(function () {
-        Route::get('/dashboard', function(){
-            return view('dashboard.freelancer.index');
-        })->name('dashboard');
+    Route::get('/dashboard', function(){return view('dashboard.freelancer.index');})->name('dashboard');
 
         // Freelancer chat routes
         Route::get('/chat', [ChatController::class, 'index'])->name('chat');
@@ -86,9 +84,10 @@ Route::middleware('auth')->group(function () {
 
     // Legacy route untuk backward compatibility
     Route::get('/client-dashboard', [JobController::class, 'dashboardIndex'])->name('client.dashboard.legacy')->middleware('role:client');
-    Route::get('/freelancer-dashboard', function(){
-        return view('dashboard.freelancer.index');
-    })->name('freelancer.dashboard.legacy')->middleware('role:freelancer');
+    Route::get('/freelancer-dashboard', function(){return view('dashboard.freelancer.index');})->name('freelancer.dashboard.legacy')->middleware('role:freelancer');
 });
+
+    Route::get('/admin-dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+
 
 require __DIR__.'/auth.php';

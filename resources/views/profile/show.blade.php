@@ -443,11 +443,11 @@ body {
         transform: translateX(-100%);
         transition: transform 0.3s ease;
     }
-    
+
     .sidebar.show {
         transform: translateX(0);
     }
-    
+
     .sidebar-toggle {
         display: flex !important;
         flex-direction: column;
@@ -457,7 +457,7 @@ body {
         justify-content: space-between;
         margin-right: 1rem;
     }
-    
+
     .sidebar-toggle span {
         width: 100%;
         height: 2px;
@@ -465,17 +465,17 @@ body {
         border-radius: 2px;
         transition: all 0.3s ease;
     }
-    
+
     .main-content {
         margin-left: 0;
         max-width: 100vw;
         padding: 1.5rem;
     }
-    
+
     .profile-container {
         flex-direction: column-reverse;
     }
-    
+
     .profile-card {
         position: static;
     }
@@ -485,37 +485,37 @@ body {
     .navbar-title {
         display: none;
     }
-    
+
     .services-section,
     .profile-card {
         padding: 1.5rem;
         margin-bottom: 1.5rem;
     }
-    
+
     .main-content {
         padding: 1rem;
     }
-    
+
     .profile-image {
         width: 150px;
         height: 150px;
     }
-    
+
     .profile-name {
         font-size: 1.5rem;
     }
-    
+
     .service-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
     }
-    
+
     .service-chat-btn {
         margin-left: 0;
         width: 100%;
     }
-    
+
     .service-status-wrapper {
         flex-direction: column;
         align-items: flex-start;
@@ -527,11 +527,11 @@ body {
     .navbar-brand span:last-child {
         display: none;
     }
-    
+
     .main-content {
         padding: 0.8rem;
     }
-    
+
     .profile-image {
         width: 120px;
         height: 120px;
@@ -580,7 +580,7 @@ if (typeof IconifyIcon === 'undefined') {
         <div class="navbar-profile" onclick="goToProfile()">
             <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Profile">
         </div>
-        
+
         <!-- Logout Form -->
         <form method="POST" action="{{ route('logout') }}" class="navbar-logout-form">
             @csrf
@@ -619,9 +619,17 @@ if (typeof IconifyIcon === 'undefined') {
 
 <!-- Main Content -->
 <div class="main-content">
+     @php
+        $dashboardRoute = match(auth()->user()->role) {
+            'client' => route('client.dashboard'),
+            'freelancer' => route('freelancer.dashboard'),
+            'admin' => route('admin.dashboard'),
+            // default => route('landing'),
+        };
+    @endphp
     <!-- Back Button -->
-    <a href="{{ route('dashboard') }}" class="back-button">
-        <iconify-icon icon="material-symbols:chevron-left"></iconify-icon>
+<a href="{{ $dashboardRoute }}" class="back-btn">
+        <span>←</span>
         Back
     </a>
 
@@ -630,7 +638,7 @@ if (typeof IconifyIcon === 'undefined') {
         <div class="profile-left">
             <div class="services-section">
                 <h2 class="services-title">JOB</h2>
-                
+
                 @forelse($user->jobs as $index => $job)
                     <div class="service-item">
                         <div class="service-header">
@@ -683,7 +691,7 @@ if (typeof IconifyIcon === 'undefined') {
                         <p class="service-description">Pembuatan prototype menggunakan figma dan sketch.</p>
                         <p class="service-project">contoh project : https://link-project-prototype-figma</p>
                     </div>
-                    
+
                     <div class="service-item">
                         <div class="service-header">
                             <div class="service-info">
@@ -701,7 +709,7 @@ if (typeof IconifyIcon === 'undefined') {
                         <p class="service-description">Jasa pembuatan website toko pakaian dengan menggunakan laravel.</p>
                         <p class="service-project">contoh project : https://link-project-website-toko-pakaian</p>
                     </div>
-                    
+
                     <div class="service-item">
                         <div class="service-header">
                             <div class="service-info">
@@ -719,7 +727,7 @@ if (typeof IconifyIcon === 'undefined') {
                         <p class="service-description">Jasa pembuatan website toko furniture dengan menggunakan laravel.</p>
                         <p class="service-project">contoh project : https://link-project-website-toko-furniture</p>
                     </div>
-                    
+
                     <div class="service-item">
                         <div class="service-header">
                             <div class="service-info">
@@ -745,9 +753,9 @@ if (typeof IconifyIcon === 'undefined') {
         <div class="profile-right">
             <div class="profile-card">
                 <img src="https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=200&h=200&fit=crop&crop=face" alt="Profile" class="profile-image">
-                
+
                 <h1 class="profile-name">{{ $user->name ?? 'Nadia Ima' }}</h1>
-                
+
                 <div class="profile-skills">
                     @if($user->profile && $user->profile->skills)
                         @if(is_array($user->profile->skills))
@@ -764,7 +772,7 @@ if (typeof IconifyIcon === 'undefined') {
                         <span class="skill-tag">Front-End</span>
                     @endif
                 </div>
-                
+
                 <div class="profile-contact">
                     <div class="contact-item">
                         <iconify-icon icon="material-symbols:mail"></iconify-icon>
@@ -772,7 +780,7 @@ if (typeof IconifyIcon === 'undefined') {
                     </div>
                     <div class="contact-item">
                         <iconify-icon icon="material-symbols:star"></iconify-icon>
-                        <strong>SKILLS :</strong> 
+                        <strong>SKILLS :</strong>
                         @if($user->profile && $user->profile->skills)
                             @if(is_array($user->profile->skills))
                                 {{ implode(', ', $user->profile->skills) }}
@@ -784,10 +792,10 @@ if (typeof IconifyIcon === 'undefined') {
                         @endif
                     </div>
                 </div>
-                
+
                 <div class="profile-bio">
                     <p>{{ $user->profile->bio ?? "I'm a third-year IT student at Airlangga University passionate about software development. In UI design and data analysis, I've gained practical experience through building and optimizing web apps and contributing to student tech projects, strengthening my technical and teamwork skills." }}</p>
-                    
+
                     <p style="margin-top: 1rem;">{{ $user->profile->achievement ?? "As a Top 200 Finalist in the 2023 National UI Design Competition, I demonstrated my ability to create intuitive, visually appealing digital experiences by combining design thinking with technical execution." }}</p>
                 </div>
             </div>
@@ -799,7 +807,7 @@ if (typeof IconifyIcon === 'undefined') {
 document.addEventListener('DOMContentLoaded', function() {
     var sidebar = document.getElementById('sidebar');
     var sidebarToggle = document.getElementById('sidebarToggle');
-    
+
     // Sidebar functionality
     if (sidebarToggle) {
         const sidebarOverlay = document.createElement('div');
@@ -815,18 +823,18 @@ document.addEventListener('DOMContentLoaded', function() {
             backdrop-filter: blur(4px);
         `;
         document.body.appendChild(sidebarOverlay);
-        
+
         sidebarToggle.addEventListener('click', function() {
             sidebar.classList.toggle('show');
             sidebarOverlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
         });
-        
+
         sidebarOverlay.addEventListener('click', function() {
             sidebar.classList.remove('show');
             sidebarOverlay.style.display = 'none';
         });
     }
-    
+
     // Chat button functionality
     document.querySelectorAll('.service-chat-btn:not([disabled])').forEach(btn => {
         btn.addEventListener('click', function() {

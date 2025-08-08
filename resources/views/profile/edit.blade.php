@@ -568,10 +568,14 @@ body {
         </a>
         <h1 class="page-title">Profile</h1>
     </div>
-    <div class="navbar-right">
-        <a href="{{ route('landing') }}" class="logout-btn" onclick="return confirmLogout()">
-            🚪 Log Out
-        </a>
+       <!-- Logout Form - Using Laravel's proper logout method -->
+        <form method="POST" action="{{ route('logout') }}" class="navbar-logout-form">
+            @csrf
+            <button type="submit" class="navbar-logout" onclick="return confirmLogout()">
+                <span>🚪</span>
+                Log Out
+            </button>
+        </form>
     </div>
 </div>
 
@@ -605,8 +609,9 @@ body {
     @endphp
 
     <!-- Back Button -->
-    <a href="{{ route('client.dashboard') }}" class="back-button">
-        ← Back
+    <a href="{{ $dashboardRoute }}" class="back-btn">
+        <span>←</span>
+        Back
     </a>
 
     <!-- Success Message -->
