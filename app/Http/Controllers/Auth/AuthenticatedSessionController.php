@@ -33,7 +33,9 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->route('client.dashboard');
             }elseif(Auth::user()->role === 'freelancer'){
                 return redirect()->route('freelancer.dashboard');
-            }
+            } elseif (Auth::user()->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+             }
         };
         return redirect()->intended(route('dashboard', absolute: false));
 
@@ -50,6 +52,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect('login');
     }
 }

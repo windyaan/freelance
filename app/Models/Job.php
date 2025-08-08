@@ -15,7 +15,7 @@ class Job extends Model
         'starting_price',
         'is_active'
     ];
-    //relasi many to one ke tabel user
+    //relasi one to one ke tabel user
      public function freelancer() {
         return $this->belongsTo(User::class, 'freelancer_id');
     }

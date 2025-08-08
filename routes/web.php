@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\FreelancerController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -11,14 +12,6 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', function () {
     return redirect()->route('login');
 });
-
-// ROUTE LOGOUT MANUAL - TAMBAHAN BARU
-// Route::post('/logout', function () {
-//     Auth::logout();
-//     request()->session()->invalidate();
-//     request()->session()->regenerateToken();
-//     return redirect()->route('login')->with('status', 'Berhasil logout!');
-// });
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth')
@@ -36,34 +29,46 @@ Route::middleware('auth')->group(function () {
 
     //BARU
     Route::middleware('auth')->group(function () {
+    Route::get('/profile/{id}', [UserController::class, 'showProfile'])->name('profile.show');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Route yang sudah ada
-    // Route::get('/client', [UserController::class, 'index'])->name('client.index');
-
-    // Tambahkan route baru ini
-    // Route::get('/client-dashboard', [UserController::class, 'index'])->name('client.dashboard');
-    // Route::get('/freelancer-dashboard', [FreelancerController::class, 'index'])->name('freelancer.dashboard');
-
 
     Route::get('client-dashboard',function(){
     return view('dashboard.client.index');
-})->name('client.dashboard')->middleware('role:client');
+    })->name('client.dashboard')->middleware('role:client');
 
-Route::get('freelancer-dashboard',function(){
+    // Route::middleware('role:client')->prefix('client')->group(function () {
+    //     Route::get('/client-dashboard', [UserController::class, 'index'])->name('client.dashboard');
+    //     Route::get('/freelancer/{id}/profile', [UserController::class, 'showFreelancerProfile'])->name('client.freelancer.profile');
+
+    Route::get('freelancer-dashboard',function(){
     return view('dashboard.freelancer.index');
-})->name('freelancer.dashboard')->middleware('role:freelancer');
-});
+    })->name('freelancer.dashboard')->middleware('role:freelancer');
 
+    // Route::get('/dashboard', [FreelancerController::class, 'index'])->name('freelancer.dashboard');
+
+//     Route::middleware('role:freelancer')->prefix('freelancer')->group(function () {
+//         Route::get('/freelancer-dashboard', [FreelancerController::class, 'index'])->name('freelancer.dashboard');
+//         Route::get('/offer/{offer}', [FreelancerController::class, 'showOrderDetail'])->name('freelancer.offer.detail');
+//         Route::post('/offer/{offer}/milestone', [FreelancerController::class, 'storeMilestone'])->name('freelancer.milestone.store');
+//         Route::put('/milestone/{milestone}', [FreelancerController::class, 'updateMilestone'])->name('freelancer.milestone.update');
+//     });
+    Route::get('/admin-dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+
+// });
+    // Route::get('admin-dashboard',function(){
+    // return view('dashboard.admin.index');
+    // })->name('admin.dashboard')->middleware('role:admin');
+});
 
     // // Tambahkan route ini untuk /dashboard
     // Route::get('/dashboard', [UserController::class, 'index'])->name('user.dashboard');
 
-    Route::get('/', function () {
-    return redirect()->route('login');
-    })->name('landing');
+    // Route::get('/landing', function () {
+    // return redirect()->route('login');
+    // })->name('landing');
 
 
 

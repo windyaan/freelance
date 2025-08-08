@@ -57,12 +57,15 @@ class ProfileController extends Controller
     }
 
     // penggabungan
-    if (isset($profileData['skills']) && is_string($profileData['skills'])) {
-    $profileData['skills'] = array_map('trim', explode(',', $profileData['skills']));
-}
-
+//     if (isset($profileData['skills']) && is_string($profileData['skills'])) {
+//     $profileData['skills'] = array_map('trim', explode(',', $profileData['skills']));
+// }
 
     // Update profile
+    if (!$user->profile) {
+    $user->profile()->create();
+    }
+
     $user->profile->update($profileData);
 
     return Redirect::route('profile.edit')->with('status', 'profile-updated');

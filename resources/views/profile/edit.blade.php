@@ -400,11 +400,14 @@ body {
         <h1 class="navbar-title">Profile</h1>
     </div>
     <div class="navbar-right">
-        <!-- Logout Button -->
-        <a href="{{ route('landing') }}" class="navbar-logout" onclick="return confirmLogout()">
-            <span>🚪</span>
-            Log Out
-        </a>
+<!-- Logout Form - Using Laravel's proper logout method -->
+        <form method="POST" action="{{ route('logout') }}" class="navbar-logout-form">
+            @csrf
+            <button type="submit" class="navbar-logout" onclick="return confirmLogout()">
+                <span>🚪</span>
+                Log Out
+            </button>
+        </form>
     </div>
 </div>
 
@@ -428,8 +431,17 @@ body {
 
 <!-- Main Content -->
 <div class="main-content">
+    @php
+        $dashboardRoute = match(auth()->user()->role) {
+            'client' => route('client.dashboard'),
+            'freelancer' => route('freelancer.dashboard'),
+            'admin' => route('admin.dashboard'),
+            // default => route('landing'),
+        };
+    @endphp
+
     <!-- Back Button -->
-    <a href="{{ route('client.dashboard') }}" class="back-btn">
+    <a href="{{ $dashboardRoute }}" class="back-btn">
         <span>←</span>
         Back
     </a>

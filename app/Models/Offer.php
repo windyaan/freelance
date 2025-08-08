@@ -19,12 +19,12 @@ class Offer extends Model
         'status'
     ];
 
-    //relasi many to one ke tabel user
+    //relasi one to one ke tabel user
     public function client() {
         return $this->belongsTo(User::class, 'client_id');
     }
 
-    //relasi many to one ke tabel user
+    //relasi one to one ke tabel user
     public function freelancer() {
         return $this->belongsTo(User::class, 'freelancer_id');
     }
@@ -39,7 +39,7 @@ class Offer extends Model
     return $this->hasMany(Order::class, 'offer_id');
     }
 
-    //relasi many to one ke tabel job
+    //relasi one to one ke tabel job
     public function job() {
     return $this->belongsTo(Job::class);
     }
