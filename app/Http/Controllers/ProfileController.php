@@ -87,10 +87,9 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'bio' => 'nullable|string|max:1000',
-            'skills' => 'nullable|array',
-            'skills.*' => 'string|max:50',
+            'skills' => 'nullable|string|max:1000',
             'avatar_url' => 'nullable|url|max:255',
-            'achievement' => 'nullable|string|max:1000'
+            // 'achievement' => 'nullable|string|max:1000'
         ]);
 
         // Update user data
@@ -104,7 +103,7 @@ class ProfileController extends Controller
             ['user_id' => $user->id],
             [
                 'bio' => $request->bio,
-                'skills' => $request->skills ?? [],
+                'skills' => $request->skills,
                 'avatar_url' => $request->avatar_url,
                 'achievement' => $request->achievement
             ]
@@ -130,8 +129,7 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'bio' => 'nullable|string|max:1000',
-            'skills' => 'nullable|array',
-            'skills.*' => 'string|max:50',
+            'skills' => 'nullable|string|max:1000',
             'avatar_url' => 'nullable|url|max:255',
             'achievement' => 'nullable|string|max:1000'
         ]);
@@ -147,7 +145,7 @@ class ProfileController extends Controller
             ['user_id' => $user->id],
             [
                 'bio' => $request->bio,
-                'skills' => $request->skills ?? [],
+                'skills' => $request->skills,
                 'avatar_url' => $request->avatar_url,
                 'achievement' => $request->achievement
             ]

@@ -20,7 +20,7 @@ class ProfileFactory extends Factory
         return [
         'bio' => $this->faker->paragraph(),
         'avatar_url' => $this->faker->imageUrl(),
-        'skills' => Arr::random(['Laravel', 'Vue', 'PHP', 'React', 'CSS', 'HTML'], 2),
+        'skills' => implode(', ', Arr::random(['Laravel', 'Vue', 'PHP', 'React', 'CSS', 'HTML'], 2)),
         ];
     }
 }

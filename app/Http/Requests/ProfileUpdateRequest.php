@@ -28,8 +28,7 @@ class ProfileUpdateRequest extends FormRequest
             //untuk model profile
             'bio' => ['nullable', 'string', 'max:1000'],
             'avatar_url' => ['nullable', 'url'],
-            'skills' => ['nullable', 'array'],
-            'skills.*' => ['string', 'max:255'],
+            'skills' => ['nullable', 'string', 'max:1000'],
         ];
     }
 }

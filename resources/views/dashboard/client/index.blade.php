@@ -749,11 +749,11 @@ body {
         transform: translateX(-100%);
         transition: transform 0.3s ease;
     }
-    
+
     .sidebar.show {
         transform: translateX(0);
     }
-    
+
     .sidebar-toggle {
         display: flex !important;
         flex-direction: column;
@@ -763,7 +763,7 @@ body {
         justify-content: space-between;
         margin-right: 1rem;
     }
-    
+
     .sidebar-toggle span {
         width: 100%;
         height: 2px;
@@ -771,28 +771,28 @@ body {
         border-radius: 2px;
         transition: all 0.3s ease;
     }
-    
+
     .main-content {
         margin-left: 0;
         max-width: 100vw;
         padding: 1.5rem;
     }
-    
+
     .talent-slide {
         grid-template-columns: repeat(2, 1fr);
         gap: 1.5rem;
     }
-    
+
     .skills-slide {
         grid-template-columns: repeat(3, 1fr);
         gap: 1rem;
     }
-    
+
     .navbar-center {
         flex: 1.5;
         max-width: 350px;
     }
-    
+
     .search-container {
         max-width: 320px;
     }
@@ -802,60 +802,60 @@ body {
     .navbar-title {
         display: none;
     }
-    
+
     .navbar-center {
         flex: 2;
         max-width: 280px;
     }
-    
+
     .search-container {
         max-width: 250px;
     }
-    
+
     .search-container input {
         font-size: 0.85rem;
         padding: 0.6rem 0.8rem 0.6rem 2.5rem;
     }
-    
+
     .search-container .search-btn {
         padding: 0.4rem 0.8rem;
         font-size: 0.8rem;
     }
-    
+
     .skills-section,
     .talents-section {
         padding: 1.5rem;
         margin-bottom: 1.5rem;
     }
-    
+
     .main-content {
         padding: 1rem;
     }
-    
+
     .talent-slide {
         grid-template-columns: 1fr;
         gap: 1rem;
     }
-    
+
     .skills-slide {
         grid-template-columns: repeat(2, 1fr);
         gap: 0.8rem;
     }
-    
+
     .skill-card {
         padding: 1rem 0.5rem;
     }
-    
+
     .talent-footer {
         flex-direction: column;
         align-items: stretch;
         gap: 0.5rem;
     }
-    
+
     .talent-price {
         text-align: center;
     }
-    
+
     .talent-profile-btn {
         max-width: none;
     }
@@ -865,30 +865,30 @@ body {
     .navbar-brand span:last-child {
         display: none;
     }
-    
+
     .navbar-center {
         display: none;
     }
-    
+
     .main-content {
         padding: 0.8rem;
     }
-    
+
     .skill-card {
         padding: 0.8rem 0.4rem;
     }
-    
+
     .skill-icon {
         width: 50px;
         height: 50px;
         font-size: 1.2rem;
     }
-    
+
     .talent-slide {
         grid-template-columns: 1fr;
         gap: 1rem;
     }
-    
+
     .skills-slide {
         grid-template-columns: repeat(2, 1fr);
         gap: 0.6rem;
@@ -937,7 +937,7 @@ body {
         <div class="navbar-profile" onclick="goToProfile()">
             <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Profile">
         </div>
-        
+
         <form method="POST" action="{{ route('logout') }}" class="navbar-logout-form">
             @csrf
             <button type="submit" class="navbar-logout" onclick="return confirmLogout()">
@@ -985,7 +985,7 @@ body {
             <button class="slider-nav next" id="nextSlide">
                 <iconify-icon icon="material-symbols:chevron-right"></iconify-icon>
             </button>
-            
+
             <div class="skills-slider-wrapper" id="skillsSlider">
                 <!-- Slide 1 -->
                 <div class="skills-slide">
@@ -1026,7 +1026,7 @@ body {
                         <div class="skill-name">translator</div>
                     </div>
                 </div>
-                
+
                 <!-- Slide 2 -->
                 <div class="skills-slide">
                     <div class="skill-card" data-skill="ui design">
@@ -1067,7 +1067,7 @@ body {
                     </div>
                 </div>
             </div>
-            
+
             <!-- Slide indicators -->
             <div class="slide-indicators">
                 <div class="slide-indicator active" data-slide="0"></div>
@@ -1084,18 +1084,18 @@ body {
                     $jobsPerSlide = 3;
                     $totalSlides = ceil($jobs->count() / $jobsPerSlide);
                 @endphp
-                
+
                 @for ($slideIndex = 0; $slideIndex < $totalSlides; $slideIndex++)
                     <div class="talent-slide">
                         @php
                             $startIndex = $slideIndex * $jobsPerSlide;
                             $slideJobs = $jobs->slice($startIndex, $jobsPerSlide);
                         @endphp
-                        
+
                         @foreach ($slideJobs as $job)
-                            <div class="talent-card" 
-                                 data-name="{{ $job->freelancer->name ?? 'Unknown' }}" 
-                                 data-user-id="{{ $job->freelancer->id ?? 0 }}" 
+                            <div class="talent-card"
+                                 data-name="{{ $job->freelancer->name ?? 'Unknown' }}"
+                                 data-user-id="{{ $job->freelancer->id ?? 0 }}"
                                  data-skills="{{ strtolower($job->category->name ?? 'general') }}"
                                  data-job-id="{{ $job->id }}">
                                 <div class="talent-header">
@@ -1108,7 +1108,7 @@ body {
                                 <button class="talent-profile-btn" data-freelancer-id="{{ $job->freelancer->id ?? 0 }}">profile</button>
                             </div>
                         @endforeach
-                        
+
                         @if ($slideJobs->count() < $jobsPerSlide)
                             @for ($i = $slideJobs->count(); $i < $jobsPerSlide; $i++)
                                 <div class="talent-card" style="opacity: 0; pointer-events: none;">
@@ -1118,7 +1118,7 @@ body {
                         @endif
                     </div>
                 @endfor
-                
+
                 @if ($jobs->count() == 0)
                     <div class="talent-slide">
                         <div class="no-results">
@@ -1164,13 +1164,13 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('Failed to parse jobs data:', error);
         jobsData = [];
     }
-    
+
     // Cache DOM elements
     const searchInput = document.getElementById('globalSearch');
     const searchResults = document.getElementById('searchResults');
     const sidebar = document.getElementById('sidebar');
     const sidebarToggle = document.getElementById('sidebarToggle');
-    
+
     // Skills slider functionality
     let currentSlide = 0;
     const skillsSlides = document.querySelectorAll('.skills-slide');
@@ -1179,13 +1179,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const prevBtn = document.getElementById('prevSlide');
     const nextBtn = document.getElementById('nextSlide');
     const indicators = document.querySelectorAll('.slide-indicator');
-    
+
     // Talent slider functionality
     let currentTalentSlide = 0;
     const talentSlides = document.querySelectorAll('.talent-slide');
     const totalTalentSlides = talentSlides.length;
     const talentSlider = document.getElementById('talentSlider');
-    
+
     // Prevent horizontal scroll
     if (document.body) {
         document.body.style.overflowX = 'hidden';
@@ -1193,14 +1193,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.documentElement) {
         document.documentElement.style.overflowX = 'hidden';
     }
-    
+
     // Skills slider functions
     function updateSkillsSlider() {
         if (!skillsSlider) return;
-        
+
         const translateX = -currentSlide * 100;
         skillsSlider.style.transform = `translateX(${translateX}%)`;
-        
+
         // Update navigation buttons
         if (prevBtn) {
             prevBtn.classList.toggle('disabled', currentSlide === 0);
@@ -1208,7 +1208,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (nextBtn) {
             nextBtn.classList.toggle('disabled', currentSlide === totalSlides - 1);
         }
-        
+
         // Update indicators
         indicators.forEach((indicator, index) => {
             if (indicator) {
@@ -1216,28 +1216,28 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     function nextSkillsSlide() {
         if (currentSlide < totalSlides - 1) {
             currentSlide++;
             updateSkillsSlider();
         }
     }
-    
+
     function prevSkillsSlide() {
         if (currentSlide > 0) {
             currentSlide--;
             updateSkillsSlider();
         }
     }
-    
+
     // Talent slider functions
     function updateTalentSlider() {
         if (!talentSlider) return;
-        
+
         const translateX = -currentTalentSlide * 100;
         talentSlider.style.transform = `translateX(${translateX}%)`;
-        
+
         // Update pagination buttons
         const paginationBtns = document.querySelectorAll('.talent-pagination button[data-page]');
         paginationBtns.forEach((btn, index) => {
@@ -1245,7 +1245,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.classList.toggle('active', index === currentTalentSlide);
             }
         });
-        
+
         // Update prev/next buttons
         const prevPageBtn = document.getElementById('prevPageBtn');
         const nextPageBtn = document.getElementById('nextPageBtn');
@@ -1256,28 +1256,28 @@ document.addEventListener('DOMContentLoaded', function() {
             nextPageBtn.disabled = currentTalentSlide === totalTalentSlides - 1;
         }
     }
-    
+
     function nextTalentSlide() {
         if (currentTalentSlide < totalTalentSlides - 1) {
             currentTalentSlide++;
             updateTalentSlider();
         }
     }
-    
+
     function prevTalentSlide() {
         if (currentTalentSlide > 0) {
             currentTalentSlide--;
             updateTalentSlider();
         }
     }
-    
+
     function goToTalentSlide(slideIndex) {
         if (slideIndex >= 0 && slideIndex < totalTalentSlides) {
             currentTalentSlide = slideIndex;
             updateTalentSlider();
         }
     }
-    
+
     // Event listeners for skills slider
     if (nextBtn) {
         nextBtn.addEventListener('click', function(e) {
@@ -1285,14 +1285,14 @@ document.addEventListener('DOMContentLoaded', function() {
             nextSkillsSlide();
         });
     }
-    
+
     if (prevBtn) {
         prevBtn.addEventListener('click', function(e) {
             e.preventDefault();
             prevSkillsSlide();
         });
     }
-    
+
     // Indicator event listeners
     indicators.forEach((indicator, index) => {
         if (indicator) {
@@ -1303,7 +1303,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
-    
+
     // Pagination event listeners
     const paginationBtns = document.querySelectorAll('.talent-pagination button[data-page]');
     paginationBtns.forEach(btn => {
@@ -1317,25 +1317,25 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
-    
+
     // Prev/Next pagination buttons
     const prevPageBtn = document.getElementById('prevPageBtn');
     const nextPageBtn = document.getElementById('nextPageBtn');
-    
+
     if (prevPageBtn) {
         prevPageBtn.addEventListener('click', function(e) {
             e.preventDefault();
             prevTalentSlide();
         });
     }
-    
+
     if (nextPageBtn) {
         nextPageBtn.addEventListener('click', function(e) {
             e.preventDefault();
             nextTalentSlide();
         });
     }
-    
+
     // Search functionality
     function performSearch(query) {
         if (!query || query.length < 2) {
@@ -1344,24 +1344,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             return;
         }
-        
+
         const filtered = jobsData.filter(job => {
             const freelancerName = job.freelancer && job.freelancer.name ? job.freelancer.name.toLowerCase() : '';
             const category = job.category ? job.category.toLowerCase() : '';
             const title = job.title ? job.title.toLowerCase() : '';
             const searchTerm = query.toLowerCase();
-            
-            return freelancerName.includes(searchTerm) || 
-                   category.includes(searchTerm) || 
+
+            return freelancerName.includes(searchTerm) ||
+                   category.includes(searchTerm) ||
                    title.includes(searchTerm);
         });
-        
+
         displaySearchResults(filtered);
     }
-    
+
     function displaySearchResults(results) {
         if (!searchResults) return;
-        
+
         if (results.length === 0) {
             searchResults.innerHTML = '<div class="search-result-item">No results found</div>';
         } else {
@@ -1369,7 +1369,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const freelancerName = job.freelancer && job.freelancer.name ? job.freelancer.name : 'Unknown';
                 const category = job.category || 'General';
                 const title = job.title || 'Untitled';
-                
+
                 return `
                     <div class="search-result-item" onclick="selectSearchResult('${freelancerName}')">
                         <div class="search-result-name">${freelancerName}</div>
@@ -1380,21 +1380,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         searchResults.classList.add('show');
     }
-    
+
     // Search input event listeners
     if (searchInput) {
         searchInput.addEventListener('input', function() {
             const query = this.value.trim();
             performSearch(query);
         });
-        
+
         searchInput.addEventListener('focus', function() {
             const query = this.value.trim();
             if (query.length >= 2) {
                 performSearch(query);
             }
         });
-        
+
         // Enter key search
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
@@ -1409,7 +1409,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Search button functionality
     const searchBtn = document.getElementById('searchBtn');
     if (searchBtn) {
@@ -1426,7 +1426,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Hide search results when clicking outside
     document.addEventListener('click', function(e) {
         if (!e.target.closest('.search-container')) {
@@ -1435,18 +1435,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-    
+
     // Filter talents by search query
     function filterTalentsBySearch(query) {
         const cards = document.querySelectorAll('.talent-card');
         let hasResults = false;
-        
+
         cards.forEach(card => {
             const name = (card.getAttribute('data-name') || '').toLowerCase();
             const skills = (card.getAttribute('data-skills') || '').toLowerCase();
             const searchTerm = query.toLowerCase();
             const hasMatch = name.includes(searchTerm) || skills.includes(searchTerm);
-            
+
             if (hasMatch || query === '') {
                 card.style.display = 'block';
                 hasResults = true;
@@ -1454,10 +1454,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 card.style.display = 'none';
             }
         });
-        
+
         showNoResultsMessage(!hasResults && query !== '');
     }
-    
+
     // Global function for search result selection
     window.selectSearchResult = function(name) {
         if (searchInput) {
@@ -1468,16 +1468,16 @@ document.addEventListener('DOMContentLoaded', function() {
             searchResults.classList.remove('show');
         }
     };
-    
+
     // Filter talents by skill
     function filterTalentsBySkill(skillName) {
         const cards = document.querySelectorAll('.talent-card');
         let hasResults = false;
-        
+
         cards.forEach(card => {
             const cardSkills = (card.getAttribute('data-skills') || '').toLowerCase();
             const hasSkill = cardSkills.includes(skillName.toLowerCase());
-            
+
             if (hasSkill) {
                 card.style.display = 'block';
                 hasResults = true;
@@ -1485,14 +1485,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 card.style.display = 'none';
             }
         });
-        
+
         showNoResultsMessage(!hasResults);
     }
-    
+
     // Show no results message
     function showNoResultsMessage(show) {
         let existingMessage = document.querySelector('.no-results');
-        
+
         if (show && !existingMessage) {
             const noResultsDiv = document.createElement('div');
             noResultsDiv.className = 'no-results';
@@ -1512,7 +1512,7 @@ document.addEventListener('DOMContentLoaded', function() {
             existingMessage.remove();
         }
     }
-    
+
     // Global function to clear all filters
     window.clearAllFilters = function() {
         // Remove active state from skill cards
@@ -1520,22 +1520,22 @@ document.addEventListener('DOMContentLoaded', function() {
         skillCards.forEach(card => {
             card.classList.remove('active');
         });
-        
+
         // Show all talent cards
         const talentCards = document.querySelectorAll('.talent-card');
         talentCards.forEach(card => {
             card.style.display = 'block';
         });
-        
+
         // Clear search input
         if (searchInput) {
             searchInput.value = '';
         }
-        
+
         // Remove no results message
         showNoResultsMessage(false);
     };
-    
+
     // Skill card and profile button event delegation
     document.addEventListener('click', function(e) {
         // Handle skill card clicks
@@ -1543,26 +1543,26 @@ document.addEventListener('DOMContentLoaded', function() {
         if (skillCard) {
             e.preventDefault();
             const skillName = skillCard.getAttribute('data-skill');
-            
+
             if (skillName) {
                 // Remove active class from all skill cards
                 document.querySelectorAll('.skill-card').forEach(card => {
                     card.classList.remove('active');
                 });
-                
+
                 // Add active state to clicked card
                 skillCard.classList.add('active');
-                
+
                 // Filter talents by skill
                 filterTalentsBySkill(skillName);
             }
         }
-        
+
         // Handle profile button clicks
         if (e.target.classList.contains('talent-profile-btn')) {
             e.preventDefault();
             const freelancerId = e.target.getAttribute('data-freelancer-id');
-            
+
             if (freelancerId && freelancerId !== '0') {
                 // Redirect to profile page with freelancer ID
                 window.location.href = `/profile/${freelancerId}`;
@@ -1572,7 +1572,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-    
+
     // Sidebar functionality
     if (sidebarToggle && sidebar) {
         // Create overlay
@@ -1589,19 +1589,19 @@ document.addEventListener('DOMContentLoaded', function() {
             backdrop-filter: blur(4px);
         `;
         document.body.appendChild(sidebarOverlay);
-        
+
         sidebarToggle.addEventListener('click', function(e) {
             e.preventDefault();
             sidebar.classList.toggle('show');
             sidebarOverlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
         });
-        
+
         sidebarOverlay.addEventListener('click', function() {
             sidebar.classList.remove('show');
             sidebarOverlay.style.display = 'none';
         });
     }
-    
+
     // Keyboard shortcuts
     document.addEventListener('keydown', function(e) {
         // Arrow keys for skills slider when focused
@@ -1614,7 +1614,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 nextSkillsSlide();
             }
         }
-        
+
         // Escape to clear search
         if (e.key === 'Escape') {
             if (searchResults) {
@@ -1625,7 +1625,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 clearAllFilters();
             }
         }
-        
+
         // Ctrl/Cmd + K to focus search
         if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
             e.preventDefault();
@@ -1634,11 +1634,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-    
+
     // Initialize sliders
     updateSkillsSlider();
     updateTalentSlider();
-    
+
     console.log('Dashboard initialized successfully');
 });
 
@@ -1654,4 +1654,3 @@ function goToProfile() {
 }
 </script>
 @endsection
-    

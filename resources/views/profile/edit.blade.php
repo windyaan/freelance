@@ -1,5 +1,11 @@
 @extends('layouts.client')
 
+{{-- @if (auth()->user()->role === 'freelancer')
+    @extends('layouts.freelance')
+@else
+    @extends('layouts.client')
+@endif --}}
+
 @section('title', 'Profile - SkillMatch')
 
 @section('content')
@@ -651,7 +657,7 @@ body {
             <img src="{{ $user->avatar_url ?? 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=350&h=400&fit=crop&crop=face' }}"
                  alt="Profile Picture"
                  class="profile-image"
-                 onerror="this.src='https://via.placeholder.com/350x400/f3f4f6/9ca3af?text=Profile'">
+                 onerror="this.onerror=null; this.src='https://placehold.co/350x400/f3f4f6/9ca3af?text=Profile'">
         </div>
     </div>
 </div>
@@ -711,10 +717,10 @@ body {
                 @endphp
 
                 @foreach ($skills as $index => $skill)
-                <input type="text" name="skills[]" class="form-input" value="{{ trim($skill) }}" placeholder="Skill {{ $index + 1 }}" style="margin-bottom: 0.75rem;">
+                <input type="text" name="skills" class="form-input" value="{{ trim($skill) }}" placeholder="Skill {{ $index + 1 }}" style="margin-bottom: 0.75rem;">
                 @endforeach
 
-                <input type="text" name="skills[]" class="form-input" placeholder="Add new skill...">
+                <input type="text" name="skills" class="form-input" placeholder="Add new skill...">
 
                 @error('skills')
                 <div class="error-message">{{ $message }}</div>
