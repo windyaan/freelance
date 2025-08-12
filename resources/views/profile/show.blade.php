@@ -570,7 +570,7 @@ if (typeof IconifyIcon === 'undefined') {
         </div>
         <a href="{{ route('dashboard') }}" class="navbar-brand">
             <div class="logo" style="margin-top: 60px;">
-                <h1>skill<span>Match</span></h1>
+                <h1>Skill<span>Match</span></h1>
             </div>
         </a>
         <h1 class="navbar-title">Dashboard</h1>
