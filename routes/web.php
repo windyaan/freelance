@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
 
     // Client routes group
     Route::prefix('client')->name('client.')->middleware('role:client')->group(function () {
-        // Client dashboard - gunakan method dashboardIndex
+        // Client dashboard
         Route::get('/dashboard', [JobController::class, 'dashboardIndex'])->name('dashboard');
 
         // Client chat routes
@@ -51,12 +51,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/chat/{user}/send', [ChatController::class, 'send'])->name('chat.send');
         Route::get('/chat/{user}/messages', [ChatController::class, 'getMessages'])->name('chat.messages');
 
-        // Client orders routes
-        Route::get('/orders', [OrderController::class, 'clientIndex'])->name('orders');
-        Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-        Route::post('/orders/{order}/pay', [OrderController::class, 'makePayment'])->name('orders.pay');
-        Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
-        Route::get('/orders/{order}/invoice', [OrderController::class, 'downloadInvoice'])->name('orders.invoice');
+        // Client order routes (changed from orders to order)
+        Route::get('/order', [OrderController::class, 'clientIndex'])->name('order');
+        Route::get('/order/{order}', [OrderController::class, 'show'])->name('order.show');
+        Route::post('/order/{order}/pay', [OrderController::class, 'makePayment'])->name('order.pay');
+        Route::patch('/order/{order}/cancel', [OrderController::class, 'cancel'])->name('order.cancel');
+        Route::get('/order/{order}/invoice', [OrderController::class, 'downloadInvoice'])->name('order.invoice');
     });
 
     // Freelancer routes group
@@ -69,20 +69,20 @@ Route::middleware('auth')->group(function () {
         Route::post('/chat/{user}/send', [ChatController::class, 'send'])->name('chat.send');
         Route::get('/chat/{user}/messages', [ChatController::class, 'getMessages'])->name('chat.messages');
 
-        // Freelancer orders routes
-        Route::get('/orders', [OrderController::class, 'freelancerIndex'])->name('orders');
-        Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-        Route::patch('/orders/{order}/accept', [OrderController::class, 'accept'])->name('orders.accept');
-        Route::patch('/orders/{order}/reject', [OrderController::class, 'reject'])->name('orders.reject');
-        Route::patch('/orders/{order}/complete', [OrderController::class, 'complete'])->name('orders.complete');
-        Route::post('/orders/{order}/upload-deliverable', [OrderController::class, 'uploadDeliverable'])->name('orders.upload');
+        // Freelancer order routes (changed from orders to order)
+        Route::get('/order', [OrderController::class, 'freelancerIndex'])->name('order');
+        Route::get('/order/{order}', [OrderController::class, 'show'])->name('order.show');
+        Route::patch('/order/{order}/accept', [OrderController::class, 'accept'])->name('order.accept');
+        Route::patch('/order/{order}/reject', [OrderController::class, 'reject'])->name('order.reject');
+        Route::patch('/order/{order}/complete', [OrderController::class, 'complete'])->name('order.complete');
+        Route::post('/order/{order}/upload-deliverable', [OrderController::class, 'uploadDeliverable'])->name('order.upload');
     });
 
     // General order creation routes (accessible by both roles)
-    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
-    Route::get('/orders/create/{job}', [OrderController::class, 'create'])->name('orders.create');
+    Route::post('/order', [OrderController::class, 'store'])->name('order.store');
+    Route::get('/order/create/{job}', [OrderController::class, 'create'])->name('order.create');
 
-    // Legacy route untuk backward compatibility
+    // Legacy routes untuk backward compatibility
     Route::get('/client-dashboard', [JobController::class, 'dashboardIndex'])->name('client.dashboard.legacy')->middleware('role:client');
     Route::get('/freelancer-dashboard', function(){return view('dashboard.freelancer.index');})->name('freelancer.dashboard.legacy')->middleware('role:freelancer');
 });

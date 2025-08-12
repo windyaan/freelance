@@ -1,10 +1,10 @@
-@extends('layouts.client')
+@extends('layouts.freelancer')
 
-@section('title', 'Orders - SkillMatch')
+@section('title', 'Order - SkillMatch')
 
 @section('content')
 <!-- Embed sample orders data for demo purposes -->
-<script id="orders-data" type="application/json">
+<script id="order-data" type="application/json">
 [
     {
         "id": 1,
@@ -785,17 +785,17 @@ body {
             <span></span>
         </div>
         <!-- Updated navbar brand with Laravel route -->
-        <a href="{{ route('client.dashboard') }}" class="navbar-brand">
+        <a href="{{ route('freelancer.dashboard') }}" class="navbar-brand">
             <div class="logo" style="margin-top: 60px;">
                 <h1>Skill<span>Match</span></h1>
             </div>
         </a>
-        <h1 class="navbar-title">Orders</h1>
+        <h1 class="navbar-title">Order</h1>
     </div>
     <div class="navbar-center">
         <div class="search-container">
             <iconify-icon icon="material-symbols:search" class="search-icon"></iconify-icon>
-            <input type="text" class="search-input" placeholder="Search orders..." id="globalSearch">
+            <input type="text" class="search-input" placeholder="Search order..." id="globalSearch">
             <button class="search-btn" id="searchBtn">Search</button>
         </div>
     </div>
@@ -818,24 +818,24 @@ body {
 <div class="sidebar" id="sidebar">
     <nav>
         <!-- Updated sidebar navigation with Laravel routes -->
-        <a href="{{ route('client.dashboard') }}" class="nav-item {{ request()->routeIs('client.dashboard') ? 'active' : '' }}">
+        <a href="{{ route('freelancer.dashboard') }}" class="nav-item {{ request()->routeIs('freelancer.dashboard') ? 'active' : '' }}">
             <div class="nav-icon">
                 <iconify-icon icon="material-symbols:dashboard"></iconify-icon>
             </div>
             <span class="nav-text">Dashboard</span>
         </a>
-        <a href="{{ route('client.chat') }}" class="nav-item {{ request()->routeIs('client.chat') ? 'active' : '' }}">
+        <a href="{{ route('freelancer.chat') }}" class="nav-item {{ request()->routeIs('freelancer.chat') ? 'active' : '' }}">
             <div class="nav-icon">
                 <iconify-icon icon="material-symbols:chat"></iconify-icon>
             </div>
             <span class="nav-text">Chat</span>
             <span class="nav-badge">3</span>
         </a>
-        <a href="#" class="nav-item {{ request()->routeIs('client.orders') ? 'active' : '' }}">
+        <a href="#" class="nav-item {{ request()->routeIs('freelancer.order') ? 'active' : '' }}">
             <div class="nav-icon">
                 <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
             </div>
-            <span class="nav-text">Orders</span>
+            <span class="nav-text">Order</span>
         </a>
     </nav>
 </div>
@@ -843,11 +843,11 @@ body {
 <!-- Main Content -->
 <div class="main-content">
     <!-- Orders Section -->
-    <div class="orders-section">
+    <div class="order-section">
         <div class="section-header">
             <h1 class="section-title">
                 <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
-                My Orders
+                My Order
             </h1>
             <div class="filter-buttons">
                 <button class="filter-btn active" data-filter="all">All</button>
@@ -858,7 +858,7 @@ body {
             </div>
         </div>
 
-        <div class="orders-grid" id="ordersGrid">
+        <div class="order-grid" id="orderGrid">
             <!-- Sample Order Cards - these would be populated from your database -->
             <div class="order-card" data-status="completed" data-order-id="1">
                 <div class="order-header">
@@ -948,9 +948,9 @@ body {
         <!-- Empty State (hidden by default, shown when no orders match filter) -->
         <div class="empty-state" id="emptyState" style="display: none;">
             <iconify-icon icon="material-symbols:inbox"></iconify-icon>
-            <h3>No orders found</h3>
-            <p>You don't have any orders matching the current filter.</p>
-            <a href="{{ route('client.dashboard') }}" class="btn-primary">
+            <h3>No order found</h3>
+            <p>You don't have any order matching the current filter.</p>
+            <a href="{{ route('freelancer.dashboard') }}" class="btn-primary">
                 <iconify-icon icon="material-symbols:add"></iconify-icon>
                 Browse Talents
             </a>
@@ -962,22 +962,22 @@ body {
 // Orders page JavaScript
 document.addEventListener('DOMContentLoaded', function() {
     // Get orders data from the embedded JSON script
-    let ordersData = [];
+    let orderData = [];
     try {
-        const ordersScript = document.getElementById('orders-data');
-        if (ordersScript && ordersScript.textContent) {
-            ordersData = JSON.parse(ordersScript.textContent);
+        const orderScript = document.getElementById('order-data');
+        if (orderScript && orderScript.textContent) {
+            orderData = JSON.parse(orderScript.textContent);
         }
     } catch (error) {
-        console.error('Failed to parse orders data:', error);
-        ordersData = [];
+        console.error('Failed to parse order data:', error);
+        orderData = [];
     }
     
     // Cache DOM elements
     const searchInput = document.getElementById('globalSearch');
     const sidebar = document.getElementById('sidebar');
     const sidebarToggle = document.getElementById('sidebarToggle');
-    const ordersGrid = document.getElementById('ordersGrid');
+    const orderGrid = document.getElementById('orderGrid');
     const emptyState = document.getElementById('emptyState');
     const filterButtons = document.querySelectorAll('.filter-btn');
     
@@ -992,7 +992,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Filter functionality
-    function filterOrders(status) {
+    function filterOrder(status) {
         currentFilter = status;
         const orderCards = document.querySelectorAll('.order-card');
         let visibleCount = 0;
@@ -1011,10 +1011,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Show/hide empty state
         if (visibleCount === 0) {
-            ordersGrid.style.display = 'none';
+            orderGrid.style.display = 'none';
             emptyState.style.display = 'block';
         } else {
-            ordersGrid.style.display = 'block';
+            orderGrid.style.display = 'block';
             emptyState.style.display = 'none';
         }
         
@@ -1028,9 +1028,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Search functionality
-    function searchOrders(query) {
+    function searchOrder(query) {
         if (!query || query.length < 2) {
-            filterOrders(currentFilter);
+            filterOrder(currentFilter);
             return;
         }
         
@@ -1060,10 +1060,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Show/hide empty state
         if (visibleCount === 0) {
-            ordersGrid.style.display = 'none';
+            orderGrid.style.display = 'none';
             emptyState.style.display = 'block';
         } else {
-            ordersGrid.style.display = 'block';
+            orderGrid.style.display = 'block';
             emptyState.style.display = 'none';
         }
     }
@@ -1073,7 +1073,7 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function(e) {
             e.preventDefault();
             const filter = this.getAttribute('data-filter');
-            filterOrders(filter);
+            filterOrder(filter);
             
             // Clear search when filtering
             if (searchInput) {
@@ -1086,14 +1086,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (searchInput) {
         searchInput.addEventListener('input', function() {
             const query = this.value.trim();
-            searchOrders(query);
+            searchOrder(query);
         });
         
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 const query = this.value.trim();
-                searchOrders(query);
+                searchOrder(query);
             }
         });
     }
@@ -1105,7 +1105,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             if (searchInput) {
                 const query = searchInput.value.trim();
-                searchOrders(query);
+                searchOrder(query);
             }
         });
     }
@@ -1156,7 +1156,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.key === 'Escape') {
             if (searchInput && searchInput.value) {
                 searchInput.value = '';
-                filterOrders(currentFilter);
+                filterOrder(currentFilter);
             }
         }
         
@@ -1174,7 +1174,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const filters = ['all', 'pending', 'in_progress', 'completed', 'cancelled'];
             const filterIndex = parseInt(e.key) - 1;
             if (filters[filterIndex]) {
-                filterOrders(filters[filterIndex]);
+                filterOrder(filters[filterIndex]);
                 if (searchInput) {
                     searchInput.value = '';
                 }
@@ -1195,9 +1195,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Initialize page
-    filterOrders('all');
+    filterOrder('all');
     
-    console.log('Orders page initialized successfully');
+    console.log('Order page initialized successfully');
 });
 
 // Global functions for order actions

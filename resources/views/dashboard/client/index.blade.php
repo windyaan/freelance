@@ -965,12 +965,13 @@ body {
             <span class="nav-text">Chat</span>
             <span class="nav-badge">3</span>
         </a>
-        <a href="#" class="nav-item">
-            <div class="nav-icon">
-                <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
-            </div>
-            <span class="nav-text">Orders</span>
-        </a>
+            <!-- Updated navbar brand with Laravel route -->
+    <a href="{{ route('client.order') }}" class="nav-item {{ request()->routeIs('client.order*') ? 'active' : '' }}">
+    <div class="nav-icon">
+        <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
+    </div>
+    <span class="nav-text">Orders</span>
+</a>
     </nav>
 </div>
 
