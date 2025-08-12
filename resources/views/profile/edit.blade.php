@@ -638,7 +638,7 @@ body {
             </div>
 
             <div class="profile-bio">
-                {{ $user->bio ?? 'I am a publishing professional at Gramedia Pustaka, responsible for managing the editing and design process throughout book production. With experience in ensuring visual and content quality, I focus on detail, aesthetics, and design consistency to create engaging and professional publications. My expertise includes coordinating with editorial teams, designers, and printers to deliver works that meet the highest publishing standards.' }}
+                {{ $user->profile->bio ?? '' }}
             </div>
 
             @if ($user->role === 'freelancer' && $user->skills)
@@ -703,13 +703,13 @@ body {
 
             <div class="form-group">
                 <label class="form-label">Bio</label>
-                <textarea class="form-input form-textarea" name="bio" rows="6" placeholder="Tell us about yourself...">{{ old('bio', $user->bio ?? 'I am a publishing professional at Gramedia Pustaka, responsible for managing the editing and design process throughout book production. With experience in ensuring visual and content quality, I focus on detail, aesthetics, and design consistency to create engaging and professional publications. My expertise includes coordinating with editorial teams, designers, and printers to deliver works that meet the highest publishing standards.') }}</textarea>
+                <textarea class="form-input form-textarea" name="bio" rows="6" placeholder="Tell us about yourself...">{{ old('bio', $user->profile->bio ?? '') }}</textarea>
                 @error('bio')
                     <div class="error-message">{{ $message }}</div>
                 @enderror
             </div>
 
-            @if ($user->role === 'freelancer')
+            {{-- @if ($user->role === 'freelancer')
             <div class="form-group">
                 <label class="form-label">Skills</label>
                 @php
@@ -726,7 +726,25 @@ body {
                 <div class="error-message">{{ $message }}</div>
                 @enderror
             </div>
-            @endif
+            @endif --}}
+
+            @if (auth()->user()->role === 'freelancer')
+            <div class="form-group">
+            <label for="skills">Skills</label>
+            <input
+            type="text"
+            id="skills"
+            name="skills"
+            class="form-input @error('skills') border-red-500 @enderror"
+            value="{{ old('skills', $user->profile->skills ?? '') }}"
+            placeholder="Contoh: PHP, Laravel, JavaScript"
+            autocomplete="off">
+            <small class="text-gray-500">Pisahkan skill dengan koma (,)</small>
+            @error('skills')
+            <div class="error-message text-red-500 mt-1">{{ $message }}</div>
+            @enderror
+         </div>
+        @endif
 
             <div class="modal-buttons">
                 <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
