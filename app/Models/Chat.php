@@ -26,4 +26,9 @@ class Chat extends Model
         return $this->belongsTo(User::class,'freelancer_id');
     }
 
+    // Relasi ke offer (nullable)
+    public function offer()
+    {
+        return $this->belongsTo(Offer::class, 'offer_id');
+    }
 }

@@ -8,10 +8,7 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    /**
-     * Tampilkan halaman dashboard admin.
-     */
-   public function index(Request $request)
+    public function index(Request $request)
 {
     // Ambil input pencarian dari query string ?search=...
     $search = $request->input('search');
@@ -35,19 +32,4 @@ class AdminController extends Controller
 
     return view('dashboard.admin.index', compact('totalClients', 'totalFreelancers', 'totalOrders', 'users', 'search'));
 }
-
-/**
-    * Handle search request from navbar
-    */
-   public function search(Request $request)
-   {
-       $query = $request->get('q', '');
-       
-       if (empty($query)) {
-           return redirect()->route('admin.dashboard');
-       }
-       
-       // Redirect ke admin dashboard dengan parameter search
-       return redirect()->route('admin.dashboard', ['search' => $query]);
-   }
 }

@@ -625,11 +625,11 @@ body {
         transform: translateX(-100%);
         transition: transform 0.3s ease;
     }
-    
+
     .sidebar.show {
         transform: translateX(0);
     }
-    
+
     .sidebar-toggle {
         display: flex !important;
         flex-direction: column;
@@ -639,7 +639,7 @@ body {
         justify-content: space-between;
         margin-right: 1rem;
     }
-    
+
     .sidebar-toggle span {
         width: 100%;
         height: 2px;
@@ -647,28 +647,28 @@ body {
         border-radius: 2px;
         transition: all 0.3s ease;
     }
-    
+
     .main-content {
         margin-left: 0;
         max-width: 100vw;
         padding: 1.5rem;
     }
-    
+
     .navbar-center {
         flex: 1.5;
         max-width: 350px;
     }
-    
+
     .search-container {
         max-width: 320px;
     }
-    
+
     .section-header {
         flex-direction: column;
         gap: 1rem;
         align-items: flex-start;
     }
-    
+
     .filter-buttons {
         width: 100%;
         justify-content: flex-start;
@@ -680,51 +680,51 @@ body {
     .navbar-title {
         display: none;
     }
-    
+
     .navbar-center {
         flex: 2;
         max-width: 280px;
     }
-    
+
     .search-container {
         max-width: 250px;
     }
-    
+
     .search-container input {
         font-size: 0.85rem;
         padding: 0.6rem 0.8rem 0.6rem 2.5rem;
     }
-    
+
     .search-container .search-btn {
         padding: 0.4rem 0.8rem;
         font-size: 0.8rem;
     }
-    
+
     .orders-section {
         padding: 1.5rem;
         margin-bottom: 1.5rem;
     }
-    
+
     .main-content {
         padding: 1rem;
     }
-    
+
     .order-header {
         flex-direction: column;
         gap: 0.75rem;
         align-items: flex-start;
     }
-    
+
     .order-footer {
         flex-direction: column;
         gap: 1rem;
         align-items: stretch;
     }
-    
+
     .order-actions {
         justify-content: stretch;
     }
-    
+
     .action-btn {
         flex: 1;
         text-align: center;
@@ -735,27 +735,27 @@ body {
     .navbar-brand span:last-child {
         display: none;
     }
-    
+
     .navbar-center {
         display: none;
     }
-    
+
     .main-content {
         padding: 0.8rem;
     }
-    
+
     .order-card {
         padding: 1rem;
     }
-    
+
     .section-title {
         font-size: 1.5rem;
     }
-    
+
     .filter-buttons {
         gap: 0.25rem;
     }
-    
+
     .filter-btn {
         font-size: 0.75rem;
         padding: 0.4rem 0.8rem;
@@ -803,7 +803,7 @@ body {
         <div class="navbar-profile" onclick="goToProfile()">
             <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Profile">
         </div>
-        
+
         <form method="POST" action="{{ route('logout') }}" class="navbar-logout-form">
             @csrf
             <button type="submit" class="navbar-logout" onclick="return confirmLogout()">
@@ -837,6 +837,12 @@ body {
             </div>
             <span class="nav-text">Order</span>
         </a>
+        {{-- <a href="{{ route('freelancer.services') }}" class="nav-item {{ request()->routeIs('freelancer.services') ? 'active' : '' }}"> --}}
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:work"></iconify-icon>
+            </div>
+            <span class="nav-text">Service</span>
+        </a>
     </nav>
 </div>
 
@@ -868,7 +874,7 @@ body {
                     </div>
                     <div class="order-status status-completed">Completed</div>
                 </div>
-                
+
                 <div class="order-content">
                     <div class="order-category">illustrator</div>
                     <div class="order-freelancer">Freelancer: Namira Enggar</div>
@@ -878,7 +884,7 @@ body {
                         Deadline: Sep 25, 2025
                     </div>
                 </div>
-                
+
                 <div class="order-footer">
                     <div class="order-price">Rp150.000</div>
                     <div class="order-actions">
@@ -896,7 +902,7 @@ body {
                     </div>
                     <div class="order-status status-in_progress">In Progress</div>
                 </div>
-                
+
                 <div class="order-content">
                     <div class="order-category">graphic design</div>
                     <div class="order-freelancer">Freelancer: Namira Enggar</div>
@@ -906,7 +912,7 @@ body {
                         Deadline: Sep 28, 2025
                     </div>
                 </div>
-                
+
                 <div class="order-footer">
                     <div class="order-price">Rp250.000</div>
                     <div class="order-actions">
@@ -924,7 +930,7 @@ body {
                     </div>
                     <div class="order-status status-pending">Pending</div>
                 </div>
-                
+
                 <div class="order-content">
                     <div class="order-category">illustrator</div>
                     <div class="order-freelancer">Freelancer: Nadia Ima</div>
@@ -934,7 +940,7 @@ body {
                         Deadline: Oct 1, 2025
                     </div>
                 </div>
-                
+
                 <div class="order-footer">
                     <div class="order-price">Rp200.000</div>
                     <div class="order-actions">
@@ -972,7 +978,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('Failed to parse order data:', error);
         orderData = [];
     }
-    
+
     // Cache DOM elements
     const searchInput = document.getElementById('globalSearch');
     const sidebar = document.getElementById('sidebar');
@@ -980,9 +986,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const orderGrid = document.getElementById('orderGrid');
     const emptyState = document.getElementById('emptyState');
     const filterButtons = document.querySelectorAll('.filter-btn');
-    
+
     let currentFilter = 'all';
-    
+
     // Prevent horizontal scroll
     if (document.body) {
         document.body.style.overflowX = 'hidden';
@@ -990,17 +996,17 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.documentElement) {
         document.documentElement.style.overflowX = 'hidden';
     }
-    
+
     // Filter functionality
     function filterOrder(status) {
         currentFilter = status;
         const orderCards = document.querySelectorAll('.order-card');
         let visibleCount = 0;
-        
+
         orderCards.forEach(card => {
             const cardStatus = card.getAttribute('data-status');
             const shouldShow = status === 'all' || cardStatus === status;
-            
+
             if (shouldShow) {
                 card.style.display = 'block';
                 visibleCount++;
@@ -1008,7 +1014,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 card.style.display = 'none';
             }
         });
-        
+
         // Show/hide empty state
         if (visibleCount === 0) {
             orderGrid.style.display = 'none';
@@ -1017,7 +1023,7 @@ document.addEventListener('DOMContentLoaded', function() {
             orderGrid.style.display = 'block';
             emptyState.style.display = 'none';
         }
-        
+
         // Update active filter button
         filterButtons.forEach(btn => {
             btn.classList.remove('active');
@@ -1026,30 +1032,30 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Search functionality
     function searchOrder(query) {
         if (!query || query.length < 2) {
             filterOrder(currentFilter);
             return;
         }
-        
+
         const orderCards = document.querySelectorAll('.order-card');
         let visibleCount = 0;
         const searchTerm = query.toLowerCase();
-        
+
         orderCards.forEach(card => {
             const title = card.querySelector('.order-title').textContent.toLowerCase();
             const freelancer = card.querySelector('.order-freelancer').textContent.toLowerCase();
             const category = card.querySelector('.order-category').textContent.toLowerCase();
-            
-            const matchesSearch = title.includes(searchTerm) || 
-                                freelancer.includes(searchTerm) || 
+
+            const matchesSearch = title.includes(searchTerm) ||
+                                freelancer.includes(searchTerm) ||
                                 category.includes(searchTerm);
-            
-            const matchesFilter = currentFilter === 'all' || 
+
+            const matchesFilter = currentFilter === 'all' ||
                                 card.getAttribute('data-status') === currentFilter;
-            
+
             if (matchesSearch && matchesFilter) {
                 card.style.display = 'block';
                 visibleCount++;
@@ -1057,7 +1063,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 card.style.display = 'none';
             }
         });
-        
+
         // Show/hide empty state
         if (visibleCount === 0) {
             orderGrid.style.display = 'none';
@@ -1067,28 +1073,28 @@ document.addEventListener('DOMContentLoaded', function() {
             emptyState.style.display = 'none';
         }
     }
-    
+
     // Event listeners for filter buttons
     filterButtons.forEach(button => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
             const filter = this.getAttribute('data-filter');
             filterOrder(filter);
-            
+
             // Clear search when filtering
             if (searchInput) {
                 searchInput.value = '';
             }
         });
     });
-    
+
     // Search input event listeners
     if (searchInput) {
         searchInput.addEventListener('input', function() {
             const query = this.value.trim();
             searchOrder(query);
         });
-        
+
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -1097,7 +1103,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Search button functionality
     const searchBtn = document.getElementById('searchBtn');
     if (searchBtn) {
@@ -1109,7 +1115,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Sidebar functionality
     if (sidebarToggle && sidebar) {
         // Create overlay
@@ -1126,19 +1132,19 @@ document.addEventListener('DOMContentLoaded', function() {
             backdrop-filter: blur(4px);
         `;
         document.body.appendChild(sidebarOverlay);
-        
+
         sidebarToggle.addEventListener('click', function(e) {
             e.preventDefault();
             sidebar.classList.toggle('show');
             sidebarOverlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
         });
-        
+
         sidebarOverlay.addEventListener('click', function() {
             sidebar.classList.remove('show');
             sidebarOverlay.style.display = 'none';
         });
     }
-    
+
     // Order card click handling
     document.addEventListener('click', function(e) {
         const orderCard = e.target.closest('.order-card');
@@ -1149,7 +1155,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // You can add navigation to order details here
         }
     });
-    
+
     // Keyboard shortcuts
     document.addEventListener('keydown', function(e) {
         // Escape to clear search
@@ -1159,7 +1165,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 filterOrder(currentFilter);
             }
         }
-        
+
         // Ctrl/Cmd + K to focus search
         if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
             e.preventDefault();
@@ -1167,7 +1173,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 searchInput.focus();
             }
         }
-        
+
         // Number keys for quick filtering
         if (e.key >= '1' && e.key <= '5' && !e.target.matches('input')) {
             e.preventDefault();
@@ -1181,22 +1187,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-    
+
     // Order hover effects
     const orderCards = document.querySelectorAll('.order-card');
     orderCards.forEach(card => {
         card.addEventListener('mouseenter', function() {
             this.style.transform = 'translateY(-2px)';
         });
-        
+
         card.addEventListener('mouseleave', function() {
             this.style.transform = 'translateY(0)';
         });
     });
-    
+
     // Initialize page
     filterOrder('all');
-    
+
     console.log('Order page initialized successfully');
 });
 
