@@ -87,7 +87,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/freelancer-dashboard', function(){return view('dashboard.freelancer.index');})->name('freelancer.dashboard.legacy')->middleware('role:freelancer');
 });
 
-    Route::get('/admin-dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+// Admin routes
+Route::get('/admin-dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
+// Search route for admin dashboard
+Route::get('/search', [AdminController::class, 'search'])->name('search')->middleware('auth');
 
 require __DIR__.'/auth.php';
