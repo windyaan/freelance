@@ -456,7 +456,7 @@
             <div class="navbar-center">
                 <div class="search-container">
                     <iconify-icon icon="material-symbols:search" class="search-icon"></iconify-icon>
-                    <input type="text" class="search-input" placeholder="Search orders, clients..." id="globalSearch">
+                    <input type="text" class="search-input" placeholder="Search orders, clients..." id="globalSearch" autocomplete="off">
                     <button class="search-btn" id="searchBtn">Search</button>
                 </div>
             </div>
@@ -532,7 +532,10 @@
 
     <!-- Base JavaScript -->
     <script>
+        // Wait for DOM to load
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('Layout script loading...');
+            
             const sidebar = document.getElementById('sidebar');
             const sidebarToggle = document.getElementById('sidebarToggle');
             const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -563,45 +566,6 @@
                 });
             }
 
-            // Global search functionality
-            function performSearch() {
-                const query = searchInput ? searchInput.value.trim() : '';
-                if (query) {
-                    // Check if search function exists on dashboard
-                    if (typeof window.searchOrders === 'function') {
-                        window.searchOrders(query);
-                    }
-                } else {
-                    if (typeof window.showAllOrders === 'function') {
-                        window.showAllOrders();
-                    }
-                }
-            }
-
-            if (searchBtn) {
-                searchBtn.addEventListener('click', performSearch);
-            }
-
-            if (searchInput) {
-                searchInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        performSearch();
-                    }
-                });
-
-                // Real-time search
-                searchInput.addEventListener('input', function() {
-                    const query = this.value.trim();
-                    if (typeof window.searchOrders === 'function') {
-                        if (query.length > 2) {
-                            window.searchOrders(query);
-                        } else if (query.length === 0) {
-                            window.showAllOrders();
-                        }
-                    }
-                });
-            }
-
             // Close sidebar on window resize if desktop
             window.addEventListener('resize', function() {
                 if (window.innerWidth > 1024) {
@@ -610,15 +574,66 @@
                 }
             });
 
-            // Keyboard shortcuts
+            // Search functionality - wait for page-specific functions to load
+            if (searchInput && searchBtn) {
+                console.log('Search elements found, setting up listeners');
+                
+                // Set up search input listener
+                searchInput.addEventListener('input', function(e) {
+                    const query = e.target.value.trim();
+                    console.log('Search input changed:', query);
+                    
+                    // Try to call page-specific search function
+                    if (typeof window.performSearch === 'function') {
+                        window.performSearch(query);
+                    } else if (typeof window.searchOrders === 'function') {
+                        window.searchOrders(query);
+                    } else {
+                        console.log('No search function available yet, will try again');
+                    }
+                });
+                
+                // Search button click
+                searchBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const query = searchInput.value.trim();
+                    console.log('Search button clicked:', query);
+                    
+                    if (typeof window.performSearch === 'function') {
+                        window.performSearch(query);
+                    } else if (typeof window.searchOrders === 'function') {
+                        window.searchOrders(query);
+                    }
+                });
+                
+                // Enter key search
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const query = e.target.value.trim();
+                        console.log('Search enter key:', query);
+                        
+                        if (typeof window.performSearch === 'function') {
+                            window.performSearch(query);
+                        } else if (typeof window.searchOrders === 'function') {
+                            window.searchOrders(query);
+                        }
+                    }
+                });
+            }
+
+            // Global keyboard shortcuts
             document.addEventListener('keydown', function(e) {
-                // Escape to clear search
+                // Escape to clear search or close sidebar
                 if (e.key === 'Escape') {
                     if (searchInput && searchInput.value) {
                         searchInput.value = '';
                         if (typeof window.showAllOrders === 'function') {
                             window.showAllOrders();
                         }
+                    } else if (sidebar.classList.contains('show')) {
+                        sidebar.classList.remove('show');
+                        sidebarOverlay.classList.remove('show');
                     }
                 }
                 
@@ -627,31 +642,35 @@
                     e.preventDefault();
                     if (searchInput) {
                         searchInput.focus();
+                        searchInput.select();
                     }
                 }
             });
 
-            console.log('Freelancer Layout initialized successfully');
+            console.log('Layout script loaded successfully');
         });
 
-        // Global functions
-        window.showAllOrders = function() {
-            const orderCards = document.querySelectorAll('.order-card');
-            orderCards.forEach(card => {
-                card.style.display = 'block';
-            });
-
-            // Remove no results message if exists
-            const noResults = document.querySelector('.no-results');
-            if (noResults) {
-                noResults.remove();
-            }
-        };
-
-        // Logout confirmation function
+        // Utility functions
         function confirmLogout() {
             return confirm('Are you sure you want to log out?');
         }
+
+        // Global search interface - these will be overridden by page-specific functions
+        window.searchOrders = window.searchOrders || function(query) {
+            console.log('Default searchOrders called with:', query);
+        };
+
+        window.showAllOrders = window.showAllOrders || function() {
+            console.log('Default showAllOrders called');
+            const searchInput = document.getElementById('globalSearch');
+            if (searchInput) {
+                searchInput.value = '';
+            }
+        };
+
+        window.performSearch = window.performSearch || function(query) {
+            console.log('Default performSearch called with:', query);
+        };
     </script>
 
     @stack('scripts')

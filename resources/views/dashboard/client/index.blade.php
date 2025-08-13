@@ -463,6 +463,7 @@ body {
     text-align: center;
     background: #f8fafc;
     border: 1px solid #f1f5f9;
+    position: relative;
 }
 
 .skill-card:hover {
@@ -473,14 +474,42 @@ body {
 .skill-card.active {
     transform: translateY(-4px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    background: rgba(56, 193, 185, 0.1);
+    border-color: #38C1B9;
+}
+
+.skill-card.active .skill-icon {
+    background: #38C1B9 !important;
+    color: white !important;
+    box-shadow: 0 6px 20px rgba(56, 193, 185, 0.4) !important;
+}
+
+.skill-card.active .skill-name {
+    color: #38C1B9 !important;
+    font-weight: 600 !important;
+}
+
+.skill-card.active::after {
+    content: '✓';
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #38C1B9;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(56, 193, 185, 0.4);
 }
 
 .skill-card[data-skill="videographer"]:hover,
-.skill-card[data-skill="videographer"].active,
 .skill-card[data-skill="video editor"]:hover,
-.skill-card[data-skill="video editor"].active,
-.skill-card[data-skill="photographer"]:hover,
-.skill-card[data-skill="photographer"].active {
+.skill-card[data-skill="photographer"]:hover {
     background: rgba(116, 204, 205, 0.1);
     border-color: rgba(116, 204, 205, 0.3);
 }
@@ -493,11 +522,8 @@ body {
 }
 
 .skill-card[data-skill="content writing"]:hover,
-.skill-card[data-skill="content writing"].active,
 .skill-card[data-skill="copywriting"]:hover,
-.skill-card[data-skill="copywriting"].active,
-.skill-card[data-skill="translator"]:hover,
-.skill-card[data-skill="translator"].active {
+.skill-card[data-skill="translator"]:hover {
     background: rgba(40, 160, 148, 0.1);
     border-color: rgba(40, 160, 148, 0.3);
 }
@@ -510,13 +536,9 @@ body {
 }
 
 .skill-card[data-skill="ui design"]:hover,
-.skill-card[data-skill="ui design"].active,
 .skill-card[data-skill="front-end"]:hover,
-.skill-card[data-skill="front-end"].active,
 .skill-card[data-skill="back-end"]:hover,
-.skill-card[data-skill="back-end"].active,
-.skill-card[data-skill="fullstack"]:hover,
-.skill-card[data-skill="fullstack"].active {
+.skill-card[data-skill="fullstack"]:hover {
     background: rgba(31, 112, 102, 0.1);
     border-color: rgba(31, 112, 102, 0.3);
 }
@@ -530,9 +552,7 @@ body {
 }
 
 .skill-card[data-skill="graphic design"]:hover,
-.skill-card[data-skill="graphic design"].active,
-.skill-card[data-skill="illustrator"]:hover,
-.skill-card[data-skill="illustrator"].active {
+.skill-card[data-skill="illustrator"]:hover {
     background: rgba(27, 98, 91, 0.1);
     border-color: rgba(27, 98, 91, 0.3);
 }
@@ -561,6 +581,178 @@ body {
     font-size: 0.8rem;
     text-align: center;
     line-height: 1.3;
+    transition: all 0.3s ease;
+}
+
+/* NEW: Filters Section */
+.filters-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1rem 0;
+    flex-wrap: wrap;
+}
+
+.filter-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #64748b;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.filter-button:hover {
+    border-color: #38C1B9;
+    color: #38C1B9;
+    background: #f8fafc;
+}
+
+.filter-button.active {
+    border-color: #38C1B9;
+    background: #38C1B9;
+    color: white;
+}
+
+.filter-button.active .filter-arrow {
+    color: white;
+}
+
+.filter-arrow {
+    font-size: 0.8rem;
+    transition: transform 0.2s ease;
+}
+
+.filter-button.open .filter-arrow {
+    transform: rotate(180deg);
+}
+
+/* Price Filter Dropdown */
+.price-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    margin-top: 8px;
+    padding: 1.5rem;
+    min-width: 300px;
+    z-index: 1000;
+    display: none;
+}
+
+.price-dropdown.show {
+    display: block;
+}
+
+.price-inputs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.price-input-group {
+    flex: 1;
+}
+
+.price-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.price-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.price-input:focus {
+    border-color: #38C1B9;
+}
+
+.price-apply-btn {
+    background: #38C1B9;
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+.price-apply-btn:hover {
+    background: #2da89f;
+}
+
+/* Selected Filters */
+.selected-filters {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.filter-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #38C1B9;
+    color: white;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.filter-tag-close {
+    cursor: pointer;
+    font-size: 1rem;
+    margin-left: 0.25rem;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.filter-tag-close:hover {
+    opacity: 1;
+}
+
+.clear-filters-btn {
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    color: #64748b;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.clear-filters-btn:hover {
+    border-color: #38C1B9;
+    color: #38C1B9;
+    background: #f8fafc;
 }
 
 .talents-section {
@@ -744,6 +936,7 @@ body {
     grid-column: 1 / -1;
 }
 
+/* Responsive */
 @media (max-width: 1024px) {
     .sidebar {
         transform: translateX(-100%);
@@ -795,6 +988,20 @@ body {
 
     .search-container {
         max-width: 320px;
+    }
+
+    .filters-section {
+        flex-wrap: wrap;
+        gap: 0.8rem;
+    }
+
+    .filter-button {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.85rem;
+    }
+
+    .price-dropdown {
+        min-width: 250px;
     }
 }
 
@@ -859,6 +1066,20 @@ body {
     .talent-profile-btn {
         max-width: none;
     }
+
+    .filters-section {
+        gap: 0.5rem;
+    }
+
+    .filter-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    .price-dropdown {
+        min-width: 200px;
+        padding: 1rem;
+    }
 }
 
 @media (max-width: 640px) {
@@ -892,6 +1113,16 @@ body {
     .skills-slide {
         grid-template-columns: repeat(2, 1fr);
         gap: 0.6rem;
+    }
+
+    .filters-section {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+
+    .selected-filters {
+        justify-content: center;
     }
 }
 
@@ -965,13 +1196,13 @@ body {
             <span class="nav-text">Chat</span>
             <span class="nav-badge">3</span>
         </a>
-            <!-- Updated navbar brand with Laravel route -->
-    <a href="{{ route('client.order') }}" class="nav-item {{ request()->routeIs('client.order*') ? 'active' : '' }}">
-    <div class="nav-icon">
-        <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
-    </div>
-    <span class="nav-text">Orders</span>
-</a>
+        <!-- Updated navbar brand with Laravel route -->
+        <a href="{{ route('client.order') }}" class="nav-item {{ request()->routeIs('client.order*') ? 'active' : '' }}">
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
+            </div>
+            <span class="nav-text">Orders</span>
+        </a>
     </nav>
 </div>
 
@@ -1077,6 +1308,40 @@ body {
         </div>
     </div>
 
+    <!-- NEW: Filters Section -->
+    <div class="filters-section">
+        <div class="filter-button" id="filterBtn">
+            <iconify-icon icon="material-symbols:tune"></iconify-icon>
+            Filter
+        </div>
+        
+        <div class="filter-button" id="priceBtn">
+            <iconify-icon icon="material-symbols:payments"></iconify-icon>
+            Price
+            <span class="filter-arrow">▼</span>
+            
+            <!-- Price Filter Dropdown -->
+            <div class="price-dropdown" id="priceDropdown">
+                <div class="price-inputs">
+                    <div class="price-input-group">
+                        <label class="price-label">MIN</label>
+                        <input type="number" class="price-input" id="minPrice" placeholder="0" min="0">
+                    </div>
+                    <div class="price-input-group">
+                        <label class="price-label">MAX</label>
+                        <input type="number" class="price-input" id="maxPrice" placeholder="1000000" min="0">
+                    </div>
+                </div>
+                <button class="price-apply-btn" id="applyPriceFilter">Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Selected Filters Display -->
+    <div class="selected-filters" id="selectedFilters" style="display: none;">
+        <!-- Dynamic filter tags will be inserted here -->
+    </div>
+
     <!-- Talent Grid with Data from Jobs -->
     <div class="talents-section">
         <div class="talent-slider-container">
@@ -1098,6 +1363,8 @@ body {
                                  data-name="{{ $job->freelancer->name ?? 'Unknown' }}"
                                  data-user-id="{{ $job->freelancer->id ?? 0 }}"
                                  data-skills="{{ strtolower($job->category->name ?? 'general') }}"
+                                 data-price="{{ $job->starting_price }}"
+                                 data-category="{{ strtolower($job->category->name ?? 'general') }}"
                                  data-job-id="{{ $job->id }}">
                                 <div class="talent-header">
                                     <div class="talent-skill-badge">{{ $job->category->name ?? 'General' }}</div>
@@ -1152,7 +1419,7 @@ body {
 </div>
 
 <script>
-// Fixed JavaScript code for Dashboard
+// Enhanced JavaScript code for Dashboard with Filters
 document.addEventListener('DOMContentLoaded', function() {
     // Get jobs data from the embedded JSON script
     let jobsData = [];
@@ -1171,6 +1438,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchResults = document.getElementById('searchResults');
     const sidebar = document.getElementById('sidebar');
     const sidebarToggle = document.getElementById('sidebarToggle');
+    const priceBtn = document.getElementById('priceBtn');
+    const priceDropdown = document.getElementById('priceDropdown');
+    const minPriceInput = document.getElementById('minPrice');
+    const maxPriceInput = document.getElementById('maxPrice');
+    const applyPriceBtn = document.getElementById('applyPriceFilter');
+    const selectedFiltersDiv = document.getElementById('selectedFilters');
+
+    // Filter state
+    let activeFilters = {
+        skills: [],
+        priceMin: null,
+        priceMax: null,
+        search: ''
+    };
 
     // Skills slider functionality
     let currentSlide = 0;
@@ -1279,6 +1560,246 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Price filter functions
+    function togglePriceDropdown() {
+        if (priceDropdown && priceBtn) {
+            const isOpen = priceDropdown.classList.contains('show');
+            
+            // Close all dropdowns first
+            document.querySelectorAll('.price-dropdown').forEach(dropdown => {
+                dropdown.classList.remove('show');
+            });
+            document.querySelectorAll('.filter-button').forEach(btn => {
+                btn.classList.remove('open');
+            });
+            
+            if (!isOpen) {
+                priceDropdown.classList.add('show');
+                priceBtn.classList.add('open');
+            }
+        }
+    }
+
+    function applyPriceFilter() {
+        const minPrice = minPriceInput ? parseInt(minPriceInput.value) || null : null;
+        const maxPrice = maxPriceInput ? parseInt(maxPriceInput.value) || null : null;
+        
+        activeFilters.priceMin = minPrice;
+        activeFilters.priceMax = maxPrice;
+        
+        applyFilters();
+        updateSelectedFilters();
+        
+        // Close dropdown
+        if (priceDropdown && priceBtn) {
+            priceDropdown.classList.remove('show');
+            priceBtn.classList.remove('open');
+        }
+        
+        // Update price button appearance
+        if (priceBtn) {
+            if (minPrice !== null || maxPrice !== null) {
+                priceBtn.classList.add('active');
+            } else {
+                priceBtn.classList.remove('active');
+            }
+        }
+    }
+
+    // Filter application function
+    function applyFilters() {
+        const cards = document.querySelectorAll('.talent-card[data-name]');
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            let show = true;
+
+            // Filter by skills/categories
+            if (activeFilters.skills.length > 0) {
+                const cardCategory = (card.getAttribute('data-category') || '').toLowerCase();
+                const cardSkills = (card.getAttribute('data-skills') || '').toLowerCase();
+                
+                const hasMatchingSkill = activeFilters.skills.some(skill => 
+                    cardCategory.includes(skill.toLowerCase()) || 
+                    cardSkills.includes(skill.toLowerCase())
+                );
+                
+                if (!hasMatchingSkill) {
+                    show = false;
+                }
+            }
+
+            // Filter by price range
+            if (show && (activeFilters.priceMin !== null || activeFilters.priceMax !== null)) {
+                const cardPrice = parseInt(card.getAttribute('data-price')) || 0;
+                
+                if (activeFilters.priceMin !== null && cardPrice < activeFilters.priceMin) {
+                    show = false;
+                }
+                if (activeFilters.priceMax !== null && cardPrice > activeFilters.priceMax) {
+                    show = false;
+                }
+            }
+
+            // Filter by search term
+            if (show && activeFilters.search) {
+                const name = (card.getAttribute('data-name') || '').toLowerCase();
+                const skills = (card.getAttribute('data-skills') || '').toLowerCase();
+                const category = (card.getAttribute('data-category') || '').toLowerCase();
+                const searchTerm = activeFilters.search.toLowerCase();
+
+                if (!name.includes(searchTerm) && !skills.includes(searchTerm) && !category.includes(searchTerm)) {
+                    show = false;
+                }
+            }
+
+            if (show) {
+                card.style.display = 'flex';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        showNoResultsMessage(visibleCount === 0);
+    }
+
+    // Update selected filters display
+    function updateSelectedFilters() {
+        if (!selectedFiltersDiv) return;
+
+        let filterTags = [];
+
+        // Add skill filters
+        activeFilters.skills.forEach(skill => {
+            filterTags.push({
+                type: 'skill',
+                value: skill,
+                display: skill.charAt(0).toUpperCase() + skill.slice(1),
+                onRemove: () => removeSkillFilter(skill)
+            });
+        });
+
+        // Add price filter
+        if (activeFilters.priceMin !== null || activeFilters.priceMax !== null) {
+            let priceDisplay = 'Price: ';
+            if (activeFilters.priceMin !== null && activeFilters.priceMax !== null) {
+                priceDisplay += `Rp${activeFilters.priceMin.toLocaleString()} - Rp${activeFilters.priceMax.toLocaleString()}`;
+            } else if (activeFilters.priceMin !== null) {
+                priceDisplay += `Min Rp${activeFilters.priceMin.toLocaleString()}`;
+            } else {
+                priceDisplay += `Max Rp${activeFilters.priceMax.toLocaleString()}`;
+            }
+
+            filterTags.push({
+                type: 'price',
+                value: 'price',
+                display: priceDisplay,
+                onRemove: removePriceFilter
+            });
+        }
+
+        // Add search filter
+        if (activeFilters.search) {
+            filterTags.push({
+                type: 'search',
+                value: 'search',
+                display: `Search: "${activeFilters.search}"`,
+                onRemove: removeSearchFilter
+            });
+        }
+
+        if (filterTags.length > 0) {
+            selectedFiltersDiv.style.display = 'flex';
+            selectedFiltersDiv.innerHTML = filterTags.map(tag => `
+                <div class="filter-tag" data-type="${tag.type}" data-value="${tag.value}">
+                    ${tag.display}
+                    <span class="filter-tag-close" onclick="removeFilter('${tag.type}', '${tag.value}')">&times;</span>
+                </div>
+            `).join('') + `
+                <button class="clear-filters-btn" onclick="clearAllFilters()">Clear All</button>
+            `;
+        } else {
+            selectedFiltersDiv.style.display = 'none';
+        }
+    }
+
+    // Filter removal functions
+    function removeSkillFilter(skill) {
+        activeFilters.skills = activeFilters.skills.filter(s => s !== skill);
+        
+        // Remove active state from skill card
+        const skillCards = document.querySelectorAll('.skill-card');
+        skillCards.forEach(card => {
+            if (card.getAttribute('data-skill') === skill) {
+                card.classList.remove('active');
+            }
+        });
+        
+        applyFilters();
+        updateSelectedFilters();
+    }
+
+    function removePriceFilter() {
+        activeFilters.priceMin = null;
+        activeFilters.priceMax = null;
+        
+        if (minPriceInput) minPriceInput.value = '';
+        if (maxPriceInput) maxPriceInput.value = '';
+        if (priceBtn) priceBtn.classList.remove('active');
+        
+        applyFilters();
+        updateSelectedFilters();
+    }
+
+    function removeSearchFilter() {
+        activeFilters.search = '';
+        if (searchInput) searchInput.value = '';
+        
+        applyFilters();
+        updateSelectedFilters();
+    }
+
+    // Global function to remove individual filters
+    window.removeFilter = function(type, value) {
+        switch(type) {
+            case 'skill':
+                removeSkillFilter(value);
+                break;
+            case 'price':
+                removePriceFilter();
+                break;
+            case 'search':
+                removeSearchFilter();
+                break;
+        }
+    };
+
+    // Global function to clear all filters
+    window.clearAllFilters = function() {
+        // Clear all filter states
+        activeFilters = {
+            skills: [],
+            priceMin: null,
+            priceMax: null,
+            search: ''
+        };
+
+        // Clear UI elements
+        document.querySelectorAll('.skill-card').forEach(card => {
+            card.classList.remove('active');
+        });
+
+        if (minPriceInput) minPriceInput.value = '';
+        if (maxPriceInput) maxPriceInput.value = '';
+        if (priceBtn) priceBtn.classList.remove('active');
+        if (searchInput) searchInput.value = '';
+
+        // Apply filters (show all)
+        applyFilters();
+        updateSelectedFilters();
+    };
+
     // Event listeners for skills slider
     if (nextBtn) {
         nextBtn.addEventListener('click', function(e) {
@@ -1302,6 +1823,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentSlide = index;
                 updateSkillsSlider();
             });
+        }
+    });
+
+    // Price filter event listeners
+    if (priceBtn) {
+        priceBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            togglePriceDropdown();
+        });
+    }
+
+    if (applyPriceBtn) {
+        applyPriceBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            applyPriceFilter();
+        });
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.filter-button')) {
+            document.querySelectorAll('.price-dropdown').forEach(dropdown => {
+                dropdown.classList.remove('show');
+            });
+            document.querySelectorAll('.filter-button').forEach(btn => {
+                btn.classList.remove('open');
+            });
+        }
+
+        // Hide search results when clicking outside search
+        if (!e.target.closest('.search-container')) {
+            if (searchResults) {
+                searchResults.classList.remove('show');
+            }
         }
     });
 
@@ -1339,10 +1895,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Search functionality
     function performSearch(query) {
+        activeFilters.search = query;
+        
         if (!query || query.length < 2) {
             if (searchResults) {
                 searchResults.classList.remove('show');
             }
+            activeFilters.search = '';
+            applyFilters();
+            updateSelectedFilters();
             return;
         }
 
@@ -1358,6 +1919,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         displaySearchResults(filtered);
+        applyFilters();
+        updateSelectedFilters();
     }
 
     function displaySearchResults(results) {
@@ -1372,7 +1935,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const title = job.title || 'Untitled';
 
                 return `
-                    <div class="search-result-item" onclick="selectSearchResult('${freelancerName}')">
+                    <div class="search-result-item" onclick="selectSearchResult('${freelancerName}', '${category}')">
                         <div class="search-result-name">${freelancerName}</div>
                         <div class="search-result-skills">${category} - ${title}</div>
                     </div>
@@ -1386,7 +1949,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (searchInput) {
         searchInput.addEventListener('input', function() {
             const query = this.value.trim();
-            performSearch(query);
+            if (query.length >= 2) {
+                performSearch(query);
+            } else if (query.length === 0) {
+                activeFilters.search = '';
+                applyFilters();
+                updateSelectedFilters();
+                if (searchResults) {
+                    searchResults.classList.remove('show');
+                }
+            }
         });
 
         searchInput.addEventListener('focus', function() {
@@ -1402,7 +1974,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.preventDefault();
                 const query = this.value.trim();
                 if (query) {
-                    filterTalentsBySearch(query);
+                    performSearch(query);
                     if (searchResults) {
                         searchResults.classList.remove('show');
                     }
@@ -1419,7 +1991,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (searchInput) {
                 const query = searchInput.value.trim();
                 if (query) {
-                    filterTalentsBySearch(query);
+                    performSearch(query);
                     if (searchResults) {
                         searchResults.classList.remove('show');
                     }
@@ -1428,67 +2000,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Hide search results when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.search-container')) {
-            if (searchResults) {
-                searchResults.classList.remove('show');
-            }
-        }
-    });
-
-    // Filter talents by search query
-    function filterTalentsBySearch(query) {
-        const cards = document.querySelectorAll('.talent-card');
-        let hasResults = false;
-
-        cards.forEach(card => {
-            const name = (card.getAttribute('data-name') || '').toLowerCase();
-            const skills = (card.getAttribute('data-skills') || '').toLowerCase();
-            const searchTerm = query.toLowerCase();
-            const hasMatch = name.includes(searchTerm) || skills.includes(searchTerm);
-
-            if (hasMatch || query === '') {
-                card.style.display = 'block';
-                hasResults = true;
-            } else {
-                card.style.display = 'none';
-            }
-        });
-
-        showNoResultsMessage(!hasResults && query !== '');
-    }
-
     // Global function for search result selection
-    window.selectSearchResult = function(name) {
+    window.selectSearchResult = function(name, category) {
         if (searchInput) {
             searchInput.value = name;
-            filterTalentsBySearch(name);
+            activeFilters.search = name;
+            applyFilters();
+            updateSelectedFilters();
         }
         if (searchResults) {
             searchResults.classList.remove('show');
         }
     };
-
-    // Filter talents by skill
-    function filterTalentsBySkill(skillName) {
-        const cards = document.querySelectorAll('.talent-card');
-        let hasResults = false;
-
-        cards.forEach(card => {
-            const cardSkills = (card.getAttribute('data-skills') || '').toLowerCase();
-            const hasSkill = cardSkills.includes(skillName.toLowerCase());
-
-            if (hasSkill) {
-                card.style.display = 'block';
-                hasResults = true;
-            } else {
-                card.style.display = 'none';
-            }
-        });
-
-        showNoResultsMessage(!hasResults);
-    }
 
     // Show no results message
     function showNoResultsMessage(show) {
@@ -1514,29 +2037,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Global function to clear all filters
-    window.clearAllFilters = function() {
-        // Remove active state from skill cards
-        const skillCards = document.querySelectorAll('.skill-card');
-        skillCards.forEach(card => {
-            card.classList.remove('active');
-        });
-
-        // Show all talent cards
-        const talentCards = document.querySelectorAll('.talent-card');
-        talentCards.forEach(card => {
-            card.style.display = 'block';
-        });
-
-        // Clear search input
-        if (searchInput) {
-            searchInput.value = '';
-        }
-
-        // Remove no results message
-        showNoResultsMessage(false);
-    };
-
     // Skill card and profile button event delegation
     document.addEventListener('click', function(e) {
         // Handle skill card clicks
@@ -1546,16 +2046,22 @@ document.addEventListener('DOMContentLoaded', function() {
             const skillName = skillCard.getAttribute('data-skill');
 
             if (skillName) {
-                // Remove active class from all skill cards
-                document.querySelectorAll('.skill-card').forEach(card => {
-                    card.classList.remove('active');
-                });
+                const isActive = skillCard.classList.contains('active');
+                
+                if (isActive) {
+                    // Remove skill from active filters
+                    skillCard.classList.remove('active');
+                    activeFilters.skills = activeFilters.skills.filter(s => s !== skillName);
+                } else {
+                    // Add skill to active filters
+                    skillCard.classList.add('active');
+                    if (!activeFilters.skills.includes(skillName)) {
+                        activeFilters.skills.push(skillName);
+                    }
+                }
 
-                // Add active state to clicked card
-                skillCard.classList.add('active');
-
-                // Filter talents by skill
-                filterTalentsBySkill(skillName);
+                applyFilters();
+                updateSelectedFilters();
             }
         }
 
@@ -1616,14 +2122,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Escape to clear search
+        // Escape to clear search and close dropdowns
         if (e.key === 'Escape') {
             if (searchResults) {
                 searchResults.classList.remove('show');
             }
+            
+            document.querySelectorAll('.price-dropdown').forEach(dropdown => {
+                dropdown.classList.remove('show');
+            });
+            document.querySelectorAll('.filter-button').forEach(btn => {
+                btn.classList.remove('open');
+            });
+            
             if (searchInput && searchInput.value) {
                 searchInput.value = '';
-                clearAllFilters();
+                activeFilters.search = '';
+                applyFilters();
+                updateSelectedFilters();
             }
         }
 
@@ -1640,7 +2156,11 @@ document.addEventListener('DOMContentLoaded', function() {
     updateSkillsSlider();
     updateTalentSlider();
 
-    console.log('Dashboard initialized successfully');
+    // Initialize filters
+    applyFilters();
+    updateSelectedFilters();
+
+    console.log('Enhanced Dashboard with filters initialized successfully');
 });
 
 // Logout confirmation function

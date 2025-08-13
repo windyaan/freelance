@@ -1,15 +1,15 @@
 @extends('layouts.client')
 
-{{-- @if (auth()->user()->role === 'freelancer')
-    @extends('layouts.freelance')
-@else
-    @extends('layouts.client')
-@endif --}}
-
 @section('title', 'Profile - SkillMatch')
 
 @section('content')
 <style>
+/* Prevent horizontal overflow globally */
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -22,60 +22,193 @@ body {
     color: #334155;
 }
 
-/* Top Navigation */
 .top-navbar {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 80px;
+    height: 70px;
     background: white;
+    border-bottom: 1px solid #e2e8f0;
     display: flex;
     align-items: center;
     padding: 0 2rem;
     z-index: 1001;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    max-width: 100vw;
+    overflow: hidden;
 }
 
 .navbar-left {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1rem;
     flex: 1;
+    min-width: 0;
 }
 
 .navbar-brand {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: #38C1B9;
     text-decoration: none;
+    white-space: nowrap;
 }
 
-.navbar-brand span {
-    color: #1e293b;
-}
-
-.page-title {
+.navbar-title {
+    margin-left: 2rem;
     font-size: 1.5rem;
-    font-weight: 600;
+    font-weight: 700;
     color: #1e293b;
+    white-space: nowrap;
+}
+
+.navbar-center {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 450px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+}
+
+.search-container:focus-within {
+    box-shadow: 0 4px 16px rgba(56, 193, 185, 0.15);
+    border-color: #38C1B9;
+}
+
+.search-input-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 3rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: transparent;
+    outline: none;
+    color: #334155;
+    flex: 1;
+}
+
+.search-container input::placeholder {
+    color: #94a3b8;
+    font-weight: 400;
+}
+
+.search-container .search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 1.1rem;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.search-container .search-btn {
+    background: #38C1B9;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 4px;
+    white-space: nowrap;
+    min-width: 80px;
+    flex-shrink: 0;
+}
+
+.search-container .search-btn:hover {
+    background: #2da89f;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(56, 193, 185, 0.3);
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e2e8f0;
+    margin-top: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+}
+
+.search-results.show {
+    display: block;
+}
+
+.search-result-item {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f1f5f9;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.search-result-item:hover {
+    background-color: #f8fafc;
+}
+
+.search-result-name {
+    font-weight: 500;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.search-result-skills {
+    font-size: 0.8rem;
+    color: #64748b;
 }
 
 .navbar-right {
     display: flex;
     align-items: center;
+    gap: 1rem;
+    flex: 1;
+    justify-content: flex-end;
 }
 
-.logout-btn {
+.navbar-logout-form {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-logout {
     background: #ef4444;
     color: white;
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -85,7 +218,7 @@ body {
     gap: 0.5rem;
 }
 
-.logout-btn:hover {
+.navbar-logout:hover {
     background: #dc2626;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
@@ -93,34 +226,52 @@ body {
     text-decoration: none;
 }
 
-/* Sidebar */
+.navbar-profile {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.navbar-profile:hover {
+    border-color: #38C1B9;
+}
+
+.navbar-profile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .sidebar {
     position: fixed;
     left: 0;
-    top: 80px;
-    width: 280px;
-    height: calc(100vh - 80px);
+    top: 70px;
+    width: 240px;
+    height: calc(100vh - 70px);
     background: #ffffff;
+    border-right: 1px solid #e2e8f0;
     z-index: 1000;
-    padding: 2rem 0;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem 0;
 }
 
 .nav-item {
     display: flex;
     align-items: center;
-    padding: 1rem 2rem;
+    padding: 1rem 1.5rem;
     color: #64748b;
     text-decoration: none;
     cursor: pointer;
-    margin: 0 1rem 0.5rem 1rem;
-    border-radius: 12px;
+    margin-bottom: 0.5rem;
     transition: all 0.2s ease;
-    font-weight: 500;
+    border-radius: 0;
 }
 
 .nav-item:hover {
-    background: #f1f5f9;
+    background: #f8fafc;
     color: #1e293b;
     text-decoration: none;
 }
@@ -128,17 +279,19 @@ body {
 .nav-item.active {
     background: #475569;
     color: white;
+    border-radius: 12px;
+    margin: 0 1rem 0.5rem 1rem;
 }
 
 .nav-icon {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     margin-right: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
-    background: rgba(100, 116, 139, 0.1);
+    font-size: 1.3rem;
+    background: #f1f5f9;
     border-radius: 8px;
     color: #64748b;
 }
@@ -150,18 +303,36 @@ body {
 
 .nav-text {
     flex: 1;
+    font-weight: 500;
     font-size: 0.95rem;
 }
 
-/* Main Content */
-.main-content {
-    margin-left: 280px;
-    margin-top: 80px;
-    min-height: calc(100vh - 80px);
-    padding: 2.5rem;
-    background: #f8fafc;
+.nav-badge {
+    background: #38C1B9;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: auto;
 }
 
+.main-content {
+    margin-left: 240px;
+    margin-top: 70px;
+    min-height: calc(100vh - 70px);
+    padding: 2rem;
+    background: #f8fafc;
+    max-width: calc(100vw - 240px);
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+/* Back Button */
 .back-button {
     display: inline-flex;
     align-items: center;
@@ -501,7 +672,7 @@ body {
     font-weight: 500;
 }
 
-/* Responsive Design */
+/* Mobile Responsiveness */
 @media (max-width: 1200px) {
     .profile-container {
         grid-template-columns: 1fr;
@@ -524,27 +695,70 @@ body {
         transition: transform 0.3s ease;
     }
 
+    .sidebar.show {
+        transform: translateX(0);
+    }
+
+    .sidebar-toggle {
+        display: flex !important;
+        flex-direction: column;
+        cursor: pointer;
+        width: 24px;
+        height: 18px;
+        justify-content: space-between;
+        margin-right: 1rem;
+    }
+
+    .sidebar-toggle span {
+        width: 100%;
+        height: 2px;
+        background: #64748b;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+    }
+
     .main-content {
         margin-left: 0;
-        padding: 2rem;
+        max-width: 100vw;
+        padding: 1.5rem;
+    }
+
+    .navbar-center {
+        flex: 1.5;
+        max-width: 350px;
+    }
+
+    .search-container {
+        max-width: 320px;
     }
 }
 
 @media (max-width: 768px) {
-    .top-navbar {
-        padding: 0 1rem;
+    .navbar-title {
+        display: none;
     }
 
-    .navbar-brand {
-        font-size: 1.5rem;
+    .navbar-center {
+        flex: 2;
+        max-width: 280px;
     }
 
-    .page-title {
-        font-size: 1.25rem;
+    .search-container {
+        max-width: 250px;
+    }
+
+    .search-container input {
+        font-size: 0.85rem;
+        padding: 0.6rem 0.8rem 0.6rem 2.5rem;
+    }
+
+    .search-container .search-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
     }
 
     .main-content {
-        padding: 1.5rem;
+        padding: 1rem;
     }
 
     .profile-info {
@@ -564,21 +778,67 @@ body {
         font-size: 1.5rem;
     }
 }
+
+@media (max-width: 640px) {
+    .navbar-brand span:last-child {
+        display: none;
+    }
+
+    .navbar-center {
+        display: none;
+    }
+
+    .main-content {
+        padding: 0.8rem;
+    }
+}
+
+.logo h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #38C1B9;
+}
+
+.logo span {
+    color: #1e293b;
+}
 </style>
+
+<!-- Load Iconify -->
+<script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
 
 <!-- Top Navigation -->
 <div class="top-navbar">
     <div class="navbar-left">
+        <div class="sidebar-toggle" id="sidebarToggle" style="display: none;">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
         <a href="{{ route('client.dashboard') }}" class="navbar-brand">
-            skill<span>Match</span>
+            <div class="logo" style="margin-top: 60px;">
+                <h1>Skill<span>Match</span></h1>
+            </div>
         </a>
-        <h1 class="page-title">Profile</h1>
+        <h1 class="navbar-title">Profile</h1>
     </div>
-       <!-- Logout Form - Using Laravel's proper logout method -->
+    <div class="navbar-center">
+        <div class="search-container">
+            <iconify-icon icon="material-symbols:search" class="search-icon"></iconify-icon>
+            <input type="text" class="search-input" placeholder="Search talents, skills..." id="globalSearch">
+            <button class="search-btn" id="searchBtn">Search</button>
+            <div class="search-results" id="searchResults"></div>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <div class="navbar-profile" onclick="goToProfile()">
+            <img src="{{ $user->avatar_url ?? 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face' }}" alt="Profile">
+        </div>
+
         <form method="POST" action="{{ route('logout') }}" class="navbar-logout-form">
             @csrf
             <button type="submit" class="navbar-logout" onclick="return confirmLogout()">
-                <span>🚪</span>
+                <iconify-icon icon="material-symbols:logout"></iconify-icon>
                 Log Out
             </button>
         </form>
@@ -586,18 +846,25 @@ body {
 </div>
 
 <!-- Sidebar -->
-<div class="sidebar">
+<div class="sidebar" id="sidebar">
     <nav>
-        <a href="{{ route('client.dashboard') }}" class="nav-item active">
-            <div class="nav-icon">📊</div>
+        <a href="{{ route('client.dashboard') }}" class="nav-item {{ request()->routeIs('client.dashboard') ? 'active' : '' }}">
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:dashboard"></iconify-icon>
+            </div>
             <span class="nav-text">Dashboard</span>
         </a>
-        <a href="#" class="nav-item">
-            <div class="nav-icon">💬</div>
+        <a href="{{ route('client.chat') }}" class="nav-item {{ request()->routeIs('client.chat') ? 'active' : '' }}">
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:chat"></iconify-icon>
+            </div>
             <span class="nav-text">Chat</span>
+            <span class="nav-badge">3</span>
         </a>
-        <a href="#" class="nav-item">
-            <div class="nav-icon">📋</div>
+        <a href="{{ route('client.order') }}" class="nav-item {{ request()->routeIs('client.order*') ? 'active' : '' }}">
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
+            </div>
             <span class="nav-text">Orders</span>
         </a>
     </nav>
@@ -610,12 +877,11 @@ body {
             'client' => route('client.dashboard'),
             'freelancer' => route('freelancer.dashboard'),
             'admin' => route('admin.dashboard'),
-            // default => route('landing'),
         };
     @endphp
 
     <!-- Back Button -->
-    <a href="{{ $dashboardRoute }}" class="back-btn">
+    <a href="{{ $dashboardRoute }}" class="back-button">
         <span>←</span>
         Back
     </a>
@@ -709,42 +975,23 @@ body {
                 @enderror
             </div>
 
-            {{-- @if ($user->role === 'freelancer')
-            <div class="form-group">
-                <label class="form-label">Skills</label>
-                @php
-                $skills = old('skills', explode(',', $user->skills ?? ''));
-                @endphp
-
-                @foreach ($skills as $index => $skill)
-                <input type="text" name="skills" class="form-input" value="{{ trim($skill) }}" placeholder="Skill {{ $index + 1 }}" style="margin-bottom: 0.75rem;">
-                @endforeach
-
-                <input type="text" name="skills" class="form-input" placeholder="Add new skill...">
-
-                @error('skills')
-                <div class="error-message">{{ $message }}</div>
-                @enderror
-            </div>
-            @endif --}}
-
             @if (auth()->user()->role === 'freelancer')
             <div class="form-group">
-            <label for="skills">Skills</label>
-            <input
-            type="text"
-            id="skills"
-            name="skills"
-            class="form-input @error('skills') border-red-500 @enderror"
-            value="{{ old('skills', $user->profile->skills ?? '') }}"
-            placeholder="Contoh: PHP, Laravel, JavaScript"
-            autocomplete="off">
-            <small class="text-gray-500">Pisahkan skill dengan koma (,)</small>
-            @error('skills')
-            <div class="error-message text-red-500 mt-1">{{ $message }}</div>
-            @enderror
-         </div>
-        @endif
+                <label for="skills">Skills</label>
+                <input
+                    type="text"
+                    id="skills"
+                    name="skills"
+                    class="form-input @error('skills') border-red-500 @enderror"
+                    value="{{ old('skills', $user->profile->skills ?? '') }}"
+                    placeholder="Contoh: PHP, Laravel, JavaScript"
+                    autocomplete="off">
+                <small class="text-gray-500">Pisahkan skill dengan koma (,)</small>
+                @error('skills')
+                <div class="error-message text-red-500 mt-1">{{ $message }}</div>
+                @enderror
+            </div>
+            @endif
 
             <div class="modal-buttons">
                 <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
@@ -755,6 +1002,103 @@ body {
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Cache DOM elements
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const searchInput = document.getElementById('globalSearch');
+    const searchResults = document.getElementById('searchResults');
+
+    // Sidebar functionality
+    if (sidebarToggle && sidebar) {
+        // Create overlay
+        const sidebarOverlay = document.createElement('div');
+        sidebarOverlay.style.cssText = `
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            backdrop-filter: blur(4px);
+        `;
+        document.body.appendChild(sidebarOverlay);
+
+        sidebarToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            sidebar.classList.toggle('show');
+            sidebarOverlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
+        });
+
+        sidebarOverlay.addEventListener('click', function() {
+            sidebar.classList.remove('show');
+            sidebarOverlay.style.display = 'none';
+        });
+    }
+
+    // Search functionality (basic implementation)
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            if (query.length > 2) {
+                // Show search results (this would typically connect to your search API)
+                if (searchResults) {
+                    searchResults.innerHTML = `
+                        <div class="search-result-item">
+                            <div class="search-result-name">Search for: "${query}"</div>
+                            <div class="search-result-skills">Press Enter to search</div>
+                        </div>
+                    `;
+                    searchResults.classList.add('show');
+                }
+            } else {
+                if (searchResults) {
+                    searchResults.classList.remove('show');
+                }
+            }
+        });
+
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const query = this.value.trim();
+                if (query) {
+                    // Redirect to dashboard with search query
+                    window.location.href = `{{ route('client.dashboard') }}?search=${encodeURIComponent(query)}`;
+                }
+            }
+        });
+    }
+
+    // Search button functionality
+    const searchBtn = document.getElementById('searchBtn');
+    if (searchBtn) {
+        searchBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (searchInput) {
+                const query = searchInput.value.trim();
+                if (query) {
+                    window.location.href = `{{ route('client.dashboard') }}?search=${encodeURIComponent(query)}`;
+                }
+            }
+        });
+    }
+
+    // Hide search results when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.search-container')) {
+            if (searchResults) {
+                searchResults.classList.remove('show');
+            }
+        }
+    });
+
+    console.log('Profile page initialized successfully');
+});
+
+// Modal Functions
 function openEditModal() {
     const modal = document.getElementById('editProfileModal');
     if (modal) {
@@ -793,6 +1137,11 @@ function handleFileSelect(input) {
 
 function confirmLogout() {
     return confirm('Are you sure you want to log out?');
+}
+
+function goToProfile() {
+    // Already on profile page, could open edit modal instead
+    openEditModal();
 }
 
 // Close modal when clicking outside

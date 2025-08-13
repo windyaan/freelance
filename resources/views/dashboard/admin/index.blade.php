@@ -16,59 +16,123 @@ body {
     color: #334155;
 }
 
+/* Top Navigation - Fixed Height */
 .top-navbar {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 70px;
+    height: 50px; /* Further reduced from 60px */
     background: white;
     border-bottom: 1px solid #e2e8f0;
     display: flex;
     align-items: center;
-    padding: 0 2rem;
+    justify-content: space-between;
+    padding: 0 1.25rem; /* Reduced padding */
     z-index: 1001;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .navbar-left {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    flex: 1;
-    min-width: 0;
+    gap: 1.25rem; /* Reduced gap */
 }
 
 .navbar-brand {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 1.5rem;
+    gap: 0.25rem;
+    font-size: 1.1rem; /* Further reduced from 1.25rem */
     font-weight: 700;
     color: #38C1B9;
     text-decoration: none;
-    white-space: nowrap;
+}
+
+.navbar-brand span {
+    color: #1e293b;
 }
 
 .navbar-title {
-    margin-left: 2rem;
-    font-size: 1.5rem;
+    font-size: 1.1rem; /* Further reduced from 1.25rem */
     font-weight: 700;
     color: #1e293b;
-    white-space: nowrap;
+}
+
+.navbar-center {
+    display: none; /* Hide search bar completely */
+}
+
+.search-container-nav {
+    position: relative;
+    width: 100%;
+    max-width: 350px; /* Reduced from 400px */
+}
+
+.search-input-nav {
+    width: 100%;
+    padding: 0.5rem 1rem 0.5rem 2.25rem; /* Reduced padding */
+    border: 1px solid #e2e8f0;
+    border-radius: 20px; /* Reduced from 25px */
+    font-size: 0.85rem; /* Reduced from 0.9rem */
+    background: #f8fafc;
+    transition: all 0.2s ease;
+    color: #64748b;
+    height: 36px; /* Fixed height */
+}
+
+.search-input-nav:focus {
+    outline: none;
+    border-color: #38C1B9;
+    box-shadow: 0 0 0 3px rgba(56, 193, 185, 0.1);
+    background: white;
+}
+
+.search-input-nav::placeholder {
+    color: #94a3b8;
+}
+
+.search-icon-nav {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 1rem; /* Reduced from 1.1rem */
+    pointer-events: none;
+}
+
+.search-btn-nav {
+    position: absolute;
+    right: 0.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #38C1B9;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem; /* Reduced padding */
+    border-radius: 16px; /* Reduced from 20px */
+    font-size: 0.8rem; /* Reduced from 0.85rem */
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 28px; /* Fixed height */
+}
+
+.search-btn-nav:hover {
+    background: #2da89f;
+    transform: translateY(-50%) translateY(-1px);
 }
 
 .navbar-right {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    flex: 1;
-    justify-content: flex-end;
+    gap: 0.75rem; /* Reduced from 1rem */
 }
 
 .navbar-profile {
-    width: 40px;
-    height: 40px;
+    width: 32px; /* Further reduced from 36px */
+    height: 32px; /* Further reduced from 36px */
     border-radius: 50%;
     overflow: hidden;
     cursor: pointer;
@@ -87,75 +151,78 @@ body {
 }
 
 .navbar-logout {
-    background: #ef4444;
+    background: #ff4757;
     color: white;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-size: 0.85rem;
+    padding: 0.35rem 0.7rem; /* Further reduced padding */
+    border-radius: 6px; /* Reduced border radius */
+    font-size: 0.75rem; /* Further reduced from 0.8rem */
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.3rem; /* Further reduced gap */
+    height: 28px; /* Reduced height */
 }
 
 .navbar-logout:hover {
-    background: #dc2626;
+    background: #ff3838;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
     color: white;
     text-decoration: none;
 }
 
+/* Sidebar */
 .sidebar {
     position: fixed;
     left: 0;
-    top: 70px;
-    width: 240px;
-    height: calc(100vh - 70px);
+    top: 50px; /* Updated to match navbar height */
+    width: 180px; /* Reduced from 200px */
+    height: calc(100vh - 50px);
     background: #ffffff;
     border-right: 1px solid #e2e8f0;
     z-index: 1000;
-    padding: 1.5rem 0;
+    padding: 1.5rem 0; /* Reduced padding */
 }
 
 .nav-item {
     display: flex;
     align-items: center;
-    padding: 1rem 1.5rem;
+    padding: 0.6rem 1rem; /* Reduced padding */
     color: #64748b;
     text-decoration: none;
     cursor: pointer;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.2rem; /* Reduced margin */
     transition: all 0.2s ease;
-    border-radius: 0;
+    font-weight: 500;
+    font-size: 0.9rem; /* Added font size */
 }
 
 .nav-item:hover {
     background: #f8fafc;
     color: #1e293b;
+    text-decoration: none;
 }
 
 .nav-item.active {
     background: #475569;
     color: white;
-    border-radius: 12px;
-    margin: 0 1rem 0.5rem 1rem;
+    border-radius: 8px; /* Reduced from 12px */
+    margin: 0 0.75rem 0.2rem 0.75rem; /* Reduced margin */
 }
 
 .nav-icon {
-    width: 32px;
-    height: 32px;
-    margin-right: 1rem;
+    width: 28px; /* Reduced from 32px */
+    height: 28px; /* Reduced from 32px */
+    margin-right: 0.6rem; /* Reduced from 0.75rem */
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.3rem;
+    font-size: 1.1rem; /* Reduced from 1.2rem */
     background: #f1f5f9;
-    border-radius: 8px;
+    border-radius: 6px;
     color: #64748b;
 }
 
@@ -164,80 +231,53 @@ body {
     color: white;
 }
 
-.nav-text {
-    flex: 1;
-    font-weight: 500;
-    font-size: 0.95rem;
-}
-
+/* Main Content */
 .main-content {
-    margin-left: 240px;
-    margin-top: 70px;
-    min-height: calc(100vh - 70px);
-    padding: 2rem;
+    margin-left: 180px; /* Updated to match sidebar width */
+    margin-top: 50px; /* Updated to match navbar height */
+    min-height: calc(100vh - 50px);
+    padding: 1.5rem; /* Reduced from 2rem */
     background: #f8fafc;
 }
 
-/* Stats Cards - Modified */
-.stats-section {
+/* Stats Section */
+.stats-container {
     display: flex;
-    gap: 2rem;
-    margin-bottom: 2rem;
+    gap: 1.25rem; /* Reduced from 1.5rem */
+    margin-bottom: 1.5rem; /* Reduced from 2rem */
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem; /* Reduced from 1.5rem */
+    flex: 1;
 }
 
 .stat-card {
     background: white;
-    border-radius: 16px;
-    padding: 2rem;
-    flex: 1;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 1.25rem; /* Reduced from 1.5rem */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     border: 1px solid #f1f5f9;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    transition: all 0.2s ease;
     text-align: center;
 }
 
-.stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-}
-
-.stat-card.freelance::before {
-    background: linear-gradient(90deg, #6366f1, #8b5cf6);
-}
-
-.stat-card.client::before {
-    background: linear-gradient(90deg, #f59e0b, #f97316);
-}
-
-.stat-card.order::before {
-    background: linear-gradient(90deg, #38C1B9, #10b981);
-}
-
-.stat-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    width: 100%;
-    justify-content: center;
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .stat-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
+    width: 44px; /* Reduced from 48px */
+    height: 44px; /* Reduced from 48px */
+    margin: 0 auto 0.75rem; /* Reduced margin */
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.4rem; /* Reduced from 1.5rem */
     color: white;
 }
 
@@ -250,40 +290,60 @@ body {
 }
 
 .stat-card.order .stat-icon {
-    background: linear-gradient(135deg, #38C1B9, #10b981);
+    background: linear-gradient(135deg, #10b981, #059669);
 }
 
 .stat-title {
-    font-size: 1rem;
+    font-size: 0.85rem; /* Reduced from 0.9rem */
     color: #64748b;
-    font-weight: 600;
-}
-
-.stat-content {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    justify-content: center;
+    font-weight: 500;
+    margin-bottom: 0.4rem; /* Reduced margin */
 }
 
 .stat-number {
-    font-size: 2rem;
+    font-size: 1.75rem; /* Reduced from 2rem */
     font-weight: 700;
     color: #1e293b;
+    margin-bottom: 0.2rem; /* Reduced margin */
 }
 
 .stat-label {
-    font-size: 0.9rem;
+    font-size: 0.75rem; /* Reduced from 0.8rem */
     color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Profit Card */
+.profit-card {
+    background: linear-gradient(135deg, #38C1B9, #10b981);
+    color: white;
+    border-radius: 12px;
+    padding: 1.5rem; /* Reduced from 2rem */
+    min-width: 240px; /* Reduced from 280px */
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(56, 193, 185, 0.3);
+}
+
+.profit-title {
+    font-size: 0.85rem; /* Reduced from 0.9rem */
+    opacity: 0.9;
+    margin-bottom: 0.4rem; /* Reduced margin */
     font-weight: 500;
+}
+
+.profit-amount {
+    font-size: 2.25rem; /* Reduced from 2.5rem */
+    font-weight: 700;
+    margin-bottom: 0.4rem; /* Reduced margin */
 }
 
 /* Users Section */
 .users-section {
     background: white;
-    border-radius: 16px;
-    padding: 2rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem; /* Reduced from 2rem */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     border: 1px solid #f1f5f9;
 }
 
@@ -291,11 +351,11 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem; /* Reduced from 2rem */
 }
 
 .users-title {
-    font-size: 1.5rem;
+    font-size: 1.125rem; /* Reduced from 1.25rem */
     font-weight: 700;
     color: #1e293b;
 }
@@ -303,56 +363,100 @@ body {
 .search-container {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.6rem; /* Reduced from 0.75rem */
+}
+
+.search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .search-input {
-    padding: 0.5rem 1rem 0.5rem 2.5rem;
+    padding: 0.6rem 1rem 0.6rem 2.25rem; /* Reduced padding */
     border: 1px solid #e2e8f0;
     border-radius: 8px;
-    font-size: 0.9rem;
-    width: 300px;
-    position: relative;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="%23a1a1aa"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>') no-repeat 0.75rem center;
-    background-size: 1rem;
+    font-size: 0.85rem; /* Reduced from 0.9rem */
+    width: 240px; /* Reduced from 280px */
+    background: #f8fafc;
+    transition: all 0.2s ease;
+    height: 36px; /* Fixed height */
 }
 
 .search-input:focus {
     outline: none;
     border-color: #38C1B9;
     box-shadow: 0 0 0 3px rgba(56, 193, 185, 0.1);
+    background: white;
+}
+
+.search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 1rem; /* Reduced from 1.1rem */
+    pointer-events: none;
 }
 
 .search-btn {
     background: #38C1B9;
     color: white;
     border: none;
-    padding: 0.5rem 1.5rem;
+    padding: 0.6rem 1rem; /* Reduced padding */
     border-radius: 8px;
-    font-size: 0.9rem;
+    font-size: 0.85rem; /* Reduced from 0.9rem */
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+    height: 36px; /* Fixed height */
 }
 
 .search-btn:hover {
     background: #2da89f;
+    transform: translateY(-1px);
+}
+
+.export-btn {
+    background: #f8fafc;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 36px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.export-btn:hover {
+    background: #e2e8f0;
+    color: #475569;
+    text-decoration: none;
 }
 
 /* Users Table */
 .users-table-container {
     overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid #f1f5f9;
 }
 
 .users-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 1rem;
+    background: white;
+    font-size: 0.85rem; /* Reduced from 0.9rem */
 }
 
 .users-table th,
 .users-table td {
-    padding: 1rem;
+    padding: 0.75rem 0.6rem; /* Reduced padding */
     text-align: left;
     border-bottom: 1px solid #f1f5f9;
 }
@@ -361,21 +465,53 @@ body {
     background: #f8fafc;
     font-weight: 600;
     color: #475569;
-    font-size: 0.85rem;
+    font-size: 0.75rem; /* Reduced from 0.8rem */
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    position: relative;
 }
 
-.users-table tr:hover {
+.users-table th.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.users-table th.sortable:hover {
+    background: #f1f5f9;
+}
+
+.sort-arrows {
+    display: inline-block;
+    margin-left: 4px;
+    font-size: 0.9rem;
+    color: #94a3b8;
+    opacity: 0.7;
+}
+
+.users-table th.sortable:hover .sort-arrows {
+    opacity: 1;
+}
+
+.users-table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.users-table tbody tr:hover {
     background: #f8fafc;
 }
 
+.users-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* User Role Badges */
 .user-role {
-    padding: 0.25rem 0.75rem;
-    border-radius: 15px;
-    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem; /* Reduced padding */
+    border-radius: 6px;
+    font-size: 0.7rem; /* Reduced from 0.75rem */
     font-weight: 600;
     text-transform: capitalize;
+    display: inline-block;
 }
 
 .user-role.freelancer {
@@ -388,34 +524,62 @@ body {
     color: #92400e;
 }
 
-.user-category {
-    padding: 0.25rem 0.75rem;
-    border-radius: 15px;
-    font-size: 0.75rem;
+.user-role.admin {
+    background: #f3e8ff;
+    color: #7c3aed;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.7rem;
     font-weight: 600;
-    color: white;
+    text-transform: uppercase;
+    display: inline-block;
 }
 
-.user-category.illustrator {
+.status-badge.active {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.status-badge.inactive {
+    background: #fed7d7;
+    color: #c53030;
+}
+
+/* Category/Skill Tags */
+.skill-tag {
     background: #38C1B9;
+    color: white;
+    padding: 0.2rem 0.4rem; /* Reduced padding */
+    border-radius: 4px;
+    font-size: 0.65rem; /* Reduced from 0.7rem */
+    font-weight: 500;
 }
 
-.user-category.graphic-design {
+.skill-tag.illustrator {
+    background: #6366f1;
+}
+
+.skill-tag.graphic-design {
     background: #10b981;
 }
 
-.user-category.fullstack {
-    background: #1f2937;
+.skill-tag.fullstack {
+    background: #f59e0b;
 }
 
+/* Action Buttons */
 .action-buttons {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.4rem; /* Reduced from 0.5rem */
 }
 
 .edit-btn, .delete-btn {
-    width: 32px;
-    height: 32px;
+    width: 28px; /* Reduced from 32px */
+    height: 28px; /* Reduced from 32px */
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -423,16 +587,18 @@ body {
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
+    font-size: 0.9rem; /* Reduced from 1rem */
 }
 
 .edit-btn {
-    background: #f3f4f6;
-    color: #6b7280;
+    background: #e0f2fe;
+    color: #0369a1;
 }
 
 .edit-btn:hover {
-    background: #e5e7eb;
-    color: #374151;
+    background: #0369a1;
+    color: white;
+    transform: translateY(-1px);
 }
 
 .delete-btn {
@@ -441,11 +607,30 @@ body {
 }
 
 .delete-btn:hover {
-    background: #fee2e2;
-    color: #b91c1c;
+    background: #dc2626;
+    color: white;
+    transform: translateY(-1px);
 }
 
-/* Mobile Responsiveness */
+/* Mobile menu toggle */
+.sidebar-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    width: 20px; /* Reduced from 24px */
+    height: 15px; /* Reduced from 18px */
+    justify-content: space-between;
+}
+
+.sidebar-toggle span {
+    width: 100%;
+    height: 2px;
+    background: #64748b;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+/* Responsive Design */
 @media (max-width: 1024px) {
     .sidebar {
         transform: translateX(-100%);
@@ -456,117 +641,110 @@ body {
         transform: translateX(0);
     }
 
-    .sidebar-toggle {
-        display: flex !important;
-        flex-direction: column;
-        cursor: pointer;
-        width: 24px;
-        height: 18px;
-        justify-content: space-between;
-        margin-right: 1rem;
-    }
-
-    .sidebar-toggle span {
-        width: 100%;
-        height: 2px;
-        background: #64748b;
-        border-radius: 2px;
-        transition: all 0.3s ease;
-    }
-
     .main-content {
         margin-left: 0;
     }
 
-    .stats-section {
+    .navbar-center {
+        display: none;
+    }
+
+    .stats-container {
         flex-direction: column;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar-toggle {
+        display: flex !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .users-header {
+        flex-direction: column;
+        align-items: stretch;
         gap: 1rem;
     }
 
     .search-container {
         flex-direction: column;
-        align-items: stretch;
+        gap: 0.75rem;
     }
 
     .search-input {
         width: 100%;
-    }
-}
-
-@media (max-width: 768px) {
-    .navbar-title {
-        display: none;
-    }
-
-    .users-section {
-        padding: 1rem;
     }
 
     .main-content {
         padding: 1rem;
     }
 
-    .users-table {
-        font-size: 0.85rem;
+    .top-navbar {
+        padding: 0 1rem;
     }
 
-    .users-table th,
-    .users-table td {
-        padding: 0.75rem 0.5rem;
+    .navbar-left {
+        gap: 1rem;
     }
-}
 
-.logo h1 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #38C1B9;
-}
+    .navbar-brand {
+        font-size: 1rem;
+    }
 
-.logo span {
-    color: #1e293b;
+    .navbar-title {
+        display: none;
+    }
 }
 </style>
+
+<!-- Load Iconify -->
+<script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
 
 <!-- Top Navigation -->
 <div class="top-navbar">
     <div class="navbar-left">
-        <div class="sidebar-toggle" id="sidebarToggle" style="display: none;">
+        <div class="sidebar-toggle" id="sidebarToggle">
             <span></span>
             <span></span>
             <span></span>
         </div>
         <a href="#" class="navbar-brand">
-            <div class="logo">
-                <h1>skill<span>Match</span></h1>
-            </div>
+            <h1>Skill<span>Match</span></h1>
         </a>
         <h1 class="navbar-title">Dashboard</h1>
     </div>
+    
     <div class="navbar-right">
         <div class="navbar-profile" onclick="goToProfile()">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" alt="Admin Profile">
+            <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=32&h=32&fit=crop&crop=face" alt="Admin Profile">
         </div>
-
         <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-    @csrf
-    <button type="submit" class="navbar-logout" onclick="return confirmLogout()" style="background: none; border: none; color: inherit; cursor: pointer;">
-        Log Out
-    </button>
-    </form>
+            @csrf
+            <button type="submit" class="navbar-logout" onclick="return confirmLogout()">
+                <iconify-icon icon="material-symbols:logout"></iconify-icon>
+                Log Out
+            </button>
+        </form>
     </div>
 </div>
-
 
 <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
     <nav>
         <a href="#" class="nav-item active">
-            <div class="nav-icon">📊</div>
-            <span class="nav-text">Dashboard</span>
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:dashboard"></iconify-icon>
+            </div>
+            <span>Dashboard</span>
         </a>
         <a href="#" class="nav-item">
-            <div class="nav-icon">📋</div>
-            <span class="nav-text">Orders</span>
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
+            </div>
+            <span>Orders</span>
         </a>
     </nav>
 </div>
@@ -574,41 +752,39 @@ body {
 <!-- Main Content -->
 <div class="main-content">
     <!-- Stats Section -->
-    <div class="stats-section">
-        <div class="stat-card freelance">
-            <div class="stat-header">
-                <div class="stat-icon">👨‍💻</div>
+    <div class="stats-container">
+        <div class="stats-grid">
+            <div class="stat-card freelance">
+                <div class="stat-icon">
+                    <iconify-icon icon="material-symbols:person-check"></iconify-icon>
+                </div>
                 <div class="stat-title">Freelance</div>
-            </div>
-            <div class="stat-content">
-                {{-- <div class="stat-number">200</div> --}}
-                <div class="stat-number">{{ $totalFreelancers }}</div>
+                <div class="stat-number">{{ $totalFreelancers ?? 200 }}</div>
                 <div class="stat-label">Person</div>
             </div>
-        </div>
 
-        <div class="stat-card client">
-            <div class="stat-header">
-                <div class="stat-icon">👥</div>
+            <div class="stat-card client">
+                <div class="stat-icon">
+                    <iconify-icon icon="material-symbols:groups"></iconify-icon>
+                </div>
                 <div class="stat-title">Client</div>
-            </div>
-            <div class="stat-content">
-                {{-- <div class="stat-number">135</div> --}}
-                <div class="stat-number">{{ $totalClients }}</div>
+                <div class="stat-number">{{ $totalClients ?? 135 }}</div>
                 <div class="stat-label">Person</div>
             </div>
-        </div>
 
-        <div class="stat-card order">
-            <div class="stat-header">
-                <div class="stat-icon">📦</div>
+            <div class="stat-card order">
+                <div class="stat-icon">
+                    <iconify-icon icon="material-symbols:shopping-bag"></iconify-icon>
+                </div>
                 <div class="stat-title">Order</div>
-            </div>
-            <div class="stat-content">
-                {{-- <div class="stat-number">120</div> --}}
-                <div class="stat-number">{{ $totalOrders }}</div>
+                <div class="stat-number">{{ $totalOrders ?? 120 }}</div>
                 <div class="stat-label">Orders</div>
             </div>
+        </div>
+
+        <div class="profit-card">
+            <div class="profit-title">Profit</div>
+            <div class="profit-amount">Rp4.300.000</div>
         </div>
     </div>
 
@@ -617,8 +793,14 @@ body {
         <div class="users-header">
             <h2 class="users-title">Users</h2>
             <div class="search-container">
-                <input type="text" class="search-input" placeholder="Search here..." id="userSearch">
-                <button class="search-btn" onclick="searchUsers()">Search</button>
+                <div class="search-input-wrapper">
+                    <iconify-icon icon="material-symbols:search" class="search-icon"></iconify-icon>
+                    <input type="text" class="search-input" placeholder="Search here..." id="userSearch">
+                </div>
+                <button class="search-btn" onclick="searchUsers()">
+                    Search
+                </button>
+                <a href="#" class="export-btn">EXPORT DATA</a>
             </div>
         </div>
 
@@ -626,36 +808,83 @@ body {
             <table class="users-table">
                 <thead>
                     <tr>
-                        <th>User Role</th>
-                        <th>Nama</th>
-                        <th>Email</th>
-                        <th>Application</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
+                        <th class="sortable" onclick="sortTable(0, this)">
+                            User Role 
+                            <span class="sort-arrows">↕</span>
+                        </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Email
+                        </th>
+                        <th class="sortable" onclick="sortTable(3, this)">
+                            Applied Date 
+                            <span class="sort-arrows">↕</span>
+                        </th>
+                        <th class="sortable" onclick="sortTable(4, this)">
+                            Status 
+                            <span class="sort-arrows">↕</span>
+                        </th>
                     </tr>
                 </thead>
                 <tbody id="usersTableBody">
-                    @foreach ($users as $user)
-        <tr
-            data-role="{{ $user->role }}"
-            data-name="{{ $user->name }}"
-            data-username="{{ $user->username }}"
-            data-email="{{ $user->email }}"
-        >
-            <td>
-                <span class="user-role {{ $user->role }}">{{ ucfirst($user->role) }}</span>
-            </td>
-            <td>{{ $user->name }}</td>
-            <td>{{ $user->email }}</td>
-            <td>{{ $user->created_at->format('M d, Y') }}</td>
-            <td>
-                <button class="edit-btn" onclick="editUser(this)">✏️</button>
-            </td>
-            <td>
-                <button class="delete-btn" onclick="deleteUser(this)">🗑️</button>
-            </td>
-        </tr>
-    @endforeach
+                    <tr data-role="freelancer" data-name="Adam Johnson" data-email="adam@gmail.com">
+                        <td><span class="user-role freelancer">Freelancer</span></td>
+                        <td>Adam Johnson</td>
+                        <td>adam@gmail.com</td>
+                        <td>Sept 4, 2023</td>
+                        <td><span class="status-badge active">Active</span></td>
+                    </tr>
+                    <tr data-role="freelancer" data-name="Charlie Brooke" data-email="charlie@gmail.com">
+                        <td><span class="user-role freelancer">Freelancer</span></td>
+                        <td>Charlie Brooke</td>
+                        <td>charlie@gmail.com</td>
+                        <td>Sept 2, 2023</td>
+                        <td><span class="status-badge inactive">Inactive</span></td>
+                    </tr>
+                    <tr data-role="freelancer" data-name="Jacob Brown" data-email="jacob@gmail.com">
+                        <td><span class="user-role freelancer">Freelancer</span></td>
+                        <td>Jacob Brown</td>
+                        <td>jacob@gmail.com</td>
+                        <td>Aug 31, 2023</td>
+                        <td><span class="status-badge active">Active</span></td>
+                    </tr>
+                    <tr data-role="client" data-name="Darrell Steward" data-email="steward23@gmail.com">
+                        <td><span class="user-role client">Client</span></td>
+                        <td>Darrell Steward</td>
+                        <td>steward23@gmail.com</td>
+                        <td>Aug 29, 2023</td>
+                        <td><span class="status-badge active">Active</span></td>
+                    </tr>
+                    <tr data-role="freelancer" data-name="Eleanor Pena" data-email="eleanor@gmail.com">
+                        <td><span class="user-role freelancer">Freelancer</span></td>
+                        <td>Eleanor Pena</td>
+                        <td>eleanor@gmail.com</td>
+                        <td>Aug 26, 2023</td>
+                        <td><span class="status-badge active">Active</span></td>
+                    </tr>
+                    <tr data-role="client" data-name="Courtney Henry" data-email="courtney@gmail.com">
+                        <td><span class="user-role client">Client</span></td>
+                        <td>Courtney Henry</td>
+                        <td>courtney@gmail.com</td>
+                        <td>Aug 23, 2023</td>
+                        <td><span class="status-badge inactive">Inactive</span></td>
+                    </tr>
+                    <tr data-role="freelancer" data-name="Robert Fox" data-email="robertfox98@gmail.com">
+                        <td><span class="user-role freelancer">Freelancer</span></td>
+                        <td>Robert Fox</td>
+                        <td>robertfox98@gmail.com</td>
+                        <td>Aug 20, 2023</td>
+                        <td><span class="status-badge active">Active</span></td>
+                    </tr>
+                    <tr data-role="client" data-name="Jenny Wilson" data-email="jennywilson21@gmail.com">
+                        <td><span class="user-role client">Client</span></td>
+                        <td>Jenny Wilson</td>
+                        <td>jennywilson21@gmail.com</td>
+                        <td>Aug 19, 2023</td>
+                        <td><span class="status-badge active">Active</span></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -664,303 +893,312 @@ body {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var sidebar = document.getElementById('sidebar');
-    var sidebarToggle = document.getElementById('sidebarToggle');
-
-    // Create sidebar overlay for mobile
-    var sidebarOverlay = document.createElement('div');
-    sidebarOverlay.style.cssText = `
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 999;
-        backdrop-filter: blur(4px);
-    `;
-    document.body.appendChild(sidebarOverlay);
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
 
     // Toggle sidebar on mobile
     if (sidebarToggle) {
         sidebarToggle.addEventListener('click', function() {
             sidebar.classList.toggle('show');
-            sidebarOverlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
         });
     }
 
-    // Close sidebar when clicking overlay
-    sidebarOverlay.addEventListener('click', function() {
-        sidebar.classList.remove('show');
-        sidebarOverlay.style.display = 'none';
-    });
-
-    // Navigation functionality
-    document.querySelectorAll('.nav-item').forEach(function(item) {
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-
-            // Remove active class from all nav items
-            document.querySelectorAll('.nav-item').forEach(function(navItem) {
-                navItem.classList.remove('active');
-            });
-
-            // Add active class to clicked item
-            this.classList.add('active');
-
-            var navText = this.querySelector('.nav-text').textContent;
-            console.log('Navigating to: ' + navText);
-        });
-    });
-
-    // Search functionality
-    var searchInput = document.getElementById('userSearch');
+    // Search functionality for users table
+    const searchInput = document.getElementById('userSearch');
+    let searchTimeout;
+    
     if (searchInput) {
         searchInput.addEventListener('input', function() {
-            var query = this.value.toLowerCase();
-            searchUsers(query);
+            clearTimeout(searchTimeout);
+            const query = this.value.toLowerCase();
+            searchTimeout = setTimeout(function() {
+                searchUsers(query);
+            }, 300);
         });
     }
+
+    // Navbar search functionality
+    const navbarSearchInput = document.getElementById('navbarSearch');
+    if (navbarSearchInput) {
+        navbarSearchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performNavbarSearch();
+            }
+        });
+    }
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', function(e) {
+        if (window.innerWidth <= 1024) {
+            if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+                sidebar.classList.remove('show');
+            }
+        }
+    });
 });
 
-// Logout confirmation function
 function confirmLogout() {
     return confirm('Are you sure you want to log out?');
 }
 
-// Profile navigation function
 function goToProfile() {
-    window.location.href = "{{ route('profile.edit') }}";
+    window.location.href = "{{ route('profile.edit') ?? '#' }}";
 }
 
-// Search users function
+function performNavbarSearch() {
+    const searchQuery = document.getElementById('navbarSearch').value;
+    if (searchQuery.trim()) {
+        // Implement your navbar search functionality here
+        console.log('Searching for:', searchQuery);
+        
+        // Option 1: Filter current users table (immediate feedback)
+        searchUsers(searchQuery.toLowerCase());
+        
+        // Option 2: Redirect to search page with results
+        // window.location.href = "/search?q=" + encodeURIComponent(searchQuery);
+    }
+}
+
 function searchUsers(query = null) {
     if (query === null) {
         query = document.getElementById('userSearch').value.toLowerCase();
     }
 
-    var rows = document.querySelectorAll('#usersTableBody tr');
-    var hasResults = false;
-
+    const rows = document.querySelectorAll('#usersTableBody tr');
+    let visibleCount = 0;
+    
     rows.forEach(function(row) {
-        var role = row.getAttribute('data-role').toLowerCase();
-        var name = row.getAttribute('data-name').toLowerCase();
-        var username = row.getAttribute('data-username').toLowerCase();
-        var email = row.getAttribute('data-email').toLowerCase();
+        const role = (row.getAttribute('data-role') || '').toLowerCase();
+        const name = (row.getAttribute('data-name') || '').toLowerCase();
+        const email = (row.getAttribute('data-email') || '').toLowerCase();
+        const text = row.textContent.toLowerCase();
 
-        var hasMatch = role.includes(query) ||
-                      name.includes(query) ||
-                      username.includes(query) ||
-                      email.includes(query);
+        const hasMatch = role.includes(query) ||
+                        name.includes(query) ||
+                        email.includes(query) ||
+                        text.includes(query);
 
         if (hasMatch || query === '') {
             row.style.display = 'table-row';
-            hasResults = true;
+            visibleCount++;
         } else {
             row.style.display = 'none';
         }
     });
 
-    // Show/hide no results message
-    showNoResultsMessage(!hasResults && query !== '');
-}
-
-// Show no results message
-function showNoResultsMessage(show) {
-    var existingMessage = document.querySelector('.no-results');
-
-    if (show && !existingMessage) {
-        var noResultsRow = document.createElement('tr');
-        noResultsRow.className = 'no-results';
-        noResultsRow.innerHTML = `
-            <td colspan="8" style="text-align: center; padding: 2rem; color: #64748b;">
-                <div style="font-size: 2rem; margin-bottom: 1rem;">👥</div>
-                <h3 style="margin-bottom: 0.5rem; color: #1e293b;">No users found</h3>
-                <p>Try adjusting your search criteria</p>
-            </td>
-        `;
-        document.querySelector('#usersTableBody').appendChild(noResultsRow);
-    } else if (!show && existingMessage) {
-        existingMessage.remove();
+    // Optional: Show message if no results found
+    if (visibleCount === 0 && query !== '') {
+        console.log('No users found matching: ' + query);
     }
 }
 
-// Edit user function
 function editUser(button) {
-    var row = button.closest('tr');
-    var name = row.getAttribute('data-name');
-    var role = row.getAttribute('data-role');
+    const row = button.closest('tr');
+    const name = row.getAttribute('data-name');
+    const role = row.getAttribute('data-role');
+    const email = row.getAttribute('data-email');
 
-    alert('Edit User: ' + name + ' (' + role + ')');
-    // Here you would typically open an edit modal or redirect to edit page
+    alert(`Edit user: ${name} (${role})\nEmail: ${email}`);
+    // Implement your edit functionality here
+    // Example: window.location.href = `/admin/users/edit/${userId}`;
 }
 
-// Delete user function
 function deleteUser(button) {
-    var row = button.closest('tr');
-    var name = row.getAttribute('data-name');
+    const row = button.closest('tr');
+    const name = row.getAttribute('data-name');
 
-    if (confirm('Are you sure you want to delete user: ' + name + '?')) {
+    if (confirm(`Are you sure you want to delete user "${name}"?`)) {
         // Add loading state
         button.disabled = true;
-        button.innerHTML = '⏳';
-
-        // Simulate API call
+        button.innerHTML = '<iconify-icon icon="material-symbols:hourglass-empty"></iconify-icon>';
+        
+        // Simulate API call - replace with actual delete request
         setTimeout(function() {
             row.remove();
-            alert('User deleted successfully!');
+            // Show success message
+            console.log(`User "${name}" deleted successfully`);
+            
+            // In real implementation, make AJAX call to delete endpoint
+            // fetch(`/admin/users/delete/${userId}`, { method: 'DELETE' })
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         if (data.success) {
+            //             row.remove();
+            //         }
+            //     });
         }, 1000);
-
-        // Here you would typically make an API call to delete the user
     }
 }
 
-// Sort table functionality
-function sortTable(columnIndex, ascending = true) {
-    var table = document.querySelector('.users-table tbody');
-    var rows = Array.from(table.querySelectorAll('tr:not(.no-results)'));
-
-    rows.sort(function(a, b) {
-        var aText = a.cells[columnIndex].textContent.trim();
-        var bText = b.cells[columnIndex].textContent.trim();
-
-        if (ascending) {
-            return aText.localeCompare(bText);
-        } else {
-            return bText.localeCompare(aText);
-        }
-    });
-
-    // Re-append sorted rows
-    rows.forEach(function(row) {
-        table.appendChild(row);
-    });
+function exportData() {
+    // Implement export functionality
+    alert('Exporting user data...');
+    
+    // Example: Generate CSV or redirect to export endpoint
+    // window.location.href = '/admin/users/export';
 }
 
-// Keyboard shortcuts
+// Add smooth scrolling for better UX
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+    });
+});
+
+// Add keyboard shortcuts
 document.addEventListener('keydown', function(e) {
     // Ctrl/Cmd + K to focus search
     if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
-        var searchInput = document.getElementById('userSearch');
+        const searchInput = document.getElementById('userSearch') || document.getElementById('navbarSearch');
         if (searchInput) {
             searchInput.focus();
         }
     }
-
-    // Escape key to clear search
+    
+    // Escape to close mobile sidebar
     if (e.key === 'Escape') {
-        var searchInput = document.getElementById('userSearch');
-        if (searchInput && searchInput.value) {
-            searchInput.value = '';
-            searchUsers('');
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar && sidebar.classList.contains('show')) {
+            sidebar.classList.remove('show');
         }
     }
 });
 
-// Update stats dynamically
-function updateStats() {
-    var freelancerCount = document.querySelectorAll('[data-role="freelancer"]').length;
-    var clientCount = document.querySelectorAll('[data-role="client"]').length;
-    var totalUsers = freelancerCount + clientCount;
+// Add sorting functionality
+let sortOrder = {};
 
-    // Update the numbers (you would typically get these from your backend)
-    document.querySelector('.stat-card.freelance .stat-number').textContent = freelancerCount;
-    document.querySelector('.stat-card.client .stat-number').textContent = clientCount;
-    // Order count would come from your orders data
-}
-
-// Export users data (optional feature)
-function exportUsers() {
-    var users = [];
-    var rows = document.querySelectorAll('#usersTableBody tr:not(.no-results)');
-
-    rows.forEach(function(row) {
-        if (row.style.display !== 'none') {
-            users.push({
-                role: row.getAttribute('data-role'),
-                name: row.getAttribute('data-name'),
-                username: row.getAttribute('data-username'),
-                email: row.getAttribute('data-email')
-            });
-        }
+function sortTable(columnIndex, headerElement) {
+    const table = document.querySelector('.users-table tbody');
+    const rows = Array.from(table.querySelectorAll('tr'));
+    const isAscending = !sortOrder[columnIndex];
+    
+    // Update sort order
+    sortOrder[columnIndex] = isAscending;
+    
+    // Reset all arrows
+    document.querySelectorAll('.sort-arrows').forEach(arrow => {
+        arrow.textContent = '↕';
+        arrow.style.color = '#94a3b8';
     });
-
-    console.log('Exported users:', users);
-    // Here you would typically generate and download a CSV or Excel file
-}
-
-// Initialize tooltips and other features
-function initializeFeatures() {
-    // Add tooltips to action buttons
-    document.querySelectorAll('.edit-btn').forEach(function(btn) {
-        btn.title = 'Edit user';
-    });
-
-    document.querySelectorAll('.delete-btn').forEach(function(btn) {
-        btn.title = 'Delete user';
-    });
-
-    // Add click handlers for sortable headers
-    document.querySelectorAll('.users-table th').forEach(function(th, index) {
-        if (th.textContent.includes('↑')) {
-            th.style.cursor = 'pointer';
-            th.addEventListener('click', function() {
-                sortTable(index);
-            });
-        }
-    });
-}
-
-// Initialize features on page load
-initializeFeatures();
-
-// Auto-refresh stats every 30 seconds (optional)
-setInterval(function() {
-    updateStats();
-}, 30000);
-
-// Add smooth animations for better UX
-function addLoadingState(button) {
-    button.style.opacity = '0.5';
-    button.style.pointerEvents = 'none';
-}
-
-function removeLoadingState(button) {
-    button.style.opacity = '1';
-    button.style.pointerEvents = 'auto';
-}
-
-// Advanced search filters (optional enhancement)
-function filterByRole(role) {
-    var rows = document.querySelectorAll('#usersTableBody tr:not(.no-results)');
-    var hasResults = false;
-
-    rows.forEach(function(row) {
-        var userRole = row.getAttribute('data-role');
-
-        if (role === 'all' || userRole === role) {
-            row.style.display = 'table-row';
-            hasResults = true;
+    
+    // Update current arrow
+    const arrow = headerElement.querySelector('.sort-arrows');
+    arrow.textContent = isAscending ? '↑' : '↓';
+    arrow.style.color = '#38C1B9';
+    
+    // Sort rows
+    rows.sort((a, b) => {
+        let aValue = a.cells[columnIndex].textContent.trim();
+        let bValue = b.cells[columnIndex].textContent.trim();
+        
+        // Special handling for different column types
+        if (columnIndex === 3) { // Applied Date column
+            // Parse dates for proper sorting
+            const dateA = parseDate(aValue);
+            const dateB = parseDate(bValue);
+            
+            if (isAscending) {
+                // Panah atas = terbaru dulu (newest first)
+                return dateB - dateA;
+            } else {
+                // Panah bawah = terlama dulu (oldest first) 
+                return dateA - dateB;
+            }
+        } else if (columnIndex === 0) { // User Role column
+            // Sort by role priority: Admin > Client > Freelancer
+            const roleOrder = { 'admin': 3, 'client': 2, 'freelancer': 1 };
+            const roleA = aValue.toLowerCase();
+            const roleB = bValue.toLowerCase();
+            
+            if (isAscending) {
+                return (roleOrder[roleB] || 0) - (roleOrder[roleA] || 0);
+            } else {
+                return (roleOrder[roleA] || 0) - (roleOrder[roleB] || 0);
+            }
+        } else if (columnIndex === 4) { // Status column
+            // Sort by status: Active > Inactive
+            const statusOrder = { 'active': 2, 'inactive': 1 };
+            const statusA = aValue.toLowerCase();
+            const statusB = bValue.toLowerCase();
+            
+            if (isAscending) {
+                return (statusOrder[statusB] || 0) - (statusOrder[statusA] || 0);
+            } else {
+                return (statusOrder[statusA] || 0) - (statusOrder[statusB] || 0);
+            }
         } else {
-            row.style.display = 'none';
+            // Regular text sorting for Name and Email
+            aValue = aValue.toLowerCase();
+            bValue = bValue.toLowerCase();
+            
+            if (isAscending) {
+                // Panah atas = A-Z
+                if (aValue < bValue) return -1;
+                if (aValue > bValue) return 1;
+                return 0;
+            } else {
+                // Panah bawah = Z-A
+                if (aValue > bValue) return -1;
+                if (aValue < bValue) return 1;
+                return 0;
+            }
         }
     });
-
-    showNoResultsMessage(!hasResults && role !== 'all');
+    
+    // Re-append sorted rows
+    rows.forEach(row => table.appendChild(row));
+    
+    // Add visual feedback
+    headerElement.style.backgroundColor = '#f1f5f9';
+    setTimeout(() => {
+        headerElement.style.backgroundColor = '#f8fafc';
+    }, 200);
 }
 
-// Bulk actions (optional enhancement)
-function selectAllUsers() {
-    // This would be implemented if you add checkboxes to each row
-    console.log('Select all users functionality');
+// Helper function to parse dates
+function parseDate(dateString) {
+    // Handle different date formats: "Sept 4, 2023", "Aug 31, 2023", etc.
+    const months = {
+        'jan': 0, 'feb': 1, 'mar': 2, 'apr': 3, 'may': 4, 'jun': 5,
+        'jul': 6, 'aug': 7, 'sep': 8, 'sept': 8, 'oct': 9, 'nov': 10, 'dec': 11
+    };
+    
+    const parts = dateString.toLowerCase().split(/[\s,]+/);
+    if (parts.length >= 3) {
+        const month = months[parts[0]] !== undefined ? months[parts[0]] : 0;
+        const day = parseInt(parts[1]) || 1;
+        const year = parseInt(parts[2]) || new Date().getFullYear();
+        return new Date(year, month, day);
+    }
+    
+    return new Date(dateString);
+}
+function showLoading(element) {
+    const originalContent = element.innerHTML;
+    element.innerHTML = '<iconify-icon icon="material-symbols:hourglass-empty"></iconify-icon>';
+    element.disabled = true;
+    
+    return function hideLoading() {
+        element.innerHTML = originalContent;
+        element.disabled = false;
+    };
 }
 
-function bulkDelete() {
-    // This would be implemented for bulk operations
-    console.log('Bulk delete functionality');
-}
+// Auto-refresh data periodically (optional)
+setInterval(function() {
+    // Only refresh if page is visible
+    if (!document.hidden) {
+        // Implement auto-refresh logic here if needed
+        // fetchUpdatedStats();
+    }
+}, 300000); // 5 minutes
 </script>
 
 @endsection
