@@ -1314,12 +1314,12 @@ body {
             <iconify-icon icon="material-symbols:tune"></iconify-icon>
             Filter
         </div>
-        
+
         <div class="filter-button" id="priceBtn">
             <iconify-icon icon="material-symbols:payments"></iconify-icon>
             Price
             <span class="filter-arrow">▼</span>
-            
+
             <!-- Price Filter Dropdown -->
             <div class="price-dropdown" id="priceDropdown">
                 <div class="price-inputs">
@@ -1564,7 +1564,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function togglePriceDropdown() {
         if (priceDropdown && priceBtn) {
             const isOpen = priceDropdown.classList.contains('show');
-            
+
             // Close all dropdowns first
             document.querySelectorAll('.price-dropdown').forEach(dropdown => {
                 dropdown.classList.remove('show');
@@ -1572,7 +1572,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.filter-button').forEach(btn => {
                 btn.classList.remove('open');
             });
-            
+
             if (!isOpen) {
                 priceDropdown.classList.add('show');
                 priceBtn.classList.add('open');
@@ -1583,19 +1583,19 @@ document.addEventListener('DOMContentLoaded', function() {
     function applyPriceFilter() {
         const minPrice = minPriceInput ? parseInt(minPriceInput.value) || null : null;
         const maxPrice = maxPriceInput ? parseInt(maxPriceInput.value) || null : null;
-        
+
         activeFilters.priceMin = minPrice;
         activeFilters.priceMax = maxPrice;
-        
+
         applyFilters();
         updateSelectedFilters();
-        
+
         // Close dropdown
         if (priceDropdown && priceBtn) {
             priceDropdown.classList.remove('show');
             priceBtn.classList.remove('open');
         }
-        
+
         // Update price button appearance
         if (priceBtn) {
             if (minPrice !== null || maxPrice !== null) {
@@ -1618,12 +1618,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (activeFilters.skills.length > 0) {
                 const cardCategory = (card.getAttribute('data-category') || '').toLowerCase();
                 const cardSkills = (card.getAttribute('data-skills') || '').toLowerCase();
-                
-                const hasMatchingSkill = activeFilters.skills.some(skill => 
-                    cardCategory.includes(skill.toLowerCase()) || 
+
+                const hasMatchingSkill = activeFilters.skills.some(skill =>
+                    cardCategory.includes(skill.toLowerCase()) ||
                     cardSkills.includes(skill.toLowerCase())
                 );
-                
+
                 if (!hasMatchingSkill) {
                     show = false;
                 }
@@ -1632,7 +1632,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Filter by price range
             if (show && (activeFilters.priceMin !== null || activeFilters.priceMax !== null)) {
                 const cardPrice = parseInt(card.getAttribute('data-price')) || 0;
-                
+
                 if (activeFilters.priceMin !== null && cardPrice < activeFilters.priceMin) {
                     show = false;
                 }
@@ -1727,7 +1727,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Filter removal functions
     function removeSkillFilter(skill) {
         activeFilters.skills = activeFilters.skills.filter(s => s !== skill);
-        
+
         // Remove active state from skill card
         const skillCards = document.querySelectorAll('.skill-card');
         skillCards.forEach(card => {
@@ -1735,7 +1735,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 card.classList.remove('active');
             }
         });
-        
+
         applyFilters();
         updateSelectedFilters();
     }
@@ -1743,11 +1743,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function removePriceFilter() {
         activeFilters.priceMin = null;
         activeFilters.priceMax = null;
-        
+
         if (minPriceInput) minPriceInput.value = '';
         if (maxPriceInput) maxPriceInput.value = '';
         if (priceBtn) priceBtn.classList.remove('active');
-        
+
         applyFilters();
         updateSelectedFilters();
     }
@@ -1755,7 +1755,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function removeSearchFilter() {
         activeFilters.search = '';
         if (searchInput) searchInput.value = '';
-        
+
         applyFilters();
         updateSelectedFilters();
     }
@@ -1896,7 +1896,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Search functionality
     function performSearch(query) {
         activeFilters.search = query;
-        
+
         if (!query || query.length < 2) {
             if (searchResults) {
                 searchResults.classList.remove('show');
@@ -2047,7 +2047,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (skillName) {
                 const isActive = skillCard.classList.contains('active');
-                
+
                 if (isActive) {
                     // Remove skill from active filters
                     skillCard.classList.remove('active');
@@ -2127,14 +2127,14 @@ document.addEventListener('DOMContentLoaded', function() {
             if (searchResults) {
                 searchResults.classList.remove('show');
             }
-            
+
             document.querySelectorAll('.price-dropdown').forEach(dropdown => {
                 dropdown.classList.remove('show');
             });
             document.querySelectorAll('.filter-button').forEach(btn => {
                 btn.classList.remove('open');
             });
-            
+
             if (searchInput && searchInput.value) {
                 searchInput.value = '';
                 activeFilters.search = '';

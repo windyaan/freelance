@@ -621,11 +621,11 @@ body {
         transform: translateX(-100%);
         transition: transform 0.3s ease;
     }
-    
+
     .sidebar.show {
         transform: translateX(0);
     }
-    
+
     .sidebar-toggle {
         display: flex !important;
         flex-direction: column;
@@ -635,7 +635,7 @@ body {
         justify-content: space-between;
         margin-right: 1rem;
     }
-    
+
     .sidebar-toggle span {
         width: 100%;
         height: 2px;
@@ -643,12 +643,12 @@ body {
         border-radius: 2px;
         transition: all 0.3s ease;
     }
-    
+
     .main-content {
         margin-left: 0;
         max-width: 100vw;
     }
-    
+
     .chat-sidebar {
         width: 280px;
     }
@@ -658,50 +658,50 @@ body {
     .navbar-title {
         display: none;
     }
-    
+
     .navbar-center {
         flex: 2;
         max-width: 280px;
     }
-    
+
     .search-container {
         max-width: 250px;
     }
-    
+
     .search-container input {
         font-size: 0.85rem;
         padding: 0.6rem 0.8rem 0.6rem 2.5rem;
     }
-    
+
     .search-container .search-btn {
         padding: 0.4rem 0.8rem;
         font-size: 0.8rem;
     }
-    
+
     .chat-container {
         flex-direction: column;
         height: calc(100vh - 70px);
     }
-    
+
     .chat-sidebar {
         width: 100%;
         height: 200px;
         border-right: none;
         border-bottom: 1px solid #e2e8f0;
     }
-    
+
     .chat-list {
         padding: 0.5rem 0;
     }
-    
+
     .chat-item {
         padding: 0.75rem 1rem;
     }
-    
+
     .chat-main {
         height: calc(100% - 200px);
     }
-    
+
     .message {
         max-width: 85%;
     }
@@ -711,31 +711,31 @@ body {
     .navbar-brand span:last-child {
         display: none;
     }
-    
+
     .navbar-center {
         display: none;
     }
-    
+
     .chat-sidebar {
         height: 180px;
     }
-    
+
     .chat-sidebar-header {
         padding: 1rem;
     }
-    
+
     .chat-main {
         height: calc(100% - 180px);
     }
-    
+
     .chat-messages {
         padding: 1rem;
     }
-    
+
     .chat-input-container {
         padding: 1rem;
     }
-    
+
     .message {
         max-width: 90%;
     }
@@ -781,7 +781,7 @@ body {
         <div class="navbar-profile" onclick="goToProfile()">
             <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Profile">
         </div>
-        
+
         <form method="POST" action="{{ route('logout') }}" class="navbar-logout-form">
             @csrf
             <button type="submit" class="navbar-logout" onclick="return confirmLogout()">
@@ -795,20 +795,20 @@ body {
 <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
     <nav>
-        <a href="{{ route('dashboard') }}" class="nav-item">
+        <a href="{{ route('client.dashboard') }}" class="nav-item {{ request()->routeIs('client.dashboard') ? 'active' : '' }}">
             <div class="nav-icon">
                 <iconify-icon icon="material-symbols:dashboard"></iconify-icon>
             </div>
             <span class="nav-text">Dashboard</span>
         </a>
-        <a href="{{ route('chat') }}" class="nav-item active">
+        <a href="{{ route('client.chat') }}" class="nav-item active">
             <div class="nav-icon">
                 <iconify-icon icon="material-symbols:chat"></iconify-icon>
             </div>
             <span class="nav-text">Chat</span>
             <span class="nav-badge">3</span>
         </a>
-        <a href="#" class="nav-item">
+        <a href="{{ route('client.order') }}" class="nav-item {{ request()->routeIs('client.order*') ? 'active' : '' }}">
             <div class="nav-icon">
                 <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
             </div>
@@ -826,7 +826,7 @@ body {
                 <h2 class="chat-sidebar-title">Messages</h2>
                 <p class="chat-sidebar-subtitle">Recent conversations</p>
             </div>
-            
+
             <div class="chat-list" id="chatList">
                 <!-- Chat Item 1 -->
                 <div class="chat-item active" data-chat-id="1" data-user-name="Nadia Irma">
@@ -842,7 +842,7 @@ body {
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Chat Item 2 -->
                 <div class="chat-item" data-chat-id="2" data-user-name="Tiara Hasna">
                     <div class="chat-avatar">
@@ -857,7 +857,7 @@ body {
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Chat Item 3 -->
                 <div class="chat-item" data-chat-id="3" data-user-name="Karina Carlo">
                     <div class="chat-avatar">
@@ -872,7 +872,7 @@ body {
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Chat Item 4 -->
                 <div class="chat-item" data-chat-id="4" data-user-name="Erma Nadila">
                     <div class="chat-avatar">
@@ -889,7 +889,7 @@ body {
                 </div>
             </div>
         </div>
-        
+
         <!-- Chat Main Area -->
         <div class="chat-main">
             <!-- Active Chat Header -->
@@ -902,7 +902,7 @@ body {
                     <div class="chat-header-status" id="headerStatus">Online • UI Design, Front-End</div>
                 </div>
             </div>
-            
+
             <!-- Chat Messages -->
             <div class="chat-messages" id="chatMessages">
                 <!-- Sample messages for Nadia Irma -->
@@ -911,11 +911,11 @@ body {
                         <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=32&h=32&fit=crop&crop=face" alt="Nadia Irma">
                     </div>
                     <div class="message-content">
-                        Halo Bu, terima kasih sudah menghubungi saya untuk proyek UI Design website cafe. 
+                        Halo Bu, terima kasih sudah menghubungi saya untuk proyek UI Design website cafe.
                         <div class="message-time">10:30 AM</div>
                     </div>
                 </div>
-                
+
                 <div class="message sent">
                     <div class="message-avatar">
                         <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face" alt="You">
@@ -925,7 +925,7 @@ body {
                         <div class="message-time">10:32 AM</div>
                     </div>
                 </div>
-                
+
                 <div class="message received">
                     <div class="message-avatar">
                         <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=32&h=32&fit=crop&crop=face" alt="Nadia Irma">
@@ -935,7 +935,7 @@ body {
                         <div class="message-time">10:35 AM</div>
                     </div>
                 </div>
-                
+
                 <div class="message sent">
                     <div class="message-avatar">
                         <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face" alt="You">
@@ -946,7 +946,7 @@ body {
                     </div>
                 </div>
             </div>
-            
+
             <!-- Chat Input -->
             <div class="chat-input-container">
                 <div class="chat-input-wrapper">
@@ -974,7 +974,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('globalSearch');
     const sidebar = document.getElementById('sidebar');
     const sidebarToggle = document.getElementById('sidebarToggle');
-    
+
     // Sample chat data
     const chatData = {
         1: {
@@ -1084,21 +1084,21 @@ document.addEventListener('DOMContentLoaded', function() {
             ]
         }
     };
-    
+
     // Function to load chat messages
     function loadChatMessages(chatId) {
         const chat = chatData[chatId];
         if (!chat) return;
-        
+
         // Update header
         if (headerName) headerName.textContent = chat.name;
         if (headerStatus) headerStatus.textContent = chat.status;
         if (headerAvatar) headerAvatar.src = chat.avatar;
-        
+
         // Clear messages
         if (chatMessages) {
             chatMessages.innerHTML = '';
-            
+
             // Add messages
             chat.messages.forEach(message => {
                 const messageDiv = document.createElement('div');
@@ -1114,23 +1114,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 chatMessages.appendChild(messageDiv);
             });
-            
+
             // Scroll to bottom
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
     }
-    
+
     // Function to send message
     function sendMessage() {
         if (!messageInput || !messageInput.value.trim()) return;
-        
+
         const messageText = messageInput.value.trim();
         const currentTime = new Date().toLocaleTimeString('en-US', {
             hour: 'numeric',
             minute: '2-digit',
             hour12: true
         });
-        
+
         // Create message element
         const messageDiv = document.createElement('div');
         messageDiv.className = 'message sent';
@@ -1143,23 +1143,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="message-time">${currentTime}</div>
             </div>
         `;
-        
+
         // Add to chat
         if (chatMessages) {
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
-        
+
         // Clear input
         messageInput.value = '';
         autoResizeTextarea();
-        
+
         // Simulate typing indicator and response (optional)
         setTimeout(() => {
             simulateTypingResponse();
         }, 1000);
     }
-    
+
     // Simulate typing response
     function simulateTypingResponse() {
         const responses = [
@@ -1168,18 +1168,18 @@ document.addEventListener('DOMContentLoaded', function() {
             "Oke, nanti saya kirimkan proposal lengkapnya.",
             "Siap Bu, akan saya kerjakan sesuai timeline yang disepakati."
         ];
-        
+
         const randomResponse = responses[Math.floor(Math.random() * responses.length)];
         const currentTime = new Date().toLocaleTimeString('en-US', {
             hour: 'numeric',
             minute: '2-digit',
             hour12: true
         });
-        
+
         // Get current active chat avatar
         const activeChat = document.querySelector('.chat-item.active');
         const activeAvatar = activeChat ? activeChat.querySelector('.chat-avatar img').src : '';
-        
+
         const messageDiv = document.createElement('div');
         messageDiv.className = 'message received';
         messageDiv.innerHTML = `
@@ -1191,13 +1191,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="message-time">${currentTime}</div>
             </div>
         `;
-        
+
         if (chatMessages) {
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
     }
-    
+
     // Auto resize textarea
     function autoResizeTextarea() {
         if (messageInput) {
@@ -1205,14 +1205,14 @@ document.addEventListener('DOMContentLoaded', function() {
             messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
         }
     }
-    
+
     // Search functionality
     function searchChats(query) {
         chatItems.forEach(item => {
             const name = item.querySelector('.chat-name').textContent.toLowerCase();
             const preview = item.querySelector('.chat-preview').textContent.toLowerCase();
             const searchTerm = query.toLowerCase();
-            
+
             if (name.includes(searchTerm) || preview.includes(searchTerm) || query === '') {
                 item.style.display = 'flex';
             } else {
@@ -1220,24 +1220,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Event listeners
-    
+
     // Chat item selection
     chatItems.forEach(item => {
         item.addEventListener('click', function() {
             // Remove active from all items
             chatItems.forEach(i => i.classList.remove('active'));
-            
+
             // Add active to clicked item
             this.classList.add('active');
-            
+
             // Load chat messages
             const chatId = this.getAttribute('data-chat-id');
             loadChatMessages(chatId);
         });
     });
-    
+
     // Send button
     if (sendBtn) {
         sendBtn.addEventListener('click', function(e) {
@@ -1245,7 +1245,7 @@ document.addEventListener('DOMContentLoaded', function() {
             sendMessage();
         });
     }
-    
+
     // Enter key to send
     if (messageInput) {
         messageInput.addEventListener('keydown', function(e) {
@@ -1254,18 +1254,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 sendMessage();
             }
         });
-        
+
         // Auto resize on input
         messageInput.addEventListener('input', autoResizeTextarea);
     }
-    
+
     // Search functionality
     if (searchInput) {
         searchInput.addEventListener('input', function() {
             const query = this.value.trim();
             searchChats(query);
         });
-        
+
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -1274,7 +1274,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Search button
     const searchBtn = document.getElementById('searchBtn');
     if (searchBtn) {
@@ -1286,7 +1286,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Sidebar functionality
     if (sidebarToggle && sidebar) {
         // Create overlay
@@ -1303,22 +1303,22 @@ document.addEventListener('DOMContentLoaded', function() {
             backdrop-filter: blur(4px);
         `;
         document.body.appendChild(sidebarOverlay);
-        
+
         sidebarToggle.addEventListener('click', function(e) {
             e.preventDefault();
             sidebar.classList.toggle('show');
             sidebarOverlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
         });
-        
+
         sidebarOverlay.addEventListener('click', function() {
             sidebar.classList.remove('show');
             sidebarOverlay.style.display = 'none';
         });
     }
-    
+
     // Initialize first chat
     loadChatMessages('1');
-    
+
     console.log('Chat page initialized successfully');
 });
 
