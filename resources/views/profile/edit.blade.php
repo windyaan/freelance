@@ -641,9 +641,9 @@ body {
                 {{ $user->profile->bio ?? '' }}
             </div>
 
-            @if ($user->role === 'freelancer' && $user->skills)
+            @if ($user->role === 'freelancer' && $user->profile->skills)
             <div class="profile-skills">
-                <strong>Skills:</strong> {{ $user->skills }}
+                <strong>Skills:</strong> {{ $user->profile->skills }}
             </div>
             @endif
 

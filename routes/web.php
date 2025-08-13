@@ -30,6 +30,7 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
 
     // Profile routes - TANPA PARAMETER (untuk user yang sedang login)
+    // Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -45,7 +46,12 @@ Route::middleware('auth')->group(function () {
         // Client dashboard
         Route::get('/dashboard', [JobController::class, 'dashboardIndex'])->name('dashboard');
 
-        // Client chat routes
+        // Chat routes
+        // Route::get('/chats', [ChatController::class, 'index'])->name('chat.index');
+        // Route::get('/chats/{chat}', [ChatController::class, 'show'])->name('chat.show');
+        // Route::post('/chats', [ChatController::class, 'store'])->name('chat.store');  // buat chat baru
+        // Route::post('/chats/{chat}/messages', [ChatController::class, 'storeMessage'])->name('chat.storeMessage'); // kirim pesan
+        // Route::post('/messages/{message}/read', [ChatController::class, 'markAsRead'])->name('messages.markAsRead'); // tandai baca
         Route::get('/chat', [ChatController::class, 'index'])->name('chat');
         Route::get('/chat/{user}', [ChatController::class, 'show'])->name('chat.show');
         Route::post('/chat/{user}/send', [ChatController::class, 'send'])->name('chat.send');
@@ -63,6 +69,9 @@ Route::middleware('auth')->group(function () {
     Route::prefix('freelancer')->name('freelancer.')->middleware('role:freelancer')->group(function () {
     Route::get('/dashboard', function(){return view('dashboard.freelancer.index');})->name('dashboard');
 
+        // Job routes for freelancer
+        // Route::resource('jobs', JobController::class)->except(['show']);
+
         // Freelancer chat routes
         Route::get('/chat', [ChatController::class, 'index'])->name('chat');
         Route::get('/chat/{user}', [ChatController::class, 'show'])->name('chat.show');
@@ -76,6 +85,7 @@ Route::middleware('auth')->group(function () {
         Route::patch('/order/{order}/reject', [OrderController::class, 'reject'])->name('order.reject');
         Route::patch('/order/{order}/complete', [OrderController::class, 'complete'])->name('order.complete');
         Route::post('/order/{order}/upload-deliverable', [OrderController::class, 'uploadDeliverable'])->name('order.upload');
+
     });
 
     // General order creation routes (accessible by both roles)

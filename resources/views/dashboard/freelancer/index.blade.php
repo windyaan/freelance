@@ -595,7 +595,7 @@ body {
         </a>
         <h1 class="navbar-title">Dashboard</h1>
     </div>
-    
+
     <div class="navbar-center">
         <div class="search-container">
             <iconify-icon icon="material-symbols:search" class="search-icon"></iconify-icon>
@@ -603,7 +603,7 @@ body {
             <button class="search-btn" id="searchBtn">Search</button>
         </div>
     </div>
-    
+
     <div class="navbar-right">
         <div class="navbar-profile" onclick="goToProfile()">
             <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Profile">
@@ -628,7 +628,7 @@ body {
             </div>
             <span class="nav-text">Dashboard</span>
         </a>
-        
+
         <a href="{{ route('freelancer.chat') }}" class="nav-item {{ request()->routeIs('freelancer.chat') ? 'active' : '' }}">
             <div class="nav-icon">
                 <iconify-icon icon="material-symbols:chat"></iconify-icon>
@@ -636,16 +636,26 @@ body {
             <span class="nav-text">Chat</span>
             <span class="nav-badge">3</span>
         </a>
-        
+
                <!-- Updated navbar brand with Laravel route -->
     <a href="{{ route('freelancer.order') }}" class="nav-item {{ request()->routeIs('freelancer.order*') ? 'active' : '' }}">
     <div class="nav-icon">
         <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
     </div>
     <span class="nav-text">Order</span>
-</a>
+    </a>
+
+        {{-- <a href="{{ route('freelancer.services') }}" class="nav-item {{ request()->routeIs('freelancer.services*') ? 'active' : '' }}"> --}}
+    <div class="nav-icon">
+        <iconify-icon icon="material-symbols:work"></iconify-icon>
+    </div>
+    <span class="nav-text">Service</span>
+    </a>
+
     </nav>
 </div>
+
+
 
 <!-- Main Content -->
 <div class="main-content">
@@ -687,7 +697,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('globalSearch');
     const sidebar = document.getElementById('sidebar');
     const sidebarToggle = document.getElementById('sidebarToggle');
-    
+
     // Prevent horizontal scroll
     if (document.body) {
         document.body.style.overflowX = 'hidden';
@@ -712,13 +722,13 @@ document.addEventListener('DOMContentLoaded', function() {
             backdrop-filter: blur(4px);
         `;
         document.body.appendChild(sidebarOverlay);
-        
+
         sidebarToggle.addEventListener('click', function(e) {
             e.preventDefault();
             sidebar.classList.toggle('show');
             sidebarOverlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
         });
-        
+
         sidebarOverlay.addEventListener('click', function() {
             sidebar.classList.remove('show');
             sidebarOverlay.style.display = 'none';
@@ -772,7 +782,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!this.getAttribute('href').startsWith('#')) {
                 return;
             }
-            
+
             e.preventDefault();
 
             // Remove active class from all nav items
@@ -797,7 +807,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 showAllOrders();
             }
         }
-        
+
         // Ctrl/Cmd + K to focus search
         if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
             e.preventDefault();

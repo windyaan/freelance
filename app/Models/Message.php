@@ -15,12 +15,12 @@ class Message extends Model
         'read_at'
     ];
 
-    //relasi many to one ke tabel chat
+    //relasi one to one ke tabel chat
     public function chat(){
         return $this->belongsTo(Chat::class,'chat_id');
     }
 
-    // Relasi many to one ke tabel user (pengirim pesan)
+    // Relasi one to one ke tabel user (pengirim pesan)
     public function sender(){
         return $this->belongsTo(User::class, 'sender_id');
     }
