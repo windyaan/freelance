@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\ChatController; // Import ChatController
 use App\Http\Controllers\OrderController; // Import OrderController
+use App\Http\Controllers\AdminReportController;
+use App\Http\Controllers\ReportController;
+
+
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -63,6 +67,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/order/{order}/pay', [OrderController::class, 'makePayment'])->name('order.pay');
         Route::patch('/order/{order}/cancel', [OrderController::class, 'cancel'])->name('order.cancel');
         Route::get('/order/{order}/invoice', [OrderController::class, 'downloadInvoice'])->name('order.invoice');
+
+        //route untuk client kirim laporan
+        Route::get('/reports/create', [ReportController::class, 'create'])->name('reports.create');
+        Route::post('/reports', [ReportController::class, 'store'])->name('reports.store');
+
     });
 
     // Freelancer routes group
@@ -97,10 +106,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/freelancer-dashboard', function(){return view('dashboard.freelancer.index');})->name('freelancer.dashboard.legacy')->middleware('role:freelancer');
 });
 
-// Admin routes
-Route::get('/admin-dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    // Admin routes
+    Route::get('/admin-dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
-// Search route for admin dashboard
-Route::get('/search', [AdminController::class, 'search'])->name('search')->middleware('auth');
+    // Search route for admin dashboard
+    Route::get('/search', [AdminController::class, 'search'])->name('search')->middleware('auth');
+
+    //route admin kelola laporan
+    Route::get('/admin/reports', [AdminReportController::class, 'index'])->name('admin.reports.index');
+    Route::get('/admin/reports/{id}', [AdminReportController::class, 'show'])->name('admin.reports.show');
+    Route::post('/admin/reports/{id}/ban', [AdminReportController::class, 'banFreelancer'])->name('admin.reports.ban');
 
 require __DIR__.'/auth.php';

@@ -73,6 +73,19 @@ public function profiles()
     return $this->hasOne(Profile::class);
 }
 
+    public function reportsMade()
+    {
+    // Laporan yang dibuat user ini sebagai client
+    return $this->hasMany(Report::class, 'client_id');
+    }
+
+    public function reportsAgainst()
+    {
+    // Laporan yang ditujukan kepada user ini sebagai freelancer
+    return $this->hasMany(Report::class, 'freelancer_id');
+    }
+
+
     // // Role check helper
     // public function isAdmin()
     // {
