@@ -249,7 +249,7 @@ body {
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 1.25rem; /* Reduced from 1.5rem */
     flex: 1;
 }
@@ -419,8 +419,8 @@ body {
 }
 
 .export-btn {
-    background: #f8fafc;
-    color: #64748b;
+    background: #38C1B9;
+    color: white;
     border: 1px solid #e2e8f0;
     padding: 0.6rem 1rem;
     border-radius: 8px;
@@ -435,8 +435,8 @@ body {
 }
 
 .export-btn:hover {
-    background: #e2e8f0;
-    color: #475569;
+    background: #38C1B9;
+    color: white;
     text-decoration: none;
 }
 
@@ -716,7 +716,7 @@ body {
         </a>
         <h1 class="navbar-title">Dashboard</h1>
     </div>
-    
+
     <div class="navbar-right">
         <div class="navbar-profile" onclick="goToProfile()">
             <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=32&h=32&fit=crop&crop=face" alt="Admin Profile">
@@ -780,13 +780,16 @@ body {
                 <div class="stat-number">{{ $totalOrders ?? 120 }}</div>
                 <div class="stat-label">Orders</div>
             </div>
-        </div>
+        {{-- </div> --}}
 
         <div class="profit-card">
             <div class="profit-title">Profit</div>
-            <div class="profit-amount">Rp4.300.000</div>
+            {{-- <div class="profit-amount">Rp4.300.000</div> --}}
+             <div class="profit-amount">Rp{{ number_format($totalProfit, 0, ',', '.') }}
         </div>
     </div>
+</div>
+</div>
 
     <!-- Users Section -->
     <div class="users-section">
@@ -800,7 +803,7 @@ body {
                 <button class="search-btn" onclick="searchUsers()">
                     Search
                 </button>
-                <a href="#" class="export-btn">EXPORT DATA</a>
+                <a href="{{ route('admin.exportUsersProfitPdf') }}" class="export-btn">EXPORT DATA</a>
             </div>
         </div>
 
@@ -809,7 +812,7 @@ body {
                 <thead>
                     <tr>
                         <th class="sortable" onclick="sortTable(0, this)">
-                            User Role 
+                            User Role
                             <span class="sort-arrows">↕</span>
                         </th>
                         <th>
@@ -819,11 +822,11 @@ body {
                             Email
                         </th>
                         <th class="sortable" onclick="sortTable(3, this)">
-                            Applied Date 
+                            Applied Date
                             <span class="sort-arrows">↕</span>
                         </th>
                         <th class="sortable" onclick="sortTable(4, this)">
-                            Status 
+                            Status
                             <span class="sort-arrows">↕</span>
                         </th>
                     </tr>
@@ -906,7 +909,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Search functionality for users table
     const searchInput = document.getElementById('userSearch');
     let searchTimeout;
-    
+
     if (searchInput) {
         searchInput.addEventListener('input', function() {
             clearTimeout(searchTimeout);
@@ -950,10 +953,10 @@ function performNavbarSearch() {
     if (searchQuery.trim()) {
         // Implement your navbar search functionality here
         console.log('Searching for:', searchQuery);
-        
+
         // Option 1: Filter current users table (immediate feedback)
         searchUsers(searchQuery.toLowerCase());
-        
+
         // Option 2: Redirect to search page with results
         // window.location.href = "/search?q=" + encodeURIComponent(searchQuery);
     }
@@ -966,7 +969,7 @@ function searchUsers(query = null) {
 
     const rows = document.querySelectorAll('#usersTableBody tr');
     let visibleCount = 0;
-    
+
     rows.forEach(function(row) {
         const role = (row.getAttribute('data-role') || '').toLowerCase();
         const name = (row.getAttribute('data-name') || '').toLowerCase();
@@ -1011,13 +1014,13 @@ function deleteUser(button) {
         // Add loading state
         button.disabled = true;
         button.innerHTML = '<iconify-icon icon="material-symbols:hourglass-empty"></iconify-icon>';
-        
+
         // Simulate API call - replace with actual delete request
         setTimeout(function() {
             row.remove();
             // Show success message
             console.log(`User "${name}" deleted successfully`);
-            
+
             // In real implementation, make AJAX call to delete endpoint
             // fetch(`/admin/users/delete/${userId}`, { method: 'DELETE' })
             //     .then(response => response.json())
@@ -1033,7 +1036,7 @@ function deleteUser(button) {
 function exportData() {
     // Implement export functionality
     alert('Exporting user data...');
-    
+
     // Example: Generate CSV or redirect to export endpoint
     // window.location.href = '/admin/users/export';
 }
@@ -1061,7 +1064,7 @@ document.addEventListener('keydown', function(e) {
             searchInput.focus();
         }
     }
-    
+
     // Escape to close mobile sidebar
     if (e.key === 'Escape') {
         const sidebar = document.getElementById('sidebar');
@@ -1078,37 +1081,37 @@ function sortTable(columnIndex, headerElement) {
     const table = document.querySelector('.users-table tbody');
     const rows = Array.from(table.querySelectorAll('tr'));
     const isAscending = !sortOrder[columnIndex];
-    
+
     // Update sort order
     sortOrder[columnIndex] = isAscending;
-    
+
     // Reset all arrows
     document.querySelectorAll('.sort-arrows').forEach(arrow => {
         arrow.textContent = '↕';
         arrow.style.color = '#94a3b8';
     });
-    
+
     // Update current arrow
     const arrow = headerElement.querySelector('.sort-arrows');
     arrow.textContent = isAscending ? '↑' : '↓';
     arrow.style.color = '#38C1B9';
-    
+
     // Sort rows
     rows.sort((a, b) => {
         let aValue = a.cells[columnIndex].textContent.trim();
         let bValue = b.cells[columnIndex].textContent.trim();
-        
+
         // Special handling for different column types
         if (columnIndex === 3) { // Applied Date column
             // Parse dates for proper sorting
             const dateA = parseDate(aValue);
             const dateB = parseDate(bValue);
-            
+
             if (isAscending) {
                 // Panah atas = terbaru dulu (newest first)
                 return dateB - dateA;
             } else {
-                // Panah bawah = terlama dulu (oldest first) 
+                // Panah bawah = terlama dulu (oldest first)
                 return dateA - dateB;
             }
         } else if (columnIndex === 0) { // User Role column
@@ -1116,7 +1119,7 @@ function sortTable(columnIndex, headerElement) {
             const roleOrder = { 'admin': 3, 'client': 2, 'freelancer': 1 };
             const roleA = aValue.toLowerCase();
             const roleB = bValue.toLowerCase();
-            
+
             if (isAscending) {
                 return (roleOrder[roleB] || 0) - (roleOrder[roleA] || 0);
             } else {
@@ -1127,7 +1130,7 @@ function sortTable(columnIndex, headerElement) {
             const statusOrder = { 'active': 2, 'inactive': 1 };
             const statusA = aValue.toLowerCase();
             const statusB = bValue.toLowerCase();
-            
+
             if (isAscending) {
                 return (statusOrder[statusB] || 0) - (statusOrder[statusA] || 0);
             } else {
@@ -1137,7 +1140,7 @@ function sortTable(columnIndex, headerElement) {
             // Regular text sorting for Name and Email
             aValue = aValue.toLowerCase();
             bValue = bValue.toLowerCase();
-            
+
             if (isAscending) {
                 // Panah atas = A-Z
                 if (aValue < bValue) return -1;
@@ -1151,10 +1154,10 @@ function sortTable(columnIndex, headerElement) {
             }
         }
     });
-    
+
     // Re-append sorted rows
     rows.forEach(row => table.appendChild(row));
-    
+
     // Add visual feedback
     headerElement.style.backgroundColor = '#f1f5f9';
     setTimeout(() => {
@@ -1169,7 +1172,7 @@ function parseDate(dateString) {
         'jan': 0, 'feb': 1, 'mar': 2, 'apr': 3, 'may': 4, 'jun': 5,
         'jul': 6, 'aug': 7, 'sep': 8, 'sept': 8, 'oct': 9, 'nov': 10, 'dec': 11
     };
-    
+
     const parts = dateString.toLowerCase().split(/[\s,]+/);
     if (parts.length >= 3) {
         const month = months[parts[0]] !== undefined ? months[parts[0]] : 0;
@@ -1177,14 +1180,14 @@ function parseDate(dateString) {
         const year = parseInt(parts[2]) || new Date().getFullYear();
         return new Date(year, month, day);
     }
-    
+
     return new Date(dateString);
 }
 function showLoading(element) {
     const originalContent = element.innerHTML;
     element.innerHTML = '<iconify-icon icon="material-symbols:hourglass-empty"></iconify-icon>';
     element.disabled = true;
-    
+
     return function hideLoading() {
         element.innerHTML = originalContent;
         element.disabled = false;

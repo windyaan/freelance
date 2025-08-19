@@ -786,7 +786,7 @@ body {
         </div>
         <!-- Updated navbar brand with Laravel route -->
         <a href="{{ route('freelancer.dashboard') }}" class="navbar-brand">
-            <div class="logo" style="margin-top: 60px;">
+            <div class="logo">
                 <h1>Skill<span>Match</span></h1>
             </div>
         </a>

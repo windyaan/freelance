@@ -78,8 +78,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('freelancer')->name('freelancer.')->middleware('role:freelancer')->group(function () {
     Route::get('/dashboard', function(){return view('dashboard.freelancer.index');})->name('dashboard');
 
-        // Job routes for freelancer
-        // Route::resource('jobs', JobController::class)->except(['show']);
+        // Job routes untuk freelancer (CRUD penuh)
+
 
         // Freelancer chat routes
         Route::get('/chat', [ChatController::class, 'index'])->name('chat');
@@ -108,6 +108,7 @@ Route::middleware('auth')->group(function () {
 
     // Admin routes
     Route::get('/admin-dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/export-users-profit', [AdminController::class, 'exportUsersProfitPdf'])->name('admin.exportUsersProfitPdf');
 
     // Search route for admin dashboard
     Route::get('/search', [AdminController::class, 'search'])->name('search')->middleware('auth');

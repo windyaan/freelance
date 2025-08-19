@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('offer_id')->constrained('offers')->onDelete('cascade');
             $table->decimal('amount', 12, 2);
+            $table->decimal('amount_paid', 12, 2)->default(0);
             $table->string('payment_method')->nullable(); // contoh: 'transfer', 'gopay', 'ovo'
-            $table->enum('status', ['pending', 'paid', 'failed'])->default('pending');
+            $table->enum('status', ['pending', 'paid', 'dp','failed'])->default('pending');
             $table->timestamps();
         });
     }

@@ -17,11 +17,24 @@ class OrderFactory extends Factory
      */
     public function definition(): array
     {
+        $amount = $this->faker->randomFloat(2, 500, 10000);
+
+        // Simulasi pembayaran: belum bayar, DP, full, atau gagal
+        $case = $this->faker->randomElement(['pending', 'dp', 'paid', 'failed']);
+
+        $amountPaid = match ($case) {
+            'pending' => 0,
+            'dp'      => $this->faker->randomFloat(2, 1, $amount - 1), // kurang dari total
+            'paid'    => $amount,
+            'failed'  => 0, // gagal = tidak tercatat bayar
+        };
+
         return [
-        'offer_id' => Offer::factory(),
-        'amount' => $this->faker->randomFloat(2, 500, 10000),
-        'payment_method' => $this->faker->randomElement(['transfer', 'gopay', 'ovo']),
-        'status' => $this->faker->randomElement(['pending', 'paid', 'failed']),
+        'offer_id'       => Offer::factory(),
+            'amount'         => $amount,
+            'amount_paid'    => $amountPaid,
+            'payment_method' => $this->faker->randomElement(['transfer', 'gopay', 'ovo']),
+            'status'         => $case,
         ];
     }
 }

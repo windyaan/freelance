@@ -13,7 +13,7 @@ class ChatController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth'); // pastikan user sudah login
+        // $this->middleware('auth'); // pastikan user sudah login
     }
 
     /**
@@ -35,11 +35,25 @@ class ChatController extends Controller
     }
 
     /**
-     * Tampilkan chat lengkap beserta semua pesan
+     * Tampilkan chat lengkap beserta semua
+     * menandai pesan lawan sebagai dibaca dan broadcast messageread
      */
     public function show(Chat $chat)
     {
         $this->authorize('view', $chat); // cek policy apakah user boleh akses chat ini
+
+        // Ambil semua pesan dari lawan yang belum dibaca
+        // $unreadMessages = $chat->messages()
+        //     ->where('sender_id', '!=', Auth::id())
+        //     ->whereNull('read_at')
+        //     ->get();
+
+        // foreach ($unreadMessages as $msg) {
+        //     $msg->update(['read_at' => now()]);
+
+        //     // Broadcast event read agar centang berubah di sisi pengirim
+        //     broadcast(new MessageRead($msg))->toOthers();
+        // }
 
         $messages = $chat->messages()
                          ->with('sender')
@@ -88,28 +102,20 @@ class ChatController extends Controller
             'content' => $request->input('content'),
         ]);
 
-        // Broadcast event menggunakan Laravel Event
-        event(new MessageSent($message));
-
-        // Kirim ke Reverb untuk realtime
-        // Channel: chat.{chat_id} agar semua peserta chat menerima
-        app('reverb')->sendToChannel('chat.' . $chat->id, [
-        'message' => $message->content,
-        'sender_id' => $message->sender_id,
-        'chat_id' => $chat->id,
-        'created_at' => $message->created_at->toDateTimeString(),
-        ]);
+        // Broadcast ke channel private chat.{chat_id}
+        broadcast(new MessageSent($message))->toOthers();
 
         return back()->with('success', 'Pesan berhasil dikirim');
     }
 
-    /*** Tandai pesan sebagai sudah dibaca*/
+    /*** Tandai 1 pesan sebagai sudah dibaca*/
     public function markAsRead(Message $message)
     {
         $this->authorize('view', $message->chat);
 
         if (is_null($message->read_at)) {
             $message->update(['read_at' => now()]);
+            // broadcast(event: new MessageRead($message))->toOthers();
         }
 
         return back();
