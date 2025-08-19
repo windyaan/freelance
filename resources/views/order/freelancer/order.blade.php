@@ -786,7 +786,7 @@ body {
         </div>
         <!-- Updated navbar brand with Laravel route -->
         <a href="{{ route('freelancer.dashboard') }}" class="navbar-brand">
-            <div class="logo" style="margin-top: 60px;">
+            <div class="logo">
                 <h1>Skill<span>Match</span></h1>
             </div>
         </a>
@@ -837,7 +837,7 @@ body {
             </div>
             <span class="nav-text">Order</span>
         </a>
-        {{-- <a href="{{ route('freelancer.services') }}" class="nav-item {{ request()->routeIs('freelancer.services') ? 'active' : '' }}"> --}}
+        <a href="{{ route('freelancer.services') }}" class="nav-item {{ request()->routeIs('freelancer.services*') ? 'active' : '' }}">
             <div class="nav-icon">
                 <iconify-icon icon="material-symbols:work"></iconify-icon>
             </div>

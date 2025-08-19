@@ -86,6 +86,8 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     border: 1px solid #e2e8f0;
     overflow: hidden;
+    display: flex;
+    align-items: center;
 }
 
 .search-container:focus-within {
@@ -355,6 +357,10 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+.order-card.hidden {
+    display: none !important;
+}
+
 .order-skill {
     display: flex;
     align-items: center;
@@ -417,11 +423,46 @@ body {
     transform: translateY(-1px);
 }
 
+/* Search Results */
+.search-results-info {
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    background: #f1f5f9;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #64748b;
+    display: none;
+}
+
+.search-results-info.show {
+    display: block;
+}
+
+.clear-search-btn {
+    background: #38C1B9;
+    color: white;
+    border: none;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-left: 0.5rem;
+}
+
+.clear-search-btn:hover {
+    background: #2da89f;
+}
+
 /* Empty State */
 .empty-state {
     text-align: center;
     padding: 4rem 2rem;
     color: #64748b;
+    display: none;
+}
+
+.empty-state.show {
+    display: block;
 }
 
 .empty-state-icon {
@@ -599,7 +640,7 @@ body {
     <div class="navbar-center">
         <div class="search-container">
             <iconify-icon icon="material-symbols:search" class="search-icon"></iconify-icon>
-            <input type="text" class="search-input" placeholder="Search order, clients..." id="globalSearch">
+            <input type="text" class="search-input" placeholder="Search orders, clients, skills..." id="globalSearch">
             <button class="search-btn" id="searchBtn">Search</button>
         </div>
     </div>
@@ -637,33 +678,40 @@ body {
             <span class="nav-badge">3</span>
         </a>
 
-               <!-- Updated navbar brand with Laravel route -->
-    <a href="{{ route('freelancer.order') }}" class="nav-item {{ request()->routeIs('freelancer.order*') ? 'active' : '' }}">
-    <div class="nav-icon">
-        <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
-    </div>
-    <span class="nav-text">Order</span>
-    </a>
+        <a href="{{ route('freelancer.order') }}" class="nav-item {{ request()->routeIs('freelancer.order*') ? 'active' : '' }}">
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
+            </div>
+            <span class="nav-text">Order</span>
+        </a>
 
-        {{-- <a href="{{ route('freelancer.services') }}" class="nav-item {{ request()->routeIs('freelancer.services*') ? 'active' : '' }}"> --}}
-    <div class="nav-icon">
-        <iconify-icon icon="material-symbols:work"></iconify-icon>
-    </div>
-    <span class="nav-text">Service</span>
-    </a>
-
+        <a href="#" class="nav-item">
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:work"></iconify-icon>
+            </div>
+            <span class="nav-text">Service</span>
+        </a>
     </nav>
 </div>
-
-
 
 <!-- Main Content -->
 <div class="main-content">
     <!-- Orders Section -->
-    <div class="order-section">
-        <div class="order-list">
+    <div class="orders-section">
+        <div class="orders-header">
+            <h2 class="orders-title">Recent Orders</h2>
+            <span class="orders-count" id="ordersCount">2 Orders</span>
+        </div>
+
+        <!-- Search Results Info -->
+        <div class="search-results-info" id="searchResultsInfo">
+            <span id="searchResultsText"></span>
+            <button class="clear-search-btn" onclick="clearSearch()">Clear</button>
+        </div>
+
+        <div class="orders-list" id="ordersList">
             <!-- Order Card 1 -->
-            <div class="order-card" data-client="Denada F" data-skill="illustrator">
+            <div class="order-card" data-client="denada f" data-skill="illustrator" data-description="buku cerita anak aku sayang nenek" data-date="thursday, 18 september 2025">
                 <div class="order-skill">illustrator</div>
                 <div class="order-info">
                     <div class="order-date">Thursday, 18 September 2025</div>
@@ -671,12 +719,12 @@ body {
                     <div class="order-description">Buku cerita anak Aku Sayang Nenek</div>
                 </div>
                 <div class="order-actions">
-                    <button class="details-btn">Details</button>
+                    <button class="details-btn" onclick="showOrderDetails('Denada F', 'illustrator', 'Thursday, 18 September 2025', 'Buku cerita anak Aku Sayang Nenek')">Details</button>
                 </div>
             </div>
 
             <!-- Order Card 2 -->
-            <div class="order-card" data-client="Ira Maria" data-skill="graphic design">
+            <div class="order-card" data-client="ira maria" data-skill="graphic design" data-description="pembuatan design kaos barongsai" data-date="sunday, 21 september 2025">
                 <div class="order-skill">graphic design</div>
                 <div class="order-info">
                     <div class="order-date">Sunday, 21 September 2025</div>
@@ -684,29 +732,158 @@ body {
                     <div class="order-description">Pembuatan design kaos Barongsai</div>
                 </div>
                 <div class="order-actions">
-                    <button class="details-btn">Details</button>
+                    <button class="details-btn" onclick="showOrderDetails('Ira Maria', 'graphic design', 'Sunday, 21 September 2025', 'Pembuatan design kaos Barongsai')">Details</button>
                 </div>
             </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+            <div class="empty-state-icon">
+                <iconify-icon icon="material-symbols:search-off"></iconify-icon>
+            </div>
+            <h3>No orders found</h3>
+            <p>Try adjusting your search criteria or check back later for new orders.</p>
+            <button onclick="clearSearch()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #38C1B9; color: white; border: none; border-radius: 6px; cursor: pointer;">Clear Search</button>
         </div>
     </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+// Define global variables first
+let allOrderCards = [];
+let currentSearchQuery = '';
+
+// Cache DOM elements
+let searchInput, searchBtn, sidebar, sidebarToggle, ordersList, emptyState, searchResultsInfo, searchResultsText, ordersCount;
+
+// Search function - defined globally first
+function performSearch(query) {
+    console.log('Performing search for:', query);
+    
+    currentSearchQuery = query.toLowerCase().trim();
+    let hasResults = false;
+    let matchCount = 0;
+
+    if (currentSearchQuery === '') {
+        // Show all orders
+        allOrderCards.forEach(card => {
+            card.classList.remove('hidden');
+        });
+        hasResults = true;
+        hideSearchInfo();
+        hideEmptyState();
+    } else {
+        // Filter orders
+        allOrderCards.forEach(card => {
+            const client = (card.getAttribute('data-client') || '').toLowerCase();
+            const skill = (card.getAttribute('data-skill') || '').toLowerCase();
+            const description = (card.getAttribute('data-description') || '').toLowerCase();
+            const date = (card.getAttribute('data-date') || '').toLowerCase();
+
+            const hasMatch = client.includes(currentSearchQuery) ||
+                          skill.includes(currentSearchQuery) ||
+                          description.includes(currentSearchQuery) ||
+                          date.includes(currentSearchQuery);
+
+            if (hasMatch) {
+                card.classList.remove('hidden');
+                hasResults = true;
+                matchCount++;
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+
+        // Show search results info
+        if (hasResults) {
+            showSearchInfo(matchCount, currentSearchQuery);
+            hideEmptyState();
+        } else {
+            hideSearchInfo();
+            showEmptyState();
+        }
+    }
+
+    updateOrdersCount();
+    console.log('Search completed. Results found:', hasResults);
+}
+
+// Clear search function - defined globally
+function clearSearch() {
+    if (searchInput) {
+        searchInput.value = '';
+    }
+    performSearch('');
+}
+
+// Update orders count
+function updateOrdersCount() {
+    if (!ordersCount) return;
+    const visibleOrders = allOrderCards.filter(card => !card.classList.contains('hidden'));
+    const count = visibleOrders.length;
+    ordersCount.textContent = `${count} Order${count !== 1 ? 's' : ''}`;
+}
+
+// Show search results info
+function showSearchInfo(count, query) {
+    if (searchResultsInfo && searchResultsText) {
+        searchResultsText.textContent = `Found ${count} result${count !== 1 ? 's' : ''} for "${query}"`;
+        searchResultsInfo.classList.add('show');
+    }
+}
+
+// Hide search results info
+function hideSearchInfo() {
+    if (searchResultsInfo) {
+        searchResultsInfo.classList.remove('show');
+    }
+}
+
+// Show empty state
+function showEmptyState() {
+    if (emptyState) {
+        emptyState.classList.add('show');
+    }
+    if (ordersList) {
+        ordersList.style.display = 'none';
+    }
+}
+
+// Hide empty state
+function hideEmptyState() {
+    if (emptyState) {
+        emptyState.classList.remove('show');
+    }
+    if (ordersList) {
+        ordersList.style.display = 'flex';
+    }
+}
+
+// Initialize function
+function initDashboard() {
     // Cache DOM elements
-    const searchInput = document.getElementById('globalSearch');
-    const sidebar = document.getElementById('sidebar');
-    const sidebarToggle = document.getElementById('sidebarToggle');
+    searchInput = document.getElementById('globalSearch');
+    searchBtn = document.getElementById('searchBtn');
+    sidebar = document.getElementById('sidebar');
+    sidebarToggle = document.getElementById('sidebarToggle');
+    ordersList = document.getElementById('ordersList');
+    emptyState = document.getElementById('emptyState');
+    searchResultsInfo = document.getElementById('searchResultsInfo');
+    searchResultsText = document.getElementById('searchResultsText');
+    ordersCount = document.getElementById('ordersCount');
 
+    // Get all order cards
+    allOrderCards = Array.from(document.querySelectorAll('.order-card'));
+    updateOrdersCount();
+    
+    console.log('Found', allOrderCards.length, 'order cards');
+    
     // Prevent horizontal scroll
-    if (document.body) {
-        document.body.style.overflowX = 'hidden';
-    }
-    if (document.documentElement) {
-        document.documentElement.style.overflowX = 'hidden';
-    }
+    document.body.style.overflowX = 'hidden';
+    document.documentElement.style.overflowX = 'hidden';
 
-    // Sidebar functionality
+    // Setup sidebar functionality
     if (sidebarToggle && sidebar) {
         // Create overlay
         const sidebarOverlay = document.createElement('div');
@@ -735,76 +912,49 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Search functionality
+    // Setup search event listeners
     if (searchInput) {
-        searchInput.addEventListener('input', function() {
-            const query = this.value.toLowerCase();
-            searchOrder(query);
+        // Real-time search as user types with debounce
+        let searchTimeout;
+        searchInput.addEventListener('input', function(e) {
+            const query = e.target.value;
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                console.log('Search input changed:', query);
+                performSearch(query);
+            }, 300); // 300ms debounce
         });
 
+        // Enter key search
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                const query = this.value.toLowerCase();
-                searchOrder(query);
+                const query = e.target.value;
+                console.log('Search enter key pressed:', query);
+                clearTimeout(searchTimeout);
+                performSearch(query);
             }
         });
     }
 
     // Search button functionality
-    const searchBtn = document.getElementById('searchBtn');
     if (searchBtn) {
         searchBtn.addEventListener('click', function(e) {
             e.preventDefault();
             if (searchInput) {
-                const query = searchInput.value.toLowerCase();
-                searchOrder(query);
+                const query = searchInput.value;
+                console.log('Search button clicked:', query);
+                performSearch(query);
             }
         });
     }
 
-    // Event delegation for all interactions
-    document.addEventListener('click', function(e) {
-        // Details button functionality
-        if (e.target.classList.contains('details-btn')) {
-            const orderCard = e.target.closest('.order-card');
-            const client = orderCard.getAttribute('data-client');
-            const skill = orderCard.getAttribute('data-skill');
-            const date = orderCard.querySelector('.order-date').textContent;
-
-            alert('Order Details:\nClient: ' + client + '\nSkill: ' + skill + '\nDate: ' + date);
-        }
-    });
-
-    // Navigation functionality
-    document.querySelectorAll('.nav-item').forEach(function(item) {
-        item.addEventListener('click', function(e) {
-            if (!this.getAttribute('href').startsWith('#')) {
-                return;
-            }
-
-            e.preventDefault();
-
-            // Remove active class from all nav items
-            document.querySelectorAll('.nav-item').forEach(function(navItem) {
-                navItem.classList.remove('active');
-            });
-
-            // Add active class to clicked item
-            this.classList.add('active');
-
-            const navText = this.querySelector('.nav-text').textContent;
-            console.log('Navigating to: ' + navText);
-        });
-    });
-
-    // Keyboard shortcuts
+    // Global keyboard shortcuts
     document.addEventListener('keydown', function(e) {
         // Escape to clear search
         if (e.key === 'Escape') {
-            if (searchInput && searchInput.value) {
-                searchInput.value = '';
-                showAllOrders();
+            if (currentSearchQuery) {
+                clearSearch();
             }
         }
 
@@ -813,14 +963,28 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             if (searchInput) {
                 searchInput.focus();
+                searchInput.select();
             }
         }
     });
 
-    console.log('Freelancer Dashboard initialized successfully');
-});
+    console.log('Dashboard initialized successfully');
+}
 
-// Global Functions
+// Make functions available globally for layout compatibility
+window.performSearch = performSearch;
+window.searchOrders = performSearch;
+window.showAllOrders = clearSearch;
+window.clearSearch = clearSearch;
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDashboard);
+} else {
+    initDashboard();
+}
+
+// Global utility functions
 function confirmLogout() {
     return confirm('Are you sure you want to log out?');
 }
@@ -829,75 +993,13 @@ function goToProfile() {
     window.location.href = "{{ route('profile.edit') }}";
 }
 
-function searchOrders(query) {
-    const cards = document.querySelectorAll('.order-card');
-    let hasResults = false;
-
-    cards.forEach(function(card) {
-        const client = (card.getAttribute('data-client') || '').toLowerCase();
-        const skill = (card.getAttribute('data-skill') || '').toLowerCase();
-        const date = (card.querySelector('.order-date')?.textContent || '').toLowerCase();
-        const description = (card.querySelector('.order-description')?.textContent || '').toLowerCase();
-
-        const hasMatch = client.includes(query) ||
-                      skill.includes(query) ||
-                      date.includes(query) ||
-                      description.includes(query);
-
-        if (hasMatch || query === '') {
-            card.style.display = 'flex';
-            hasResults = true;
-        } else {
-            card.style.display = 'none';
-        }
-    });
-
-    showNoResultsMessage(!hasResults && query !== '');
+function showOrderDetails(client, skill, date, description) {
+    const message = `Order Details:\n\nClient: ${client}\nSkill: ${skill}\nDate: ${date}\nDescription: ${description}`;
+    alert(message);
+    
+    // In a real application, you would navigate to a detailed order page
+    // window.location.href = `/freelancer/orders/${orderId}`;
 }
-
-function showNoResultsMessage(show) {
-    let existingMessage = document.querySelector('.no-results');
-
-    if (show && !existingMessage) {
-        const noResultsDiv = document.createElement('div');
-        noResultsDiv.className = 'no-results empty-state';
-        noResultsDiv.innerHTML = `
-            <div class="empty-state-icon">
-                <iconify-icon icon="material-symbols:search-off"></iconify-icon>
-            </div>
-            <h3>No orders found</h3>
-            <p>Try adjusting your search criteria</p>
-            <button onclick="showAllOrders()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #38C1B9; color: white; border: none; border-radius: 6px; cursor: pointer;">Clear Search</button>
-        `;
-        const container = document.querySelector('.orders-list');
-        if (container) {
-            container.appendChild(noResultsDiv);
-        }
-    } else if (!show && existingMessage) {
-        existingMessage.remove();
-    }
-}
-
-function showAllOrders() {
-    const orderCards = document.querySelectorAll('.order-card');
-    orderCards.forEach(function(card) {
-        card.style.display = 'flex';
-    });
-
-    const searchInput = document.getElementById('globalSearch');
-    if (searchInput) {
-        searchInput.value = '';
-    }
-
-    const noResults = document.querySelector('.no-results');
-    if (noResults) {
-        noResults.remove();
-    }
-}
-
-// Make functions available globally
-window.searchOrders = searchOrders;
-window.showAllOrders = showAllOrders;
 </script>
 
 @endsection

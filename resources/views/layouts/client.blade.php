@@ -1,340 +1,174 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'SkillMatch - Client Dashboard')</title>
+@extends('layouts.app')
+
+@section('page-title', 'Client Dashboard')
+
+@push('styles')
+<style>
+.client-dashboard .nav-item.client-active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.client-dashboard .search-container {
+    max-width: 450px;
+}
+
+.client-dashboard .navbar-brand {
+    color: var(--primary-color);
+}
+</style>
+@endpush
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Client-specific JavaScript
+    console.log('Client dashboard loaded');
     
-    <!-- Base Styles -->
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    // Initialize client-specific features
+    if (typeof initClientDashboard === 'function') {
+        initClientDashboard();
+    }
+});
+</script>
+@endpush
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
-        }
+{{-- resources/views/layouts/freelancer.blade.php --}}
+@extends('layouts.app')
 
-        .container {
-            display: flex;
-            min-height: 100vh;
-        }
+@section('page-title', 'Freelancer Dashboard')
 
-        /* Sidebar */
-        .sidebar {
-            width: 280px;
-            background-color: white;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
-            position: fixed;
-            height: 100vh;
-            z-index: 1000;
-            padding: 2rem 0;
-        }
+@push('styles')
+<style>
+.freelancer-dashboard .nav-item.freelancer-active {
+    background: #1f7066;
+    color: white;
+}
 
-        .logo {
-            padding: 0 2rem 2rem 2rem;
-            margin-bottom: 2rem;
-        }
+.freelancer-dashboard .navbar-brand {
+    color: var(--primary-color);
+}
 
-        .logo h1 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: #38C1B9;
-        }
+.freelancer-dashboard .earnings-card {
+    background: linear-gradient(135deg, var(--primary-color), #1f7066);
+    color: white;
+}
+</style>
+@endpush
 
-        .logo span {
-            color: #1e293b;
-        }
-
-        .nav-menu {
-            list-style: none;
-            padding: 0 1rem;
-        }
-
-        .nav-item {
-            margin-bottom: 0.5rem;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 1rem 1.5rem;
-            color: #64748b;
-            text-decoration: none;
-            border-radius: 12px;
-            transition: all 0.2s ease;
-            font-weight: 500;
-        }
-
-        .nav-link:hover {
-            background-color: #f1f5f9;
-            color: #1e293b;
-        }
-
-        .nav-link.active {
-            background-color: #475569;
-            color: white;
-        }
-
-        .nav-icon {
-            width: 24px;
-            height: 24px;
-            margin-right: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            background-color: #f8fafc;
-        }
-
-        /* Header */
-        .header {
-            background-color: white;
-            padding: 1.5rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .page-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #1e293b;
-            flex-shrink: 0;
-        }
-
-        .header-center {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            padding: 0 2rem;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            flex-shrink: 0;
-        }
-
-        .search-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .search-input {
-            padding: 0.75rem 1rem 0.75rem 3rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            width: 100%;
-            font-size: 0.95rem;
-            background-color: #f8fafc;
-            transition: all 0.2s ease;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #38C1B9;
-            background-color: white;
-        }
-
-        .search-input::placeholder {
-            color: #94a3b8;
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #64748b;
-            font-size: 1.1rem;
-        }
-
-        .search-btn {
-            background-color: #38C1B9;
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .search-btn:hover {
-            background-color: #2da89f;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #e2e8f0;
-            border: 2px solid white;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #64748b;
-            font-size: 1.2rem;
-        }
-
-        .user-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Content Area */
-        .content-area {
-            padding: 2rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            
-            .main-content {
-                margin-left: 0;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                gap: 1rem;
-                padding: 1rem;
-            }
-
-            .header-center {
-                order: 2;
-                padding: 0;
-                width: 100%;
-            }
-
-            .header-right {
-                order: 1;
-                align-self: flex-end;
-            }
-
-            .page-title {
-                order: 0;
-                align-self: flex-start;
-            }
-            
-            .search-container {
-                max-width: none;
-            }
-            
-            .content-area {
-                padding: 1rem;
-            }
-        }
-    </style>
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Freelancer-specific JavaScript
+    console.log('Freelancer dashboard loaded');
     
-    @stack('styles')
-</head>
-<body>
-    <div class="container">
-        <!-- Sidebar -->
-        <nav class="sidebar">
-            <div class="logo">
-                <h1>Skill<span>Match</span></h1>
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="{{ route('client.dashboard') }}" class="nav-link active">
-                        <div class="nav-icon">⊞</div>
-                        Dashboard
-                    </a>
-                </li>
-                <!-- Menu lain bisa ditambahkan nanti -->
-            </ul>
-        </nav>
+    // Initialize freelancer-specific features
+    if (typeof initFreelancerDashboard === 'function') {
+        initFreelancerDashboard();
+    }
+});
+</script>
+@endpush
 
+{{-- resources/views/layouts/admin.blade.php --}}
+@extends('layouts.app')
 
-            <!-- Content Area -->
-            <div class="content-area">
-                @yield('content')
-            </div>
-        </main>
+@section('page-title', 'Admin Panel')
+@section('body-class', 'admin-layout')
+
+@push('styles')
+<style>
+.admin-layout {
+    background: var(--gray-100);
+}
+
+.admin-layout .navbar-brand {
+    color: var(--danger-color);
+}
+
+.admin-layout .sidebar {
+    background: var(--gray-900);
+}
+
+.admin-layout .nav-item {
+    color: var(--gray-300);
+}
+
+.admin-layout .nav-item:hover {
+    background: var(--gray-800);
+    color: white;
+}
+
+.admin-layout .nav-item.active {
+    background: var(--danger-color);
+    color: white;
+}
+</style>
+@endpush
+
+{{-- resources/views/layouts/auth.blade.php --}}
+@extends('layouts.core')
+
+@section('body-class', 'auth-layout')
+@section('container-class', 'auth-container')
+
+@section('content')
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-header">
+            @include('components.ui.logo')
+        </div>
+        <div class="auth-content">
+            {{ $slot ?? '' }}
+            @yield('auth-content')
+        </div>
     </div>
+</div>
+@endsection
 
-    <!-- Base JavaScript -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Global search functionality
-            const searchInput = document.getElementById('globalSearch');
-            const searchBtn = document.getElementById('searchBtn');
-            
-            function performSearch() {
-                const query = searchInput.value.trim();
-                if (query) {
-                    // Check if search function exists on dashboard
-                    if (typeof window.searchTalents === 'function') {
-                        window.searchTalents(query);
-                    }
-                } else {
-                    if (typeof window.showAllTalents === 'function') {
-                        window.showAllTalents();
-                    }
-                }
-            }
-            
-            if (searchBtn) {
-                searchBtn.addEventListener('click', performSearch);
-            }
-            
-            if (searchInput) {
-                searchInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        performSearch();
-                    }
-                });
+@push('styles')
+<style>
+.auth-layout {
+    background: linear-gradient(135deg, var(--primary-color), #1f7066);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-                // Real-time search
-                searchInput.addEventListener('input', function() {
-                    const query = this.value.trim();
-                    if (typeof window.searchTalents === 'function') {
-                        if (query.length > 2) {
-                            window.searchTalents(query);
-                        } else if (query.length === 0) {
-                            window.showAllTalents();
-                        }
-                    }
-                });
-            }
-        });
-    </script>
+.auth-wrapper {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+}
 
-    @stack('scripts')
-</body>
-</html>
+.auth-card {
+    background: white;
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+}
+
+.auth-header {
+    background: var(--gray-50);
+    padding: 2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.auth-content {
+    padding: 2rem;
+}
+
+@media (max-width: 640px) {
+    .auth-wrapper {
+        padding: 1rem;
+        max-width: 100%;
+    }
+    
+    .auth-card {
+        border-radius: var(--border-radius-lg);
+    }
+}
+</style>
+@endpush

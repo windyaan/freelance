@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Order - SkillMatch')</title>
+    <title>Order - SkillMatch</title>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -25,7 +25,7 @@
             overflow-x: hidden;
         }
 
-        /* Top Navigation Bar */
+        /* Top Navigation Bar - Fixed */
         .top-navbar {
             position: fixed;
             top: 0;
@@ -36,6 +36,7 @@
             border-bottom: 1px solid #e2e8f0;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             padding: 0 2rem;
             z-index: 1001;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -45,7 +46,7 @@
             display: flex;
             align-items: center;
             gap: 2rem;
-            flex: 1;
+            min-width: 0;
         }
 
         .navbar-brand {
@@ -55,6 +56,7 @@
             font-weight: 700;
             color: #38C1B9;
             text-decoration: none;
+            white-space: nowrap;
         }
 
         .navbar-brand span:last-child {
@@ -65,12 +67,15 @@
             font-size: 1.5rem;
             font-weight: 700;
             color: #64748b;
+            white-space: nowrap;
         }
 
         .navbar-center {
-            flex: 2;
+            flex: 1;
             display: flex;
             justify-content: center;
+            max-width: 500px;
+            margin: 0 2rem;
         }
 
         .search-container {
@@ -125,6 +130,7 @@
             transition: all 0.2s ease;
             margin: 4px 4px 4px 0;
             border-radius: 6px;
+            white-space: nowrap;
         }
 
         .search-btn:hover {
@@ -135,8 +141,7 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            flex: 1;
-            justify-content: flex-end;
+            min-width: 0;
         }
 
         .navbar-profile {
@@ -147,6 +152,7 @@
             cursor: pointer;
             border: 2px solid #e2e8f0;
             transition: all 0.2s ease;
+            flex-shrink: 0;
         }
 
         .navbar-profile:hover {
@@ -173,6 +179,8 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .navbar-logout:hover {
@@ -461,8 +469,13 @@
                 padding: 1.5rem;
             }
             
+            .top-navbar {
+                padding: 0 1rem;
+            }
+            
             .navbar-center {
-                flex: 1.5;
+                margin: 0 1rem;
+                max-width: 300px;
             }
         }
 
@@ -472,11 +485,12 @@
             }
             
             .navbar-center {
-                flex: 2;
+                margin: 0 0.5rem;
+                max-width: 250px;
             }
             
             .search-container {
-                max-width: 280px;
+                max-width: 220px;
             }
             
             .order-section {
@@ -518,6 +532,10 @@
                 display: none;
             }
             
+            .navbar-right {
+                gap: 0.5rem;
+            }
+            
             .main-content {
                 padding: 0.8rem;
             }
@@ -539,72 +557,135 @@
                 padding: 0.4rem 0.8rem;
             }
         }
+
+        @media (max-width: 480px) {
+            .top-navbar {
+                padding: 0 0.5rem;
+            }
+            
+            .navbar-logout span {
+                display: none;
+            }
+            
+            .navbar-logout {
+                padding: 0.5rem;
+                min-width: 40px;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Top Navigation -->
-    <div class="top-navbar">
-        <div class="navbar-left">
-            <div class="sidebar-toggle" id="sidebarToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <a href="{{ route('client.dashboard') }}" class="navbar-brand">
-                Skill<span>Match</span>
-            </a>
-            <h1 class="navbar-title">Progress</h1>
+   <!-- Top Navigation -->
+<div class="top-navbar">
+    <div class="navbar-left">
+        <div class="sidebar-toggle" id="sidebarToggle" style="display: none;">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
-        <div class="navbar-center">
-            <div class="search-container">
-                <iconify-icon icon="material-symbols:search" class="search-icon"></iconify-icon>
-                <input type="text" class="search-input" placeholder="Search here..." id="globalSearch">
-                <button class="search-btn" id="searchBtn">Search</button>
-            </div>
+        <!-- Navbar brand -->
+<div class="navbar-left">
+    <a href="{{ route('freelancer.dashboard') }}" class="navbar-brand">
+        <div class="logo">
+            <h1>Skill<span>Match</span></h1>
         </div>
-        <div class="navbar-right">
-            <div class="navbar-profile" onclick="goToProfile()">
-                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face" alt="Profile">
-            </div>
-            
-            <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
-                @csrf
-                <button type="submit" class="navbar-logout" onclick="return confirmLogout()">
-                    <iconify-icon icon="material-symbols:logout"></iconify-icon>
-                    Log Out
-                </button>
-            </form>
+    </a>
+    <h1 class="navbar-title">Order</h1>
+</div>
+
+    <div class="navbar-center">
+        <div class="search-container">
+            <iconify-icon icon="material-symbols:search" class="search-icon"></iconify-icon>
+            <input type="text" class="search-input" placeholder="Search order..." id="globalSearch">
+            <button class="search-btn" id="searchBtn">Search</button>
         </div>
     </div>
 
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <nav>
-            <a href="{{ route('client.dashboard') }}" class="nav-item {{ request()->routeIs('client.dashboard') ? 'active' : '' }}">
-                <div class="nav-icon">
-                    <iconify-icon icon="material-symbols:dashboard"></iconify-icon>
-                </div>
-                <span class="nav-text">Dashboard</span>
-            </a>
-            <a href="{{ route('client.chat') }}" class="nav-item {{ request()->routeIs('client.chat') ? 'active' : '' }}">
-                <div class="nav-icon">
-                    <iconify-icon icon="material-symbols:chat"></iconify-icon>
-                </div>
-                <span class="nav-text">Chat</span>
-                <span class="nav-badge">3</span>
-            </a>
-    <a href="{{ route('client.order') }}" class="nav-item {{ request()->routeIs('client.order*') ? 'active' : '' }}">
-    <div class="nav-icon">
-        <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
+    <div class="navbar-right">
+        <div class="navbar-profile" onclick="goToProfile()">
+            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Profile">
+        </div>
+
+        <form method="POST" action="{{ route('logout') }}" class="navbar-logout-form">
+            @csrf
+            <button type="submit" class="navbar-logout" onclick="return confirmLogout()">
+                <iconify-icon icon="material-symbols:logout"></iconify-icon>
+                Log Out
+            </button>
+        </form>
     </div>
-    <span class="nav-text">Order</span>
-</a>
-        </nav>
-    </div>
+</div>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <nav>
+        <a href="{{ route('freelancer.dashboard') }}" class="nav-item {{ request()->routeIs('freelancer.dashboard') ? 'active' : '' }}">
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:dashboard"></iconify-icon>
+            </div>
+            <span class="nav-text">Dashboard</span>
+        </a>
+
+        <a href="{{ route('freelancer.chat') }}" class="nav-item {{ request()->routeIs('freelancer.chat') ? 'active' : '' }}">
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:chat"></iconify-icon>
+            </div>
+            <span class="nav-text">Chat</span>
+            <span class="nav-badge">3</span>
+        </a>
+
+        <a href="{{ route('freelancer.order') }}" class="nav-item {{ request()->routeIs('freelancer.order') ? 'active' : '' }}">
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
+            </div>
+            <span class="nav-text">Order</span>
+        </a>
+
+        <a href="{{ route('freelancer.services') }}" class="nav-item {{ request()->routeIs('freelancer.services') ? 'active' : '' }}">
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:work"></iconify-icon>
+            </div>
+            <span class="nav-text">Service</span>
+        </a>
+    </nav>
+</div>
 
     <!-- Main Content -->
     <div class="main-content">
-        @yield('content')
+        <div class="order-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
+                    My Orders
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active">All</button>
+                    <button class="filter-btn">Pending</button>
+                    <button class="filter-btn">In Progress</button>
+                    <button class="filter-btn">Completed</button>
+                    <button class="filter-btn">Cancelled</button>
+                </div>
+            </div>
+            
+            <div class="order-grid">
+                <!-- Sample Order Card -->
+                <div class="order-card">
+                    <div class="order-left">
+                        <div class="order-category">design</div>
+                        <div class="order-details">
+                            <div class="order-date">Thursday, 18 September 2025</div>
+                            <div class="order-freelancer">John Doe</div>
+                            <div class="order-title">Logo Design for Tech Startup</div>
+                        </div>
+                    </div>
+                    <div class="order-actions">
+                        <button class="action-btn btn-details" onclick="viewOrderDetails(1)">Details</button>
+                        <button class="action-btn btn-pay" onclick="makePayment(1)">Pay Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -664,31 +745,41 @@
                     }
                 });
             }
+            
+            // Filter functionality
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
         });
 
         // Global functions
         function confirmLogout() {
-            return confirm('Are you sure you want to log out?');
+            if (confirm('Are you sure you want to log out?')) {
+                console.log('Logging out...');
+                // Implement logout logic here
+            }
         }
 
         function goToProfile() {
-            window.location.href = "{{ route('client.profile') ?? '/profile' }}";
+            console.log('Going to profile...');
+            // Navigate to profile page
         }
 
         function viewOrderDetails(orderId) {
             console.log('Viewing details for order:', orderId);
             // Navigate to order details page
-            window.location.href = `/order/${orderId}`;
         }
 
         function makePayment(orderId) {
             console.log('Making payment for order:', orderId);
             if (confirm(`Proceed to payment for order ${orderId}?`)) {
-                window.location.href = `/order/${orderId}/payment`;
+                // Navigate to payment page
             }
         }
     </script>
-
-    @stack('scripts')
 </body>
 </html>

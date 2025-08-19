@@ -1,219 +1,37 @@
-@extends('layouts.client')
+@extends('layouts.app')
 
-@section('title', 'Profile - SkillMatch')
+@section('page-title', 'Profile')
 
-@section('content')
+@section('navigation')
+    <a href="{{ route('dashboard') }}" class="nav-item">
+        <div class="nav-icon">
+            <iconify-icon icon="material-symbols:dashboard"></iconify-icon>
+        </div>
+        <span class="nav-text">Dashboard</span>
+    </a>
+    <a href="#" class="nav-item">
+        <div class="nav-icon">
+            <iconify-icon icon="material-symbols:chat"></iconify-icon>
+        </div>
+        <span class="nav-text">Chat</span>
+        <span class="nav-badge">3</span>
+    </a>
+    <a href="#" class="nav-item">
+        <div class="nav-icon">
+            <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
+        </div>
+        <span class="nav-text">Orders</span>
+    </a>
+@endsection
+
+@push('styles')
 <style>
-/* Prevent horizontal overflow globally */
-html, body {
-    overflow-x: hidden;
-    max-width: 100vw;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background-color: #f8fafc;
-    color: #334155;
-}
-
-.top-navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 70px;
-    background: white;
-    border-bottom: 1px solid #e2e8f0;
-    display: flex;
-    align-items: center;
-    padding: 0 2rem;
-    z-index: 1001;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    max-width: 100vw;
-    overflow: hidden;
-}
-
-.navbar-left {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex: 1;
-    min-width: 0;
-}
-
-.navbar-brand {
+/* Profile-specific styles only */
+.back-btn {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #38C1B9;
-    text-decoration: none;
-    white-space: nowrap;
-}
-
-.navbar-title {
-    margin-left: 2rem;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1e293b;
-    white-space: nowrap;
-}
-
-.navbar-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex: 1;
-    justify-content: flex-end;
-}
-
-.navbar-logout-form {
-    margin: 0;
-    padding: 0;
-}
-
-.navbar-logout {
-    background: #ef4444;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.navbar-logout:hover {
-    background: #dc2626;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-    color: white;
-    text-decoration: none;
-}
-
-.navbar-profile {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    cursor: pointer;
-    border: 2px solid #e2e8f0;
-    transition: all 0.2s ease;
-}
-
-.navbar-profile:hover {
-    border-color: #38C1B9;
-}
-
-.navbar-profile img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.sidebar {
-    position: fixed;
-    left: 0;
-    top: 70px;
-    width: 240px;
-    height: calc(100vh - 70px);
-    background: #ffffff;
-    border-right: 1px solid #e2e8f0;
-    z-index: 1000;
-    padding: 1.5rem 0;
-}
-
-.nav-item {
-    display: flex;
-    align-items: center;
-    padding: 1rem 1.5rem;
-    color: #64748b;
-    text-decoration: none;
-    cursor: pointer;
-    margin-bottom: 0.5rem;
-    transition: all 0.2s ease;
-    border-radius: 0;
-}
-
-.nav-item:hover {
-    background: #f8fafc;
-    color: #1e293b;
-}
-
-.nav-item.active {
-    background: #475569;
-    color: white;
-    border-radius: 12px;
-    margin: 0 1rem 0.5rem 1rem;
-}
-
-.nav-icon {
-    width: 32px;
-    height: 32px;
-    margin-right: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.3rem;
-    background: #f1f5f9;
-    border-radius: 8px;
-    color: #64748b;
-}
-
-.nav-item.active .nav-icon {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-}
-
-.nav-text {
-    flex: 1;
-    font-weight: 500;
-    font-size: 0.95rem;
-}
-
-.nav-badge {
-    background: #38C1B9;
-    color: white;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.75rem;
-    font-weight: 600;
-    margin-left: auto;
-}
-
-.main-content {
-    margin-left: 240px;
-    margin-top: 70px;
-    min-height: calc(100vh - 70px);
-    padding: 2rem;
-    background: #f8fafc;
-    max-width: calc(100vw - 240px);
-    overflow-x: hidden;
-    box-sizing: border-box;
-}
-
-/* Back Button */
-.back-button {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #64748b;
+    color: var(--text-secondary);
     text-decoration: none;
     font-weight: 500;
     margin-bottom: 2rem;
@@ -221,16 +39,11 @@ body {
     transition: color 0.2s ease;
 }
 
-.back-button:hover {
-    color: #38C1B9;
+.back-btn:hover {
+    color: var(--primary-color);
+    text-decoration: none;
 }
 
-.back-button iconify-icon {
-    width: 20px;
-    height: 20px;
-}
-
-/* Profile Layout */
 .profile-container {
     display: flex;
     gap: 2rem;
@@ -246,26 +59,25 @@ body {
     max-width: 500px;
 }
 
-/* Services Section */
 .services-section {
-    background: white;
+    background: var(--bg-primary);
     border-radius: 16px;
     padding: 2rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    border: 1px solid #f1f5f9;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
     margin-bottom: 2rem;
 }
 
 .services-title {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #1e293b;
+    color: var(--text-primary);
     margin-bottom: 2rem;
 }
 
 .service-item {
     padding: 1.5rem 0;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid var(--border-light);
 }
 
 .service-item:last-child {
@@ -286,7 +98,7 @@ body {
 .service-name {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #1e293b;
+    color: var(--text-primary);
     margin-bottom: 0.5rem;
 }
 
@@ -317,25 +129,25 @@ body {
 
 .service-price {
     font-size: 0.9rem;
-    color: #64748b;
+    color: var(--text-secondary);
     font-weight: 500;
 }
 
 .service-description {
-    color: #64748b;
+    color: var(--text-secondary);
     font-size: 0.9rem;
     line-height: 1.5;
     margin-bottom: 0.5rem;
 }
 
 .service-project {
-    color: #64748b;
+    color: var(--text-secondary);
     font-size: 0.85rem;
     word-break: break-all;
 }
 
 .service-chat-btn {
-    background: #64748b;
+    background: var(--text-secondary);
     color: white;
     border: none;
     padding: 0.5rem 1.5rem;
@@ -352,7 +164,7 @@ body {
 }
 
 .service-chat-btn:hover {
-    background: #475569;
+    background: var(--secondary-color);
     transform: translateY(-1px);
 }
 
@@ -362,13 +174,12 @@ body {
     transform: none;
 }
 
-/* Profile Card */
 .profile-card {
-    background: white;
+    background: var(--bg-primary);
     border-radius: 16px;
     padding: 2rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    border: 1px solid #f1f5f9;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
     text-align: center;
     position: sticky;
     top: 90px;
@@ -380,13 +191,13 @@ body {
     border-radius: 16px;
     object-fit: cover;
     margin: 0 auto 1.5rem;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-lg);
 }
 
 .profile-name {
     font-size: 1.75rem;
     font-weight: 700;
-    color: #1e293b;
+    color: var(--text-primary);
     margin-bottom: 1rem;
 }
 
@@ -399,7 +210,7 @@ body {
 }
 
 .skill-tag {
-    background: #38C1B9;
+    background: var(--primary-color);
     color: white;
     padding: 0.4rem 1rem;
     border-radius: 15px;
@@ -417,61 +228,28 @@ body {
     justify-content: center;
     gap: 0.5rem;
     margin-bottom: 0.5rem;
-    color: #64748b;
+    color: var(--text-secondary);
     font-size: 0.9rem;
 }
 
 .contact-item strong {
-    color: #1e293b;
+    color: var(--text-primary);
 }
 
 .contact-item iconify-icon {
-    color: #38C1B9;
+    color: var(--primary-color);
     font-size: 1.1rem;
 }
 
 .profile-bio {
     text-align: left;
-    color: #64748b;
+    color: var(--text-secondary);
     line-height: 1.6;
     font-size: 0.9rem;
 }
 
 /* Mobile Responsiveness */
 @media (max-width: 1024px) {
-    .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-    }
-
-    .sidebar.show {
-        transform: translateX(0);
-    }
-
-    .sidebar-toggle {
-        display: flex !important;
-        flex-direction: column;
-        cursor: pointer;
-        width: 24px;
-        height: 18px;
-        justify-content: space-between;
-        margin-right: 1rem;
-    }
-
-    .sidebar-toggle span {
-        width: 100%;
-        height: 2px;
-        background: #64748b;
-        border-radius: 2px;
-        transition: all 0.3s ease;
-    }
-
-    .main-content {
-        margin-left: 0;
-        max-width: 100vw;
-        padding: 1.5rem;
-    }
-
     .profile-container {
         flex-direction: column-reverse;
     }
@@ -482,18 +260,10 @@ body {
 }
 
 @media (max-width: 768px) {
-    .navbar-title {
-        display: none;
-    }
-
     .services-section,
     .profile-card {
         padding: 1.5rem;
         margin-bottom: 1.5rem;
-    }
-
-    .main-content {
-        padding: 1rem;
     }
 
     .profile-image {
@@ -524,112 +294,27 @@ body {
 }
 
 @media (max-width: 640px) {
-    .navbar-brand span:last-child {
-        display: none;
-    }
-
-    .main-content {
-        padding: 0.8rem;
-    }
-
     .profile-image {
         width: 120px;
         height: 120px;
     }
 }
-
-.logo h1 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #38C1B9;
-}
-
-.logo span {
-    color: #1e293b;
-}
 </style>
+@endpush
 
-<!-- Load Iconify -->
-<script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
-<script>
-// Fallback loading method
-if (typeof IconifyIcon === 'undefined') {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/@iconify/iconify@3.1.1/dist/iconify.min.js';
-    document.head.appendChild(script);
-}
-</script>
-
-<!-- Top Navigation -->
-<div class="top-navbar">
-    <div class="navbar-left">
-        <div class="sidebar-toggle" id="sidebarToggle" style="display: none;">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <a href="{{ route('dashboard') }}" class="navbar-brand">
-            <div class="logo" style="margin-top: 60px;">
-                <h1>Skill<span>Match</span></h1>
-            </div>
-        </a>
-        <h1 class="navbar-title">Dashboard</h1>
-    </div>
-    <div class="navbar-right">
-        <!-- Profile Button -->
-        <div class="navbar-profile" onclick="goToProfile()">
-            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Profile">
-        </div>
-
-        <!-- Logout Form -->
-        <form method="POST" action="{{ route('logout') }}" class="navbar-logout-form">
-            @csrf
-            <button type="submit" class="navbar-logout" onclick="return confirmLogout()">
-                <iconify-icon icon="material-symbols:logout"></iconify-icon>
-                Log Out
-            </button>
-        </form>
-    </div>
-</div>
-
-<!-- Sidebar -->
-<div class="sidebar" id="sidebar">
-    <nav>
-        <a href="{{ route('dashboard') }}" class="nav-item">
-            <div class="nav-icon">
-                <iconify-icon icon="material-symbols:dashboard"></iconify-icon>
-            </div>
-            <span class="nav-text">Dashboard</span>
-        </a>
-        <a href="#" class="nav-item">
-            <div class="nav-icon">
-                <iconify-icon icon="material-symbols:chat"></iconify-icon>
-            </div>
-            <span class="nav-text">Chat</span>
-            <span class="nav-badge">3</span>
-        </a>
-        <a href="#" class="nav-item">
-            <div class="nav-icon">
-                <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
-            </div>
-            <span class="nav-text">Orders</span>
-        </a>
-    </nav>
-</div>
-
-<!-- Main Content -->
-<div class="main-content">
-     @php
+@section('content')
+    @php
         $dashboardRoute = match(auth()->user()->role) {
             'client' => route('client.dashboard'),
             'freelancer' => route('freelancer.dashboard'),
             'admin' => route('admin.dashboard'),
-            // default => route('landing'),
+            default => route('dashboard'),
         };
     @endphp
+    
     <!-- Back Button -->
-<a href="{{ $dashboardRoute }}" class="back-btn">
-        <span>←</span>
+    <a href="{{ $dashboardRoute }}" class="back-btn">
+        <iconify-icon icon="material-symbols:chevron-left"></iconify-icon>
         Back
     </a>
 
@@ -652,7 +337,6 @@ if (typeof IconifyIcon === 'undefined') {
                                         <span class="service-price">Rp{{ number_format($job->price_min, 0, ',', '.') }}-Rp{{ number_format($job->price_max, 0, ',', '.') }}</span>
                                     @else
                                         @php
-                                            // Default price ranges based on service type
                                             $defaultPrices = [
                                                 'UI Design' => ['min' => 400000, 'max' => 600000],
                                                 'Front-End' => ['min' => 700000, 'max' => 900000],
@@ -801,40 +485,11 @@ if (typeof IconifyIcon === 'undefined') {
             </div>
         </div>
     </div>
-</div>
+@endsection
 
+@push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var sidebar = document.getElementById('sidebar');
-    var sidebarToggle = document.getElementById('sidebarToggle');
-
-    // Sidebar functionality
-    if (sidebarToggle) {
-        const sidebarOverlay = document.createElement('div');
-        sidebarOverlay.style.cssText = `
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            backdrop-filter: blur(4px);
-        `;
-        document.body.appendChild(sidebarOverlay);
-
-        sidebarToggle.addEventListener('click', function() {
-            sidebar.classList.toggle('show');
-            sidebarOverlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
-        });
-
-        sidebarOverlay.addEventListener('click', function() {
-            sidebar.classList.remove('show');
-            sidebarOverlay.style.display = 'none';
-        });
-    }
-
     // Chat button functionality
     document.querySelectorAll('.service-chat-btn:not([disabled])').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -846,14 +501,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-
-// Logout confirmation
-function confirmLogout() {
-    return confirm('Are you sure you want to log out?');
-}
-// Profile navigation
-function goToProfile() {
-    window.location.href = "{{ route('profile.edit') }}";
-}
 </script>
-@endsection
+@endpush

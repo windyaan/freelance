@@ -532,6 +532,34 @@
 
     <!-- Base JavaScript -->
     <script>
+        // Initialize global search functions early
+        window.performSearch = window.performSearch || function(query) {
+            console.log('Layout default performSearch called with:', query);
+        };
+
+        window.searchOrders = window.searchOrders || function(query) {
+            console.log('Layout default searchOrders called with:', query);
+            if (typeof window.performSearch === 'function') {
+                window.performSearch(query);
+            }
+        };
+
+        window.showAllOrders = window.showAllOrders || function() {
+            console.log('Layout default showAllOrders called');
+            const searchInput = document.getElementById('globalSearch');
+            if (searchInput) {
+                searchInput.value = '';
+            }
+            if (typeof window.performSearch === 'function') {
+                window.performSearch('');
+            }
+        };
+
+        window.clearSearch = window.clearSearch || function() {
+            console.log('Layout default clearSearch called');
+            window.showAllOrders();
+        };
+
         // Wait for DOM to load
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Layout script loading...');
@@ -574,23 +602,28 @@
                 }
             });
 
-            // Search functionality - wait for page-specific functions to load
+            // Search functionality with delay to allow page-specific functions to load
             if (searchInput && searchBtn) {
                 console.log('Search elements found, setting up listeners');
                 
-                // Set up search input listener
+                let searchTimeout;
+                
+                // Set up search input listener with debounce
                 searchInput.addEventListener('input', function(e) {
                     const query = e.target.value.trim();
-                    console.log('Search input changed:', query);
-                    
-                    // Try to call page-specific search function
-                    if (typeof window.performSearch === 'function') {
-                        window.performSearch(query);
-                    } else if (typeof window.searchOrders === 'function') {
-                        window.searchOrders(query);
-                    } else {
-                        console.log('No search function available yet, will try again');
-                    }
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        console.log('Search input changed (debounced):', query);
+                        
+                        // Try page-specific search function first, then fallback
+                        if (typeof window.performSearch === 'function' && window.performSearch !== arguments.callee) {
+                            window.performSearch(query);
+                        } else if (typeof window.searchOrders === 'function' && window.searchOrders !== arguments.callee) {
+                            window.searchOrders(query);
+                        } else {
+                            console.log('No specific search function available');
+                        }
+                    }, 300); // 300ms debounce
                 });
                 
                 // Search button click
@@ -598,6 +631,7 @@
                     e.preventDefault();
                     const query = searchInput.value.trim();
                     console.log('Search button clicked:', query);
+                    clearTimeout(searchTimeout);
                     
                     if (typeof window.performSearch === 'function') {
                         window.performSearch(query);
@@ -612,6 +646,7 @@
                         e.preventDefault();
                         const query = e.target.value.trim();
                         console.log('Search enter key:', query);
+                        clearTimeout(searchTimeout);
                         
                         if (typeof window.performSearch === 'function') {
                             window.performSearch(query);
@@ -630,10 +665,14 @@
                         searchInput.value = '';
                         if (typeof window.showAllOrders === 'function') {
                             window.showAllOrders();
+                        } else if (typeof window.clearSearch === 'function') {
+                            window.clearSearch();
                         }
-                    } else if (sidebar.classList.contains('show')) {
+                    } else if (sidebar && sidebar.classList.contains('show')) {
                         sidebar.classList.remove('show');
-                        sidebarOverlay.classList.remove('show');
+                        if (sidebarOverlay) {
+                            sidebarOverlay.classList.remove('show');
+                        }
                     }
                 }
                 
@@ -655,22 +694,7 @@
             return confirm('Are you sure you want to log out?');
         }
 
-        // Global search interface - these will be overridden by page-specific functions
-        window.searchOrders = window.searchOrders || function(query) {
-            console.log('Default searchOrders called with:', query);
-        };
-
-        window.showAllOrders = window.showAllOrders || function() {
-            console.log('Default showAllOrders called');
-            const searchInput = document.getElementById('globalSearch');
-            if (searchInput) {
-                searchInput.value = '';
-            }
-        };
-
-        window.performSearch = window.performSearch || function(query) {
-            console.log('Default performSearch called with:', query);
-        };
+        console.log('Layout script initialized');
     </script>
 
     @stack('scripts')
