@@ -9,8 +9,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\JobController;
-use App\Http\Controllers\ChatController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ChatController; // Import ChatController
+use App\Http\Controllers\OrderController; // Import OrderController
+use App\Http\Controllers\AdminReportController;
+use App\Http\Controllers\ReportController;
+
+
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -68,9 +72,10 @@ Route::middleware('auth')->group(function () {
         Route::patch('/order/{order}/cancel', [OrderController::class, 'cancel'])->name('order.cancel');
         Route::get('/order/{order}/invoice', [OrderController::class, 'downloadInvoice'])->name('order.invoice');
 
-        // Client services routes (for browsing/ordering services)
-        Route::get('/services', [JobController::class, 'index'])->name('services');
-        Route::get('/services/{job}', [JobController::class, 'show'])->name('services.show');
+        //route untuk client kirim laporan
+        Route::get('/reports/create', [ReportController::class, 'create'])->name('reports.create');
+        Route::post('/reports', [ReportController::class, 'store'])->name('reports.store');
+
     });
 
     // Freelancer routes group
@@ -78,7 +83,10 @@ Route::middleware('auth')->group(function () {
         // Freelancer dashboard
         Route::get('/dashboard', function(){return view('dashboard.freelancer.index');})->name('dashboard');
 
-        // Freelancer chat routes - FIXED to match your ChatController methods
+        // Job routes untuk freelancer (CRUD penuh)
+
+
+        // Freelancer chat routes
         Route::get('/chat', [ChatController::class, 'index'])->name('chat');
         Route::get('/chat/{chat}', [ChatController::class, 'show'])->name('chat.show');
         Route::post('/chat', [ChatController::class, 'store'])->name('chat.store');
@@ -117,10 +125,16 @@ Route::middleware('auth')->group(function () {
 
 });
 
-// Admin routes
-Route::get('/admin-dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    // Admin routes
+    Route::get('/admin-dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/export-users-profit', [AdminController::class, 'exportUsersProfitPdf'])->name('admin.exportUsersProfitPdf');
 
-// Search route for admin dashboard
-Route::get('/search', [AdminController::class, 'search'])->name('search')->middleware('auth');
+    // Search route for admin dashboard
+    Route::get('/search', [AdminController::class, 'search'])->name('search')->middleware('auth');
+
+    //route admin kelola laporan
+    Route::get('/admin/reports', [AdminReportController::class, 'index'])->name('admin.reports.index');
+    Route::get('/admin/reports/{id}', [AdminReportController::class, 'show'])->name('admin.reports.show');
+    Route::post('/admin/reports/{id}/ban', [AdminReportController::class, 'banFreelancer'])->name('admin.reports.ban');
 
 require __DIR__.'/auth.php';

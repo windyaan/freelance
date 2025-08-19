@@ -78,15 +78,25 @@ class DatabaseSeeder extends Seeder
             'status' => $offerStatus, // supaya bisa langsung dibuat order dan milestone
         ]);
 
-        // jika accepted Buat order dari offer
-         if ($offerStatus === 'accepted') {
-                    $orderStatus = fake()->randomElement(['pending', 'paid', 'failed']);
+                // Jika offer diterima, buat order + milestones
+                if ($offerStatus === 'accepted') {
+                    $amount      = $offer->final_price;
+                    $orderStatus = fake()->randomElement(['pending', 'dp', 'paid', 'failed']);
 
-        Order::factory()->create([
-            'offer_id' => $offer->id,
-            'amount' => $offer->final_price,
-            'status' => $orderStatus,
-        ]);
+                    // Sinkronisasi amount_paid dengan status
+                    $amountPaid = match ($orderStatus) {
+                        'pending' => 0,
+                        'dp'      => fake()->numberBetween(1, $amount - 1),
+                        'paid'    => $amount,
+                        'failed'  => 0,
+                    };
+
+                    Order::factory()->create([
+                        'offer_id'    => $offer->id,
+                        'amount'      => $amount,
+                        'amount_paid' => $amountPaid,
+                        'status'      => $orderStatus,
+                    ]);
 
         // Buat milestone dari offer
          for ($i = 0; $i < 2; $i++) {

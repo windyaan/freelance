@@ -5,33 +5,46 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 //reverb setup
 import Echo from 'laravel-echo';
-import Reverb from '@reverb/reverb-js';
-
-window.reverb = new Reverb({
-    host: import.meta.env.VITE_REVERB_HOST,
-    port: Number(import.meta.env.VITE_REVERB_PORT),
-    scheme: import.meta.env.VITE_REVERB_SCHEME,
-    key: import.meta.env.VITE_REVERB_APP_KEY,
-});
 
 window.Echo = new Echo({
     broadcaster: 'reverb',
-    client: window.reverb
+    key: import.meta.env.VITE_REVERB_APP_KEY,
+    wsHost: import.meta.env.VITE_REVERB_HOST ?? window.location.hostname,
+    wsPort: import.meta.env.VITE_REVERB_PORT ?? 80,
+    wssPort: import.meta.env.VITE_REVERB_PORT ?? 443,
+    forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
+    enabledTransports: ['ws', 'wss'],
 });
 
-// Mendengarkan channel chat
-window.Echo.channel('chat.' + window.currentChatId)
-    .listen('MessageSent', (e) => {
-        console.log('New message:', e.message);
-    });
+// // Mendengarkan channel chat
+// window.Echo.channel('chat.' + window.currentChatId)
+//     .listen('MessageSent', (e) => {
+//         console.log('New message:', e.message);
+//     });
 
-// Reverb connection events
-window.reverb.on('connect', () => console.log('✅ Reverb connected'));
-window.reverb.on('disconnect', () => console.log('⚠️ Reverb disconnected'));
-window.reverb.on('error', (err) => console.error('Reverb error:', err));
+// // Optional: listen notifications
+// window.Echo.private('App.Models.User.' + window.userId)
+//     .notification((notification) => console.log('New notification:', notification));
 
-// Optional: listen notifications
-window.Echo.private('App.Models.User.' + window.userId)
-    .notification((notification) => console.log('New notification:', notification));
+// ✅ Listen notifications secara global (setiap user login)
+if (window.userId) {
+    window.Echo.private(`App.Models.User.${window.userId}`)
+        .notification((notification) => {
+            console.log('🔔 New notification:', notification);
+        });
+}
 
+// ✅ Listen chat kalau sedang di halaman chat
+if (window.currentChatId) {
+    window.Echo.private(`chat.${window.currentChatId}`)
+        .listen('.MessageSent', (e) => {
+            console.log('💬 New message:', e.message);
+
+            // contoh update DOM
+            let box = document.getElementById('chat-box');
+            if (box) {
+                box.innerHTML += `<p><strong>${e.message.sender.name}:</strong> ${e.message.content}</p>`;
+            }
+        });
+    }
 
