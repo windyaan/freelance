@@ -69,17 +69,17 @@
     width: 100%;
 }
 
-/* Service Card */
+/* Service Card - Design sederhana seperti di gambar */
 .service-card {
-    background: #f8fafc;
+    background: white;
     border-radius: 12px;
     padding: 1.5rem;
     border: 1px solid #e2e8f0;
     transition: all 0.3s ease;
     position: relative;
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    justify-content: space-between;
+    align-items: flex-start;
     width: 100%;
 }
 
@@ -89,55 +89,39 @@
     border-color: #38C1B9;
 }
 
-.service-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
-}
-
 .service-info {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .service-title {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: #1e293b;
-    margin-bottom: 0.5rem;
+    margin: 0;
 }
 
 .service-status {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     font-weight: 500;
-    margin-bottom: 0.75rem;
-}
-
-.service-status.available {
-    background: #dcfce7;
-    color: #166534;
-}
-
-.service-status.unavailable {
-    background: #fee2e2;
-    color: #991b1b;
+    color: #10b981;
+    margin: 0;
 }
 
 .service-price {
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 600;
-    color: #38C1B9;
-    margin-bottom: 0.5rem;
+    color: #1e293b;
+    margin: 0;
 }
 
 .service-description {
     color: #64748b;
     font-size: 0.9rem;
     line-height: 1.5;
-    margin-bottom: 0.75rem;
+    margin: 0.5rem 0 0 0;
 }
 
 .service-project-link {
@@ -155,18 +139,18 @@
 .service-actions {
     display: flex;
     gap: 0.75rem;
-    align-items: center;
+    align-items: flex-start;
     flex-shrink: 0;
 }
 
 .edit-btn {
-    background: #475569;
+    background: #64748b;
     color: white;
     border: none;
     padding: 0.6rem 1.2rem;
     border-radius: 8px;
     font-size: 0.85rem;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
     text-decoration: none;
@@ -176,7 +160,7 @@
 }
 
 .edit-btn:hover {
-    background: #334155;
+    background: #475569;
     transform: translateY(-1px);
     color: white;
     text-decoration: none;
@@ -290,9 +274,10 @@
         align-items: stretch;
     }
 
-    .service-header {
+    .service-card {
         flex-direction: column;
         align-items: flex-start;
+        gap: 1rem;
     }
 
     .service-actions {
@@ -311,6 +296,7 @@
         flex-direction: column;
         align-items: stretch;
         gap: 0.5rem;
+        width: 100%;
     }
 
     .edit-btn {
@@ -334,60 +320,57 @@
 <div class="services-section">
     <div class="services-header">
         <h2 class="services-title">Services</h2>
-        <a href="#" class="add-service-btn" onclick="addNewService()">
+        <a href="{{ route('freelancer.services.create') }}" class="add-service-btn">
             <iconify-icon icon="material-symbols:add"></iconify-icon>
             Add Service
         </a>
     </div>
 
     <div class="services-list" id="servicesList">
-        <!-- Service Card 1 - UI Design -->
-        <div class="service-card" data-service="ui design" data-status="available">
-            <div class="service-header">
-                <div class="service-info">
-                    <h3 class="service-title">UI Design</h3>
-                    <span class="service-status available">Available</span>
-                    <div class="service-price">Rp400.000-Rp600.000</div>
-                    <div class="service-description">
-                        Pembuatan design kaos<br>
-                        contoh project : <a href="https://link-project-kaos" class="service-project-link" target="_blank">https://link-project-kaos</a>
+        @if($jobs->count() > 0)
+            @foreach($jobs as $job)
+                <div class="service-card" data-service="{{ strtolower(str_replace(' ', '-', $job->title)) }}" data-status="{{ $job->is_active ? 'available' : 'unavailable' }}">
+                    <div class="service-info">
+                        <h3 class="service-title">{{ $job->title }}</h3>
+                        <p class="service-status {{ $job->is_active ? 'available' : 'unavailable' }}">
+                            {{ $job->is_active ? 'Available' : 'Unavailable' }}
+                        </p>
+                        <div class="service-price">Rp{{ number_format($job->starting_price, 0, ',', '.') }}</div>
+                        <div class="service-description">
+                            {{ $job->description }}
+                            @if($job->project_link)
+                                <br>
+                                contoh project : <a href="{{ $job->project_link }}" class="service-project-link" target="_blank">{{ $job->project_link }}</a>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="service-actions">
+                        <a href="{{ route('freelancer.services.edit', $job) }}" class="edit-btn">
+                            Edit
+                        </a>
+                        <form action="{{ route('freelancer.services.destroy', $job) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this service?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="delete-btn" title="Delete Service">
+                                <iconify-icon icon="material-symbols:delete"></iconify-icon>
+                            </button>
+                        </form>
                     </div>
                 </div>
-                <div class="service-actions">
-                    <a href="#" class="edit-btn" onclick="editService('ui-design')">
-                        <iconify-icon icon="material-symbols:edit"></iconify-icon>
-                        Edit
-                    </a>
-                    <button class="delete-btn" onclick="deleteService('ui-design')" title="Delete Service">
-                        <iconify-icon icon="material-symbols:delete"></iconify-icon>
-                    </button>
+            @endforeach
+        @else
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <iconify-icon icon="material-symbols:work-outline"></iconify-icon>
                 </div>
+                <h3>No services yet</h3>
+                <p>Start by adding your first service to attract clients</p>
+                <a href="{{ route('freelancer.services.create') }}" class="empty-state-btn">
+                    <iconify-icon icon="material-symbols:add"></iconify-icon>
+                    Add Your First Service
+                </a>
             </div>
-        </div>
-
-        <!-- Service Card 2 - Illustrator -->
-        <div class="service-card" data-service="illustrator" data-status="available">
-            <div class="service-header">
-                <div class="service-info">
-                    <h3 class="service-title">Illustrator</h3>
-                    <span class="service-status available">Available</span>
-                    <div class="service-price">Rp700.000-Rp900.000</div>
-                    <div class="service-description">
-                        Jasa pembuatan ilustrasi buku anak.<br>
-                        contoh project : <a href="https://link-project-buku" class="service-project-link" target="_blank">https://link-project-buku</a>
-                    </div>
-                </div>
-                <div class="service-actions">
-                    <a href="#" class="edit-btn" onclick="editService('illustrator')">
-                        <iconify-icon icon="material-symbols:edit"></iconify-icon>
-                        Edit
-                    </a>
-                    <button class="delete-btn" onclick="deleteService('illustrator')" title="Delete Service">
-                        <iconify-icon icon="material-symbols:delete"></iconify-icon>
-                    </button>
-                </div>
-            </div>
-        </div>
+        @endif
     </div>
 </div>
 
@@ -486,66 +469,9 @@ function showAllServices() {
     console.log('Showing all services');
 }
 
-// Service management functions
-function addNewService() {
-    // In a real application, this would redirect to a create service form
-    alert('Redirect to Add New Service form\n\nThis would typically open a form where you can:\n- Enter service title\n- Set price range\n- Add description\n- Upload portfolio samples\n- Set availability status');
-    console.log('Add new service clicked');
-}
-
-function editService(serviceId) {
-    // In a real application, this would redirect to an edit form
-    alert(`Edit Service: ${serviceId}\n\nThis would typically open an edit form with pre-filled data for the selected service.`);
-    console.log('Edit service:', serviceId);
-}
-
-function deleteService(serviceId) {
-    if (confirm('Are you sure you want to delete this service?\n\nThis action cannot be undone.')) {
-        // In a real application, this would make an AJAX request to delete the service
-        const serviceCard = document.querySelector(`[data-service="${serviceId}"]`);
-        if (serviceCard) {
-            serviceCard.style.transition = 'all 0.3s ease';
-            serviceCard.style.opacity = '0';
-            serviceCard.style.transform = 'translateX(-100%)';
-            
-            setTimeout(() => {
-                serviceCard.remove();
-                checkEmptyState();
-            }, 300);
-        }
-        
-        console.log('Service deleted:', serviceId);
-    }
-}
-
-function checkEmptyState() {
-    const serviceCards = document.querySelectorAll('.service-card');
-    const servicesList = document.getElementById('servicesList');
-    
-    if (serviceCards.length === 0) {
-        const emptyStateDiv = document.createElement('div');
-        emptyStateDiv.className = 'empty-state';
-        emptyStateDiv.innerHTML = `
-            <div class="empty-state-icon">
-                <iconify-icon icon="material-symbols:work-outline"></iconify-icon>
-            </div>
-            <h3>No services yet</h3>
-            <p>Start by adding your first service to attract clients</p>
-            <button onclick="addNewService()" class="empty-state-btn">
-                <iconify-icon icon="material-symbols:add"></iconify-icon>
-                Add Your First Service
-            </button>
-        `;
-        servicesList.appendChild(emptyStateDiv);
-    }
-}
-
 // Make functions globally available
 window.searchServices = searchServices;
 window.showAllServices = showAllServices;
-window.addNewService = addNewService;
-window.editService = editService;
-window.deleteService = deleteService;
 </script>
 
 @endsection

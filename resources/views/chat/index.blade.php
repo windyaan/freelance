@@ -27,6 +27,12 @@
         <span class="nav-text">Order</span>
     </a>
 
+      <a href="{{ route('freelancer.services') }}" class="nav-item {{ request()->routeIs('freelancer.services*') ? 'active' : '' }}">
+        <div class="nav-icon">
+            <iconify-icon icon="material-symbols:work"></iconify-icon>
+        </div>
+        <span class="nav-text">Service</span>
+    </a>
    
 @endsection
 
