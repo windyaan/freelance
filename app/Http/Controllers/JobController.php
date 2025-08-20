@@ -92,7 +92,7 @@ class JobController extends Controller
     {
         $this->authorize('delete', $job); // Optional
         $job->delete();
-        return redirect()->route('jobs.index')->with('success', 'Job deleted.');
+        return redirect()->route('freelancer.service.destroy')->with('success', 'Job deleted.');
     }
 
     //BARU
