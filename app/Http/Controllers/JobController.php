@@ -90,9 +90,8 @@ class JobController extends Controller
 
     public function destroy(Job $job)
     {
-        $this->authorize('delete', $job); // Optional
         $job->delete();
-        return redirect()->route('freelancer.service.destroy')->with('success', 'Job deleted.');
+        return redirect()->route('freelancer.services')->with('success', 'Job Berhasil Dihapus.');
     }
 
     //BARU

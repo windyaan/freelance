@@ -348,7 +348,7 @@
                         <a href="{{ route('freelancer.services.edit', $job) }}" class="edit-btn">
                             Edit
                         </a>
-                        <form action="{{ route('freelancer.services.destroy', $job) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this service?')">
+                        <form action="{{ route('freelancer.services.destroy', $job->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this service?')">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="delete-btn" title="Delete Service">
@@ -377,17 +377,17 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Services page initialized');
-    
+
     // Override the global search function for services
     window.performSearch = function(query) {
         searchServices(query);
     };
-    
+
     // Also set the legacy function name
     window.searchOrders = function(query) {
         searchServices(query);
     };
-    
+
     window.showAllOrders = function() {
         showAllServices();
     };
@@ -397,7 +397,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function searchServices(query) {
     const cards = document.querySelectorAll('.service-card');
     let hasResults = false;
-    
+
     console.log('Searching services for:', query);
 
     cards.forEach(function(card) {
@@ -465,7 +465,7 @@ function showAllServices() {
     if (noResults) {
         noResults.remove();
     }
-    
+
     console.log('Showing all services');
 }
 
