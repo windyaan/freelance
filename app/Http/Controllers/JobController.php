@@ -12,12 +12,16 @@ class JobController extends Controller
 {
     use AuthorizesRequests;
 
+    //halaman freelancer:list job milik freelancer
     public function index()
     {
-        $jobs = Job::where('freelancer_id', Auth::id())->get();
+        $jobs = Job::where('freelancer_id', Auth::id())
+        ->latest()
+        ->get();
         return view('jobs.index', compact('jobs'));
     }
 
+    //halaman client menampilkan semua job yg aktif
     public function clientIndex()
     {
     $jobs = Job::with(['freelancer.profile', 'category'])
@@ -28,27 +32,37 @@ class JobController extends Controller
     return view('client.jobs.index', compact('jobs'));
     }
 
+    //tambah job
     public function create()
     {
         $categories = Category::all();
         return view('jobs.create', compact('categories'));
     }
 
+    //menyimpan job baru
     public function store(Request $request)
     {
         $data = $request->validate([
-            'category_id' => 'required|exists:categories,id',
             'title' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
             'description' => 'required|string',
             'starting_price' => 'required|numeric|min:0',
+            'is_active' => 'required|boolean',
         ]);
 
         $data['freelancer_id'] = Auth::id();
 
         Job::create($data);
 
-        return redirect()->route('jobs.index')->with('success', 'Job created successfully.');
+        return redirect()->route('freelancer.services')->with('success', 'Job Berhasil Ditambahkan.');
     }
+
+    // melihat detail job (untuk freelancer sendiri)
+    // public function show(Job $job)
+    // {
+    //     $this->authorize('view', $job);
+    //     return view('jobs.show', compact('job'));
+    // }
 
     public function edit(Job $job)
     {
@@ -62,16 +76,16 @@ class JobController extends Controller
         $this->authorize('update', $job); // Optional
 
         $data = $request->validate([
-            'category_id' => 'required|exists:categories,id',
             'title' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
             'description' => 'required|string',
             'starting_price' => 'required|numeric|min:0',
-            'is_active' => 'boolean',
+            'is_active' => 'required|boolean',
         ]);
 
         $job->update($data);
 
-        return redirect()->route('jobs.index')->with('success', 'Job updated successfully.');
+        return redirect()->route('freelancer.services')->with('success', 'Job updated successfully.');
     }
 
     public function destroy(Job $job)

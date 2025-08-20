@@ -109,6 +109,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/services/{job}/edit', [JobController::class, 'edit'])->name('services.edit');
         Route::put('/services/{job}', [JobController::class, 'update'])->name('services.update');
         Route::delete('/services/{job}', [JobController::class, 'destroy'])->name('services.destroy');
+        // Route::resource('jobs', JobController::class)->except(['show']);
     });
 
     // General order creation routes (accessible by both roles)
