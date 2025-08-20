@@ -136,35 +136,27 @@
     <a href="{{ route('freelancer.services') }}" class="close-btn">
         <iconify-icon icon="material-symbols:close"></iconify-icon>
     </a>
-    
+
     <div class="card-header">
         <h2 class="card-title">Add Services</h2>
     </div>
 
     <form action="{{ route('freelancer.services.store') }}" method="POST">
         @csrf
-        
+
+        <div>
+        <label for="title">Title</label>
+        <input type="text" name="title" id="title" required>
+    </div>
+
         <!-- Category -->
         <div class="form-group">
-            <label for="category" class="form-label">Category</label>
-            <select name="category" id="category" class="form-control form-select" required>
-                <option value="">Select Category</option>
-                <option value="web-development" {{ old('category') == 'web-development' ? 'selected' : '' }}>Web Development</option>
-                <option value="mobile-development" {{ old('category') == 'mobile-development' ? 'selected' : '' }}>Mobile Development</option>
-                <option value="ui-ux-design" {{ old('category') == 'ui-ux-design' ? 'selected' : '' }}>UI/UX Design</option>
-                <option value="graphic-design" {{ old('category') == 'graphic-design' ? 'selected' : '' }}>Graphic Design</option>
-                <option value="illustrator" {{ old('category') == 'illustrator' ? 'selected' : '' }}>Illustrator</option>
-                <option value="content-writing" {{ old('category') == 'content-writing' ? 'selected' : '' }}>Content Writing</option>
-                <option value="digital-marketing" {{ old('category') == 'digital-marketing' ? 'selected' : '' }}>Digital Marketing</option>
-                <option value="video-editing" {{ old('category') == 'video-editing' ? 'selected' : '' }}>Video Editing</option>
-                <option value="photography" {{ old('category') == 'photography' ? 'selected' : '' }}>Photography</option>
-                <option value="data-analysis" {{ old('category') == 'data-analysis' ? 'selected' : '' }}>Data Analysis</option>
-                <option value="translation" {{ old('category') == 'translation' ? 'selected' : '' }}>Translation</option>
-                <option value="other" {{ old('category') == 'other' ? 'selected' : '' }}>Other</option>
-            </select>
-            @error('category')
-                <div class="error-message">{{ $message }}</div>
-            @enderror
+            <label for="category_id" class="form-label">Category</label>
+             <select name="category_id" id="category_id" required>
+            @foreach($categories as $category)
+                <option value="{{ $category->id }}">{{ $category->name }}</option>
+            @endforeach
+        </select>
         </div>
 
         <!-- Description -->
@@ -179,27 +171,37 @@
         <!-- Price -->
         <div class="form-group">
             <label for="starting_price" class="form-label">Price</label>
-            <input type="number" name="starting_price" id="starting_price" class="form-control" value="{{ old('starting_price') }}" placeholder="700.000-900.000" min="0" step="1000" required>
-            @error('starting_price')
-                <div class="error-message">{{ $message }}</div>
-            @enderror
+        <input
+        type="number"
+        name="starting_price"
+        id="starting_price"
+        class="form-control @error('starting_price') is-invalid @enderror"
+        value="{{ old('starting_price') }}"
+        placeholder="Masukkan harga, contoh: 500000"
+        min="0"
+        step="any"
+        required
+    >
+    @error('starting_price')
+        <div class="invalid-feedback">
+            {{ $message }}
+        </div>
+    @enderror
         </div>
 
         <!-- Status -->
         <div class="form-group">
             <label for="is_active" class="form-label">Status</label>
-            <select name="is_active" id="is_active" class="form-control form-select" required>
-                <option value="1" {{ old('is_active', '1') == '1' ? 'selected' : '' }}>Available</option>
-                <option value="0" {{ old('is_active') == '0' ? 'selected' : '' }}>Unavailable</option>
-            </select>
-            @error('is_active')
-                <div class="error-message">{{ $message }}</div>
-            @enderror
+            <select name="is_active" id="is_active">
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select>
         </div>
 
         <!-- Submit Button -->
+        <a href="{{ route('freelancer.services') }}" class="back-btn">
         <button type="submit" class="submit-btn">
-            Add
+            Add Job
         </button>
     </form>
 </div>
@@ -209,7 +211,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Add service page initialized');
-    
+
     // Auto-format price input
     const priceInput = document.getElementById('starting_price');
     if (priceInput) {
@@ -221,13 +223,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.target.value = value.replace(/,/g, '.');
             }
         });
-        
+
         // Remove formatting before form submission
         priceInput.closest('form').addEventListener('submit', function() {
             priceInput.value = priceInput.value.replace(/\./g, '');
         });
     }
-    
+
     // Category change handler
     const categorySelect = document.getElementById('category');
     if (categorySelect) {
