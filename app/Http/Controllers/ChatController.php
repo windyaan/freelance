@@ -19,7 +19,7 @@ class ChatController extends Controller
     /**
      * List semua chat yang melibatkan user login
      */
-    public function index()
+    public function index(Request $request)
     {
         $userId = Auth::id();
 
@@ -31,7 +31,22 @@ class ChatController extends Controller
                     ->orderBy('updated_at', 'desc')
                     ->get();
 
-      return view('chat.index', compact('chats'));
+                    // ambil parameter chat_id dari query string jika ada
+    //     $chatId = $request->get('chat_id');
+    //     // tentukan chat aktif
+    // $activeChat = $chatId
+    //     ? $chats->where('id', $chatId)->first()
+    //     : $chats->first();
+
+     $chatId = $request->get('chat_id');
+    $activeChat = $chatId
+        ? Chat::with(['messages.sender'])  // ✅ chat aktif ambil semua pesan + sender
+            ->find($chatId)
+        : ($chats->first()
+            ? Chat::with(['messages.sender'])->find($chats->first()->id)
+            : null);
+
+      return view('chat.index', compact('chats','activeChat'));
     }
 
     /**

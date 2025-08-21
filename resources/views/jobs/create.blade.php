@@ -146,23 +146,26 @@
 
         <div>
         <label for="title">Title</label>
-        <input type="text" name="title" id="title" required>
+        {{-- <input type="text" name="title" id="title" required> --}}
+        <input type="text" name="title" id="title" class="form-control">
     </div>
 
         <!-- Category -->
         <div class="form-group">
             <label for="category_id" class="form-label">Category</label>
-             <select name="category_id" id="category_id" required>
+             {{-- <select name="category_id" id="category_id" required> --}}
+            <select name="category_id" id="category_id" class="form-control form-select" required>
             @foreach($categories as $category)
                 <option value="{{ $category->id }}">{{ $category->name }}</option>
             @endforeach
         </select>
+        <div class="form-help">Pilih Salah Satu Category</div>
         </div>
 
         <!-- Description -->
         <div class="form-group">
             <label for="description" class="form-label">Description</label>
-            <textarea name="description" id="description" class="form-control form-textarea" placeholder="Describe your service and include project examples" required>{{ old('description') }}</textarea>
+            <textarea name="description" id="description" class="form-control form-textarea" placeholder="Deskripsikan Projectmu Disini" required>{{ old('description') }}</textarea>
             @error('description')
                 <div class="error-message">{{ $message }}</div>
             @enderror
