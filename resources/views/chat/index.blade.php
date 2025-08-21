@@ -11,7 +11,7 @@
         </div>
         <span class="nav-text">Dashboard</span>
     </a>
-    
+
     <a href="{{ route(auth()->user()->role . '.chat') }}" class="nav-item active">
         <div class="nav-icon">
             <iconify-icon icon="material-symbols:chat"></iconify-icon>
@@ -19,7 +19,7 @@
         <span class="nav-text">Chat</span>
         <span class="nav-badge">3</span>
     </a>
-    
+
     <a href="{{ route(auth()->user()->role . '.order') }}" class="nav-item {{ request()->routeIs(auth()->user()->role . '.order*') ? 'active' : '' }}">
         <div class="nav-icon">
             <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
@@ -33,7 +33,7 @@
         </div>
         <span class="nav-text">Service</span>
     </a>
-   
+
 @endsection
 
 @section('navbar-center')
@@ -362,26 +362,26 @@
         flex-direction: column;
         height: calc(100vh - var(--navbar-height) - 2rem);
     }
-    
+
     .chat-sidebar {
         width: 100%;
         height: 200px;
         border-right: none;
         border-bottom: 1px solid var(--border-color);
     }
-    
+
     .chat-main {
         height: calc(100% - 200px);
     }
-    
+
     .message {
         max-width: 85%;
     }
-    
+
     .chat-messages {
         padding: 1rem;
     }
-    
+
     .chat-input-container {
         padding: 1rem;
     }
@@ -391,11 +391,11 @@
     .chat-sidebar {
         height: 160px;
     }
-    
+
     .chat-main {
         height: calc(100% - 160px);
     }
-    
+
     .message {
         max-width: 90%;
     }
@@ -425,7 +425,7 @@
 </style>
 @endpush
 
-@section('content')
+{{-- @section('content')
 <div class="chat-container">
     <!-- Chat Sidebar -->
     <div class="chat-sidebar">
@@ -433,7 +433,7 @@
             <h2 class="chat-sidebar-title">Messages</h2>
             <p class="chat-sidebar-subtitle">Recent conversations</p>
         </div>
-        
+
         <div class="chat-list" id="chatList">
             <!-- Chat Item 1 -->
             <div class="chat-item active" data-chat-id="1" data-user-name="Nadia Irma">
@@ -449,7 +449,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Chat Item 2 -->
             <div class="chat-item" data-chat-id="2" data-user-name="Tiara Hasna">
                 <div class="chat-avatar">
@@ -464,7 +464,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Chat Item 3 -->
             <div class="chat-item" data-chat-id="3" data-user-name="Karina Carlo">
                 <div class="chat-avatar">
@@ -479,7 +479,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Chat Item 4 -->
             <div class="chat-item" data-chat-id="4" data-user-name="Erma Nadila">
                 <div class="chat-avatar">
@@ -496,7 +496,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Chat Main Area -->
     <div class="chat-main">
         <!-- Active Chat Header -->
@@ -509,7 +509,7 @@
                 <div class="chat-header-status" id="headerStatus">Online • UI Design, Front-End</div>
             </div>
         </div>
-        
+
         <!-- Chat Messages -->
         <div class="chat-messages" id="chatMessages">
             <!-- Sample messages for Nadia Irma -->
@@ -522,7 +522,7 @@
                     <div class="message-time">10:30 AM</div>
                 </div>
             </div>
-            
+
             <div class="message sent">
                 <div class="message-avatar">
                     <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face" alt="You">
@@ -532,7 +532,7 @@
                     <div class="message-time">10:32 AM</div>
                 </div>
             </div>
-            
+
             <div class="message received">
                 <div class="message-avatar">
                     <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=36&h=36&fit=crop&crop=face" alt="Nadia Irma">
@@ -542,7 +542,7 @@
                     <div class="message-time">10:35 AM</div>
                 </div>
             </div>
-            
+
             <div class="message sent">
                 <div class="message-avatar">
                     <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face" alt="You">
@@ -553,7 +553,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Chat Input -->
         <div class="chat-input-container">
             <div class="chat-input-wrapper">
@@ -563,6 +563,132 @@
                 </button>
             </div>
         </div>
+    </div>
+</div>
+@endsection --}}
+
+
+@section('content')
+<div class="chat-container flex h-screen">
+    <!-- Chat Sidebar -->
+    <div class="chat-sidebar w-1/3 border-r flex flex-col bg-white">
+        <div class="chat-sidebar-header p-4 border-b">
+            <h2 class="chat-sidebar-title text-lg font-bold">Messages</h2>
+            <p class="chat-sidebar-subtitle text-sm text-gray-500">Recent conversations</p>
+        </div>
+
+        <div class="chat-list flex-1 overflow-y-auto" id="chatList">
+            @foreach($chats as $chat)
+                @php
+                    $otherUser = $chat->client_id == auth()->id()
+                        ? $chat->freelancer
+                        : $chat->client;
+                @endphp
+
+                <div class="chat-item flex items-center p-4 cursor-pointer hover:bg-gray-100
+                            {{ isset($activeChat) && $activeChat->id === $chat->id ? 'bg-gray-200' : '' }}"
+                     data-chat-id="{{ $chat->id }}"
+                     data-user-name="{{ $otherUser->name }}">
+
+                    <!-- Avatar -->
+                    <div class="chat-avatar mr-3">
+                        <img src="{{ $otherUser->profile->avatar_url ?? 'https://via.placeholder.com/50' }}"
+                             alt="{{ $otherUser->name }}"
+                             class="w-12 h-12 rounded-full object-cover">
+                    </div>
+
+                    <!-- Info -->
+                    <div class="chat-info flex-1">
+                        <div class="chat-name font-semibold">{{ $otherUser->name }}</div>
+                        <div class="chat-preview text-sm text-gray-500 truncate">
+                            {{ $chat->messages->last()->content ?? 'Belum ada pesan' }}
+                        </div>
+                        <div class="chat-skills text-xs text-gray-400 mt-1">
+                            @if($otherUser->profile && $otherUser->profile->skills)
+                                @foreach(explode(',', $otherUser->profile->skills) as $skill)
+                                    <span class="chat-skill-tag bg-gray-100 px-2 py-0.5 rounded mr-1">
+                                        {{ trim($skill) }}
+                                    </span>
+                                @endforeach
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+
+    <!-- Chat Main Area -->
+    <div class="chat-main flex-1 flex flex-col">
+        @if($activeChat)
+            @php
+                $otherUser = $activeChat->client_id == auth()->id()
+                    ? $activeChat->freelancer
+                    : $activeChat->client;
+            @endphp
+
+            <!-- Header -->
+            <div class="chat-header flex items-center p-4 border-b bg-white" id="chatHeader">
+                <div class="chat-header-avatar mr-3">
+                    <img src="{{ $otherUser->profile->avatar_url ?? 'https://via.placeholder.com/45' }}"
+                         alt="{{ $otherUser->name }}"
+                         class="w-10 h-10 rounded-full object-cover">
+                </div>
+                <div class="chat-header-info">
+                    <div class="chat-header-name font-semibold text-gray-800" id="headerName">
+                        {{ $otherUser->name }}
+                    </div>
+                    <div class="chat-header-status text-sm text-gray-500" id="headerStatus">
+                        Online • {{ $otherUser->profile->skills ?? '' }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div class="chat-messages flex-1 p-4 overflow-y-auto bg-gray-50" id="chatMessages">
+                @foreach($activeChat->messages as $msg)
+                    <div class="message {{ $msg->sender_id == auth()->id() ? 'sent flex justify-end mb-4' : 'received flex justify-start mb-4' }}">
+
+                        <div class="flex items-end space-x-2 {{ $msg->sender_id == auth()->id() ? 'flex-row-reverse space-x-reverse' : '' }}">
+                            <!-- Avatar -->
+                            <div class="message-avatar">
+                                <img src="{{ $msg->sender->profile->avatar_url ?? 'https://via.placeholder.com/36' }}"
+                                     alt="{{ $msg->sender->name }}"
+                                     class="w-9 h-9 rounded-full object-cover">
+                            </div>
+
+                            <!-- Content -->
+                            <div class="message-content max-w-xs px-4 py-2 rounded-lg
+                                        {{ $msg->sender_id == auth()->id() ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800' }}">
+                                {{ $msg->content }}
+                                <div class="message-time text-xs mt-1 text-gray-400">
+                                    {{ $msg->created_at->format('H:i') }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Chat Input -->
+            <div class="chat-input-container p-4 border-t bg-white">
+                <form action="{{ route('chat.message.store', $activeChat) }}" method="POST" class="chat-input-wrapper flex items-center">
+                    @csrf
+                    <textarea class="chat-input flex-1 resize-none border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                              name="content"
+                              placeholder="Type your message..."
+                              rows="1"></textarea>
+                    <button class="chat-send-btn ml-2 p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
+                        <iconify-icon icon="material-symbols:send"></iconify-icon>
+                    </button>
+                </form>
+            </div>
+        @else
+            <!-- Jika belum ada chat aktif -->
+            <div class="flex-1 flex items-center justify-center text-gray-400">
+                Pilih percakapan untuk mulai chat
+            </div>
+        @endif
     </div>
 </div>
 @endsection
@@ -580,131 +706,131 @@ document.addEventListener('DOMContentLoaded', function() {
     const headerStatus = document.getElementById('headerStatus');
     const headerAvatar = document.getElementById('headerAvatar');
     const searchInput = document.getElementById('globalSearch');
-    
-    // Sample chat data
-    const chatData = {
-        1: {
-            name: "Nadia Irma",
-            status: "Online • UI Design, Front-End",
-            avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=45&h=45&fit=crop&crop=face",
-            messages: [
-                {
-                    type: 'received',
-                    content: 'Halo Bu, terima kasih sudah menghubungi saya untuk proyek UI Design website cafe.',
-                    time: '10:30 AM',
-                    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=36&h=36&fit=crop&crop=face'
-                },
-                {
-                    type: 'sent',
-                    content: 'Halo Nadia, saya perlu desain untuk website cafe dan juga toko pakaian. Kira-kira berapa lama pengerjaannya?',
-                    time: '10:32 AM',
-                    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face'
-                },
-                {
-                    type: 'received',
-                    content: 'Baik Ibu, saya menghendaki 1 bulan untuk desainnya, sekaligus saya buatkan form penawarannya. Untuk 2 website, saya tawarkan harga Rp 8.500.000',
-                    time: '10:35 AM',
-                    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=36&h=36&fit=crop&crop=face'
-                },
-                {
-                    type: 'sent',
-                    content: 'Oke, bisa tolong kirimkan portfolionya dulu?',
-                    time: '10:36 AM',
-                    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face'
-                }
-            ]
-        },
-        2: {
-            name: "Tiara Hasna",
-            status: "Online • Back-End, Fullstack",
-            avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=45&h=45&fit=crop&crop=face",
-            messages: [
-                {
-                    type: 'received',
-                    content: 'Selamat siang Bu, saya lihat Ibu membutuhkan developer fullstack untuk proyek e-commerce?',
-                    time: '2:15 PM',
-                    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=36&h=36&fit=crop&crop=face'
-                },
-                {
-                    type: 'sent',
-                    content: 'Iya betul, saya butuh website e-commerce lengkap dengan sistem pembayaran. Berapa estimasi biayanya?',
-                    time: '2:18 PM',
-                    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face'
-                },
-                {
-                    type: 'received',
-                    content: 'Bisa Bu, untuk jasa fullstacknya saya tawarkan diskon 10%. Total menjadi Rp 15.000.000 untuk fitur lengkap',
-                    time: '2:20 PM',
-                    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=36&h=36&fit=crop&crop=face'
-                }
-            ]
-        },
-        3: {
-            name: "Karina Carlo",
-            status: "Online • Graphic Design, Illustrator",
-            avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=45&h=45&fit=crop&crop=face",
-            messages: [
-                {
-                    type: 'received',
-                    content: 'Halo Bu, saya sudah selesai buat beberapa konsep logo untuk cafe dan toko pakaiannya.',
-                    time: '4:45 PM',
-                    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=36&h=36&fit=crop&crop=face'
-                },
-                {
-                    type: 'sent',
-                    content: 'Wah cepat sekali! Boleh saya lihat hasil konsepnya?',
-                    time: '4:47 PM',
-                    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face'
-                },
-                {
-                    type: 'received',
-                    content: 'Ini nih Bu untuk logo cafe dan toko pakaiannnya. Saya buat 3 variasi untuk masing-masing bisnis.',
-                    time: '4:50 PM',
-                    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=36&h=36&fit=crop&crop=face'
-                }
-            ]
-        },
-        4: {
-            name: "Erma Nadila",
-            status: "Online • Illustrator, Video Editor",
-            avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=45&h=45&fit=crop&crop=face",
-            messages: [
-                {
-                    type: 'sent',
-                    content: 'Halo Erma, saya butuh video promosi untuk cafe baru saya. Durasinya sekitar 2-3 menit.',
-                    time: '11:20 AM',
-                    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face'
-                },
-                {
-                    type: 'received',
-                    content: 'Siap Bu! Untuk tema warnanya ada preferensi khusus tidak?',
-                    time: '11:25 AM',
-                    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=36&h=36&fit=crop&crop=face'
-                },
-                {
-                    type: 'sent',
-                    content: 'saya mau editannya nuansa ungu ya mbak, sesuai dengan branding cafe saya',
-                    time: '11:27 AM',
-                    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face'
-                }
-            ]
-        }
-    };
-    
+
+    // // Sample chat data
+    // const chatData = {
+    //     1: {
+    //         name: "Nadia Irma",
+    //         status: "Online • UI Design, Front-End",
+    //         avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=45&h=45&fit=crop&crop=face",
+    //         messages: [
+    //             {
+    //                 type: 'received',
+    //                 content: 'Halo Bu, terima kasih sudah menghubungi saya untuk proyek UI Design website cafe.',
+    //                 time: '10:30 AM',
+    //                 avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=36&h=36&fit=crop&crop=face'
+    //             },
+    //             {
+    //                 type: 'sent',
+    //                 content: 'Halo Nadia, saya perlu desain untuk website cafe dan juga toko pakaian. Kira-kira berapa lama pengerjaannya?',
+    //                 time: '10:32 AM',
+    //                 avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face'
+    //             },
+    //             {
+    //                 type: 'received',
+    //                 content: 'Baik Ibu, saya menghendaki 1 bulan untuk desainnya, sekaligus saya buatkan form penawarannya. Untuk 2 website, saya tawarkan harga Rp 8.500.000',
+    //                 time: '10:35 AM',
+    //                 avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=36&h=36&fit=crop&crop=face'
+    //             },
+    //             {
+    //                 type: 'sent',
+    //                 content: 'Oke, bisa tolong kirimkan portfolionya dulu?',
+    //                 time: '10:36 AM',
+    //                 avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face'
+    //             }
+    //         ]
+    //     },
+    //     2: {
+    //         name: "Tiara Hasna",
+    //         status: "Online • Back-End, Fullstack",
+    //         avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=45&h=45&fit=crop&crop=face",
+    //         messages: [
+    //             {
+    //                 type: 'received',
+    //                 content: 'Selamat siang Bu, saya lihat Ibu membutuhkan developer fullstack untuk proyek e-commerce?',
+    //                 time: '2:15 PM',
+    //                 avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=36&h=36&fit=crop&crop=face'
+    //             },
+    //             {
+    //                 type: 'sent',
+    //                 content: 'Iya betul, saya butuh website e-commerce lengkap dengan sistem pembayaran. Berapa estimasi biayanya?',
+    //                 time: '2:18 PM',
+    //                 avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face'
+    //             },
+    //             {
+    //                 type: 'received',
+    //                 content: 'Bisa Bu, untuk jasa fullstacknya saya tawarkan diskon 10%. Total menjadi Rp 15.000.000 untuk fitur lengkap',
+    //                 time: '2:20 PM',
+    //                 avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=36&h=36&fit=crop&crop=face'
+    //             }
+    //         ]
+    //     },
+    //     3: {
+    //         name: "Karina Carlo",
+    //         status: "Online • Graphic Design, Illustrator",
+    //         avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=45&h=45&fit=crop&crop=face",
+    //         messages: [
+    //             {
+    //                 type: 'received',
+    //                 content: 'Halo Bu, saya sudah selesai buat beberapa konsep logo untuk cafe dan toko pakaiannya.',
+    //                 time: '4:45 PM',
+    //                 avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=36&h=36&fit=crop&crop=face'
+    //             },
+    //             {
+    //                 type: 'sent',
+    //                 content: 'Wah cepat sekali! Boleh saya lihat hasil konsepnya?',
+    //                 time: '4:47 PM',
+    //                 avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face'
+    //             },
+    //             {
+    //                 type: 'received',
+    //                 content: 'Ini nih Bu untuk logo cafe dan toko pakaiannnya. Saya buat 3 variasi untuk masing-masing bisnis.',
+    //                 time: '4:50 PM',
+    //                 avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=36&h=36&fit=crop&crop=face'
+    //             }
+    //         ]
+    //     },
+    //     4: {
+    //         name: "Erma Nadila",
+    //         status: "Online • Illustrator, Video Editor",
+    //         avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=45&h=45&fit=crop&crop=face",
+    //         messages: [
+    //             {
+    //                 type: 'sent',
+    //                 content: 'Halo Erma, saya butuh video promosi untuk cafe baru saya. Durasinya sekitar 2-3 menit.',
+    //                 time: '11:20 AM',
+    //                 avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face'
+    //             },
+    //             {
+    //                 type: 'received',
+    //                 content: 'Siap Bu! Untuk tema warnanya ada preferensi khusus tidak?',
+    //                 time: '11:25 AM',
+    //                 avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=36&h=36&fit=crop&crop=face'
+    //             },
+    //             {
+    //                 type: 'sent',
+    //                 content: 'saya mau editannya nuansa ungu ya mbak, sesuai dengan branding cafe saya',
+    //                 time: '11:27 AM',
+    //                 avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face'
+    //             }
+    //         ]
+    //     }
+    // };
+
     // Function to load chat messages
     function loadChatMessages(chatId) {
         const chat = chatData[chatId];
         if (!chat) return;
-        
+
         // Update header
         if (headerName) headerName.textContent = chat.name;
         if (headerStatus) headerStatus.textContent = chat.status;
         if (headerAvatar) headerAvatar.src = chat.avatar;
-        
+
         // Clear messages
         if (chatMessages) {
             chatMessages.innerHTML = '';
-            
+
             // Add messages
             chat.messages.forEach(message => {
                 const messageDiv = document.createElement('div');
@@ -720,23 +846,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 chatMessages.appendChild(messageDiv);
             });
-            
+
             // Scroll to bottom
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
     }
-    
+
     // Function to send message
     function sendMessage() {
         if (!messageInput || !messageInput.value.trim()) return;
-        
+
         const messageText = messageInput.value.trim();
         const currentTime = new Date().toLocaleTimeString('en-US', {
             hour: 'numeric',
             minute: '2-digit',
             hour12: true
         });
-        
+
         // Create message element
         const messageDiv = document.createElement('div');
         messageDiv.className = 'message sent';
@@ -749,23 +875,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="message-time">${currentTime}</div>
             </div>
         `;
-        
+
         // Add to chat
         if (chatMessages) {
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
-        
+
         // Clear input
         messageInput.value = '';
         autoResizeTextarea();
-        
+
         // Simulate typing indicator and response (optional)
         setTimeout(() => {
             simulateTypingResponse();
         }, 1000);
     }
-    
+
     // Simulate typing response
     function simulateTypingResponse() {
         const responses = [
@@ -774,18 +900,18 @@ document.addEventListener('DOMContentLoaded', function() {
             "Oke, nanti saya kirimkan proposal lengkapnya.",
             "Siap Bu, akan saya kerjakan sesuai timeline yang disepakati."
         ];
-        
+
         const randomResponse = responses[Math.floor(Math.random() * responses.length)];
         const currentTime = new Date().toLocaleTimeString('en-US', {
             hour: 'numeric',
             minute: '2-digit',
             hour12: true
         });
-        
+
         // Get current active chat avatar
         const activeChat = document.querySelector('.chat-item.active');
         const activeAvatar = activeChat ? activeChat.querySelector('.chat-avatar img').src : '';
-        
+
         const messageDiv = document.createElement('div');
         messageDiv.className = 'message received';
         messageDiv.innerHTML = `
@@ -797,13 +923,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="message-time">${currentTime}</div>
             </div>
         `;
-        
+
         if (chatMessages) {
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
     }
-    
+
     // Auto resize textarea
     function autoResizeTextarea() {
         if (messageInput) {
@@ -811,7 +937,7 @@ document.addEventListener('DOMContentLoaded', function() {
             messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
         }
     }
-    
+
     // Search functionality - integrates with global search
     window.performSearch = function(query) {
         const chatItems = document.querySelectorAll('.chat-item');
@@ -819,7 +945,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const name = item.querySelector('.chat-name').textContent.toLowerCase();
             const preview = item.querySelector('.chat-preview').textContent.toLowerCase();
             const searchTerm = query.toLowerCase();
-            
+
             if (name.includes(searchTerm) || preview.includes(searchTerm) || query === '') {
                 item.style.display = 'flex';
             } else {
@@ -827,24 +953,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     };
-    
+
     // Event listeners
-    
+
     // Chat item selection
     chatItems.forEach(item => {
         item.addEventListener('click', function() {
             // Remove active from all items
             chatItems.forEach(i => i.classList.remove('active'));
-            
+
             // Add active to clicked item
             this.classList.add('active');
-            
+
             // Load chat messages
             const chatId = this.getAttribute('data-chat-id');
             loadChatMessages(chatId);
         });
     });
-    
+
     // Send button
     if (sendBtn) {
         sendBtn.addEventListener('click', function(e) {
@@ -852,7 +978,7 @@ document.addEventListener('DOMContentLoaded', function() {
             sendMessage();
         });
     }
-    
+
     // Enter key to send
     if (messageInput) {
         messageInput.addEventListener('keydown', function(e) {
@@ -861,14 +987,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 sendMessage();
             }
         });
-        
+
         // Auto resize on input
         messageInput.addEventListener('input', autoResizeTextarea);
     }
-    
+
     // Initialize first chat
     loadChatMessages('1');
-    
+
     console.log('Chat page initialized successfully');
 });
 </script>

@@ -249,16 +249,16 @@
 </style>
 
 <!-- Back Button -->
-<a href="{{ route('freelancer.services.index') }}" class="back-btn">
+<a href="{{ route('freelancer.services') }}" class="back-btn">
     <iconify-icon icon="material-symbols:arrow-back"></iconify-icon>
-    Back to Services
+    Back
 </a>
 
 <!-- Edit Services Section -->
 <div class="edit-services-section">
     <div class="edit-services-header">
         <h2 class="edit-services-title">Edit Service</h2>
-        <a href="{{ route('freelancer.services.index') }}" class="close-btn">
+        <a href="{{ route('freelancer.services') }}" class="close-btn">
             <iconify-icon icon="material-symbols:close"></iconify-icon>
         </a>
     </div>
@@ -285,25 +285,14 @@
     <form action="{{ route('freelancer.services.update', $job->id) }}" method="POST" id="editServiceForm">
         @csrf
         @method('PUT')
-        
+
         <!-- Category -->
         <div class="form-group">
             <label for="category" class="form-label">Category <span class="required">*</span></label>
-            <select name="category" id="category" class="form-control form-select" required>
-                <option value="">Select Category</option>
-                <option value="Web Development" {{ old('category', $job->category) == 'Web Development' ? 'selected' : '' }}>Web Development</option>
-                <option value="Mobile Development" {{ old('category', $job->category) == 'Mobile Development' ? 'selected' : '' }}>Mobile Development</option>
-                <option value="UI/UX Design" {{ old('category', $job->category) == 'UI/UX Design' ? 'selected' : '' }}>UI/UX Design</option>
-                <option value="Graphic Design" {{ old('category', $job->category) == 'Graphic Design' ? 'selected' : '' }}>Graphic Design</option>
-                <option value="Illustration" {{ old('category', $job->category) == 'Illustration' ? 'selected' : '' }}>Illustration</option>
-                <option value="Content Writing" {{ old('category', $job->category) == 'Content Writing' ? 'selected' : '' }}>Content Writing</option>
-                <option value="Digital Marketing" {{ old('category', $job->category) == 'Digital Marketing' ? 'selected' : '' }}>Digital Marketing</option>
-                <option value="Video Editing" {{ old('category', $job->category) == 'Video Editing' ? 'selected' : '' }}>Video Editing</option>
-                <option value="Photography" {{ old('category', $job->category) == 'Photography' ? 'selected' : '' }}>Photography</option>
-                <option value="Data Entry" {{ old('category', $job->category) == 'Data Entry' ? 'selected' : '' }}>Data Entry</option>
-                <option value="Virtual Assistant" {{ old('category', $job->category) == 'Virtual Assistant' ? 'selected' : '' }}>Virtual Assistant</option>
-                <option value="Translation" {{ old('category', $job->category) == 'Translation' ? 'selected' : '' }}>Translation</option>
-                <option value="Other" {{ old('category', $job->category) == 'Other' ? 'selected' : '' }}>Other</option>
+            <select name="category_id" id="category_id" class="form-control form-select" required>
+                @foreach($categories as $category)
+                <option value="{{ $category->id }}">{{ $category->name }}</option>
+            @endforeach
             </select>
             <div class="form-help">Choose the category that best describes your service</div>
         </div>
@@ -311,9 +300,9 @@
         <!-- Title -->
         <div class="form-group">
             <label for="title" class="form-label">Service Title <span class="required">*</span></label>
-            <input type="text" name="title" id="title" class="form-control" 
-                   value="{{ old('title', $job->title) }}" 
-                   placeholder="Enter service title" 
+            <input type="text" name="title" id="title" class="form-control"
+                   value="{{ old('title', $job->title) }}"
+                   placeholder="Enter service title"
                    required maxlength="100">
             <div class="form-help">A clear and descriptive title for your service</div>
         </div>
@@ -321,29 +310,31 @@
         <!-- Description -->
         <div class="form-group">
             <label for="description" class="form-label">Description <span class="required">*</span></label>
-            <textarea name="description" id="description" class="form-control form-textarea" 
-                      placeholder="Describe your service in detail..." 
+            <textarea name="description" id="description" class="form-control form-textarea"
+                      placeholder="Describe your service in detail..."
                       required maxlength="1000">{{ old('description', $job->description) }}</textarea>
             <div class="form-help">Provide a detailed description of what you offer</div>
-        </div>
-
-        <!-- Project Link -->
-        <div class="form-group">
-            <label for="project_link" class="form-label">Example Project Link</label>
-            <input type="url" name="project_link" id="project_link" class="form-control" 
-                   value="{{ old('project_link', $job->project_link) }}" 
-                   placeholder="https://example.com/your-project">
-            <div class="form-help">Optional: Link to showcase your work or portfolio</div>
         </div>
 
         <!-- Price -->
         <div class="form-group">
             <label for="starting_price" class="form-label">Starting Price (Rp) <span class="required">*</span></label>
-            <input type="number" name="starting_price" id="starting_price" class="form-control" 
-                   value="{{ old('starting_price', $job->starting_price) }}" 
-                   placeholder="500000" 
-                   required min="50000" max="100000000" step="1000">
-            <div class="form-help">Minimum price starts from Rp 50,000</div>
+            <input
+        type="number"
+        name="starting_price"
+        id="starting_price"
+        class="form-control @error('starting_price') is-invalid @enderror"
+        value="{{ old('starting_price') }}"
+        placeholder="Masukkan harga, contoh: 500000"
+        min="0"
+        step="any"
+        required
+    >
+    @error('starting_price')
+        <div class="invalid-feedback">
+            {{ $message }}
+        </div>
+    @enderror
         </div>
 
         <!-- Status -->
@@ -383,7 +374,7 @@ document.addEventListener('DOMContentLoaded', function() {
     priceInput.addEventListener('input', function() {
         // Remove non-numeric characters except for the decimal point
         let value = this.value.replace(/[^0-9]/g, '');
-        
+
         // Ensure minimum value
         if (value && parseInt(value) < 50000) {
             this.setCustomValidity('Minimum price is Rp 50,000');
@@ -401,13 +392,13 @@ document.addEventListener('DOMContentLoaded', function() {
         counter.className = 'form-help';
         counter.style.textAlign = 'right';
         counter.style.marginTop = '0.25rem';
-        
+
         function updateCounter() {
             const remaining = maxLength - element.value.length;
             counter.textContent = `${element.value.length}/${maxLength} characters`;
             counter.style.color = remaining < 10 ? '#ef4444' : '#6b7280';
         }
-        
+
         updateCounter();
         element.addEventListener('input', updateCounter);
         element.parentNode.appendChild(counter);
