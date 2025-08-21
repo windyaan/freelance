@@ -693,6 +693,11 @@
 </div>
 @endsection
 
+<script>
+    window.currentChatId = "{{ $activeChat ? $activeChat->id : '' }}";
+    window.userId = "{{ auth()->id() }}";
+</script>
+
 @push('scripts')
 <script>
 // Chat functionality
@@ -706,116 +711,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const headerStatus = document.getElementById('headerStatus');
     const headerAvatar = document.getElementById('headerAvatar');
     const searchInput = document.getElementById('globalSearch');
-
-    // // Sample chat data
-    // const chatData = {
-    //     1: {
-    //         name: "Nadia Irma",
-    //         status: "Online • UI Design, Front-End",
-    //         avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=45&h=45&fit=crop&crop=face",
-    //         messages: [
-    //             {
-    //                 type: 'received',
-    //                 content: 'Halo Bu, terima kasih sudah menghubungi saya untuk proyek UI Design website cafe.',
-    //                 time: '10:30 AM',
-    //                 avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=36&h=36&fit=crop&crop=face'
-    //             },
-    //             {
-    //                 type: 'sent',
-    //                 content: 'Halo Nadia, saya perlu desain untuk website cafe dan juga toko pakaian. Kira-kira berapa lama pengerjaannya?',
-    //                 time: '10:32 AM',
-    //                 avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face'
-    //             },
-    //             {
-    //                 type: 'received',
-    //                 content: 'Baik Ibu, saya menghendaki 1 bulan untuk desainnya, sekaligus saya buatkan form penawarannya. Untuk 2 website, saya tawarkan harga Rp 8.500.000',
-    //                 time: '10:35 AM',
-    //                 avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=36&h=36&fit=crop&crop=face'
-    //             },
-    //             {
-    //                 type: 'sent',
-    //                 content: 'Oke, bisa tolong kirimkan portfolionya dulu?',
-    //                 time: '10:36 AM',
-    //                 avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face'
-    //             }
-    //         ]
-    //     },
-    //     2: {
-    //         name: "Tiara Hasna",
-    //         status: "Online • Back-End, Fullstack",
-    //         avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=45&h=45&fit=crop&crop=face",
-    //         messages: [
-    //             {
-    //                 type: 'received',
-    //                 content: 'Selamat siang Bu, saya lihat Ibu membutuhkan developer fullstack untuk proyek e-commerce?',
-    //                 time: '2:15 PM',
-    //                 avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=36&h=36&fit=crop&crop=face'
-    //             },
-    //             {
-    //                 type: 'sent',
-    //                 content: 'Iya betul, saya butuh website e-commerce lengkap dengan sistem pembayaran. Berapa estimasi biayanya?',
-    //                 time: '2:18 PM',
-    //                 avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face'
-    //             },
-    //             {
-    //                 type: 'received',
-    //                 content: 'Bisa Bu, untuk jasa fullstacknya saya tawarkan diskon 10%. Total menjadi Rp 15.000.000 untuk fitur lengkap',
-    //                 time: '2:20 PM',
-    //                 avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=36&h=36&fit=crop&crop=face'
-    //             }
-    //         ]
-    //     },
-    //     3: {
-    //         name: "Karina Carlo",
-    //         status: "Online • Graphic Design, Illustrator",
-    //         avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=45&h=45&fit=crop&crop=face",
-    //         messages: [
-    //             {
-    //                 type: 'received',
-    //                 content: 'Halo Bu, saya sudah selesai buat beberapa konsep logo untuk cafe dan toko pakaiannya.',
-    //                 time: '4:45 PM',
-    //                 avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=36&h=36&fit=crop&crop=face'
-    //             },
-    //             {
-    //                 type: 'sent',
-    //                 content: 'Wah cepat sekali! Boleh saya lihat hasil konsepnya?',
-    //                 time: '4:47 PM',
-    //                 avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face'
-    //             },
-    //             {
-    //                 type: 'received',
-    //                 content: 'Ini nih Bu untuk logo cafe dan toko pakaiannnya. Saya buat 3 variasi untuk masing-masing bisnis.',
-    //                 time: '4:50 PM',
-    //                 avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=36&h=36&fit=crop&crop=face'
-    //             }
-    //         ]
-    //     },
-    //     4: {
-    //         name: "Erma Nadila",
-    //         status: "Online • Illustrator, Video Editor",
-    //         avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=45&h=45&fit=crop&crop=face",
-    //         messages: [
-    //             {
-    //                 type: 'sent',
-    //                 content: 'Halo Erma, saya butuh video promosi untuk cafe baru saya. Durasinya sekitar 2-3 menit.',
-    //                 time: '11:20 AM',
-    //                 avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face'
-    //             },
-    //             {
-    //                 type: 'received',
-    //                 content: 'Siap Bu! Untuk tema warnanya ada preferensi khusus tidak?',
-    //                 time: '11:25 AM',
-    //                 avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=36&h=36&fit=crop&crop=face'
-    //             },
-    //             {
-    //                 type: 'sent',
-    //                 content: 'saya mau editannya nuansa ungu ya mbak, sesuai dengan branding cafe saya',
-    //                 time: '11:27 AM',
-    //                 avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face'
-    //             }
-    //         ]
-    //     }
-    // };
 
     // Function to load chat messages
     function loadChatMessages(chatId) {
@@ -853,44 +748,78 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Function to send message
+    // function sendMessage() {
+    //     if (!messageInput || !messageInput.value.trim()) return;
+
+    //     const messageText = messageInput.value.trim();
+    //     const currentTime = new Date().toLocaleTimeString('en-US', {
+    //         hour: 'numeric',
+    //         minute: '2-digit',
+    //         hour12: true
+    //     });
+
+    //     // Create message element
+    //     const messageDiv = document.createElement('div');
+    //     messageDiv.className = 'message sent';
+    //     messageDiv.innerHTML = `
+    //         <div class="message-avatar">
+    //             <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face" alt="You">
+    //         </div>
+    //         <div class="message-content">
+    //             ${messageText}
+    //             <div class="message-time">${currentTime}</div>
+    //         </div>
+    //     `;
+
+    //     // Add to chat
+    //     if (chatMessages) {
+    //         chatMessages.appendChild(messageDiv);
+    //         chatMessages.scrollTop = chatMessages.scrollHeight;
+    //     }
+
+    //     // Clear input
+    //     messageInput.value = '';
+    //     autoResizeTextarea();
+
+    //     // Simulate typing indicator and response (optional)
+    //     setTimeout(() => {
+    //         simulateTypingResponse();
+    //     }, 1000);
+    // }
+
     function sendMessage() {
-        if (!messageInput || !messageInput.value.trim()) return;
+    if (!messageInput || !messageInput.value.trim()) return;
 
-        const messageText = messageInput.value.trim();
-        const currentTime = new Date().toLocaleTimeString('en-US', {
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true
-        });
+    const content = messageInput.value.trim();
 
-        // Create message element
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'message sent';
-        messageDiv.innerHTML = `
-            <div class="message-avatar">
-                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face" alt="You">
-            </div>
-            <div class="message-content">
-                ${messageText}
-                <div class="message-time">${currentTime}</div>
-            </div>
-        `;
+    // POST ke backend
+    axios.post(`/chat/{{ $activeChat->id }}/message`, { content })
+        .then(() => {
+            messageInput.value = '';
+            autoResizeTextarea();
+            // Pesan akan muncul otomatis via Echo listener
+        })
+        .catch(err => console.error(err));
+}
 
-        // Add to chat
-        if (chatMessages) {
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+// Event listener tombol kirim
+if (sendBtn) {
+    sendBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        sendMessage();
+    });
+}
+
+// Event listener enter key
+if (messageInput) {
+    messageInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
         }
+    });
+}
 
-        // Clear input
-        messageInput.value = '';
-        autoResizeTextarea();
-
-        // Simulate typing indicator and response (optional)
-        setTimeout(() => {
-            simulateTypingResponse();
-        }, 1000);
-    }
 
     // Simulate typing response
     function simulateTypingResponse() {

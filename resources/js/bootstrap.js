@@ -8,23 +8,13 @@ import Echo from 'laravel-echo';
 
 window.Echo = new Echo({
     broadcaster: 'reverb',
-    key: import.meta.env.VITE_REVERB_APP_KEY,
-    wsHost: import.meta.env.VITE_REVERB_HOST ?? window.location.hostname,
-    wsPort: import.meta.env.VITE_REVERB_PORT ?? 80,
-    wssPort: import.meta.env.VITE_REVERB_PORT ?? 443,
-    forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
+    key: import.meta.env.VITE_REVERB_APP_KEY || '28n3qjbanvuelp4nqaoh',
+    wsHost: import.meta.env.VITE_REVERB_HOST || window.location.hostname,
+    wsPort: import.meta.env.VITE_REVERB_PORT || 8080,
+    wssPort: import.meta.env.VITE_REVERB_PORT || 8080,
+    forceTLS: (import.meta.env.VITE_REVERB_SCHEME || 'http') === 'https',
     enabledTransports: ['ws', 'wss'],
 });
-
-// // Mendengarkan channel chat
-// window.Echo.channel('chat.' + window.currentChatId)
-//     .listen('MessageSent', (e) => {
-//         console.log('New message:', e.message);
-//     });
-
-// // Optional: listen notifications
-// window.Echo.private('App.Models.User.' + window.userId)
-//     .notification((notification) => console.log('New notification:', notification));
 
 // ✅ Listen notifications secara global (setiap user login)
 if (window.userId) {
@@ -34,17 +24,26 @@ if (window.userId) {
         });
 }
 
-// ✅ Listen chat kalau sedang di halaman chat
+// Listener chat realtime
 if (window.currentChatId) {
     window.Echo.private(`chat.${window.currentChatId}`)
-        .listen('.MessageSent', (e) => {
+        .listen('MessageSent', (e) => {
             console.log('💬 New message:', e.message);
 
-            // contoh update DOM
-            let box = document.getElementById('chat-box');
+            // update DOM (pastikan e.message.sender_name ada)
+            const box = document.getElementById('chatMessages');
             if (box) {
-                box.innerHTML += `<p><strong>${e.message.sender.name}:</strong> ${e.message.content}</p>`;
+                box.innerHTML += `<p><strong>${e.message.sender_name}:</strong> ${e.message}</p>`;
+                box.scrollTop = box.scrollHeight; // auto scroll ke bawah
             }
         });
     }
 
+
+/**
+ * Echo exposes an expressive API for subscribing to channels and listening
+ * for events that are broadcast by Laravel. Echo and event broadcasting
+ * allow your team to quickly build robust real-time web applications.
+ */
+
+import './echo';

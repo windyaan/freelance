@@ -31,6 +31,12 @@ class MessageSent implements ShouldBroadcastNow
         return new PrivateChannel('chat.' . $this->message->chat_id);
     }
 
+    //nama event yg diterima frontend
+    public function broadcastAs(): string
+    {
+        return 'MessageSent';
+    }
+
     /**
      * Data yang dikirim ke frontend
      */
@@ -39,6 +45,8 @@ class MessageSent implements ShouldBroadcastNow
         return [
             'message' => $this->message->content,
             'sender_id' => $this->message->sender_id,
+            'sender_name' => $this->message->sender->name ?? 'Unknown',
+            'sender_avatar' => $this->message->sender->profile->avatar_url ?? null,
             'chat_id' => $this->message->chat_id,
             'created_at' => $this->message->created_at->toDateTimeString(),
         ];
