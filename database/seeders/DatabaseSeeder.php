@@ -8,6 +8,8 @@ use App\Models\Job;
 use App\Models\Offer;
 use App\Models\Order;
 use App\Models\Milestone;
+use App\Models\Chat;
+use App\Models\Message;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -111,5 +113,32 @@ class DatabaseSeeder extends Seeder
                      }
                 }
             }
+
+             /**
+         * Chat & Message Seeder
+         */
+        $freelancers = User::where('role', 'freelancer')->get();
+        $clients = User::where('role', 'client')->get();
+
+        foreach ($clients as $client) {
+            $freelancer = $freelancers->random();
+
+            $chat = Chat::create([
+                'client_id' => $client->id,
+                'freelancer_id' => $freelancer->id,
+            ]);
+
+            Message::create([
+                'chat_id' => $chat->id,
+                'sender_id' => $client->id,
+                'content' => "Halo, saya tertarik dengan layanan Anda.",
+            ]);
+
+            Message::create([
+                'chat_id' => $chat->id,
+                'sender_id' => $freelancer->id,
+                'content' => "Halo juga, silakan ceritakan kebutuhan Anda.",
+            ]);
+        }
         }
 }

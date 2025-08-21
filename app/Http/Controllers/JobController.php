@@ -66,15 +66,12 @@ class JobController extends Controller
 
     public function edit(Job $job)
     {
-        $this->authorize('update', $job); // Optional: pakai policy
         $categories = Category::all();
         return view('jobs.edit', compact('job', 'categories'));
     }
 
     public function update(Request $request, Job $job)
     {
-        $this->authorize('update', $job); // Optional
-
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',

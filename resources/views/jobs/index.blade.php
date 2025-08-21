@@ -345,7 +345,7 @@
                         </div>
                     </div>
                     <div class="service-actions">
-                        <a href="{{ route('freelancer.services.edit', $job) }}" class="edit-btn">
+                        <a href="{{ route('freelancer.services.edit', $job->id) }}" class="edit-btn">
                             Edit
                         </a>
                         <form action="{{ route('freelancer.services.destroy', $job->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this service?')">
