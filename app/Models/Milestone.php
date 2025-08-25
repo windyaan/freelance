@@ -13,8 +13,11 @@ class Milestone extends Model
         'title',
         'description',
         'status',
-        'completed_at'//optional
+        'completed_at',//optional
+        'start_time',
     ];
+
+    protected $dates = ['completed_at', 'start_time'];
 
     //relasi one to one ke tabel offers
     public function offer() {

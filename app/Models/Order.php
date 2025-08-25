@@ -13,7 +13,8 @@ class Order extends Model
         'amount',
         'amount_paid',
         'payment_method',
-        'status',
+        'start_time',
+        'status'
     ];
 
     //relasi many to one ke tabe offer
@@ -31,5 +32,10 @@ class Order extends Model
     {
     return $this->belongsTo(User::class, 'client_id');
     }
+
+    public function milestones()
+{
+    return $this->hasMany(Milestone::class);
+}
 
 }
