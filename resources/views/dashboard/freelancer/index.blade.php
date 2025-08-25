@@ -42,45 +42,143 @@
 @endsection
 
 @section('content')
-<!-- Orders Section -->
-<div class="orders-section">
-    <div class="orders-header">
-        <h2 class="orders-title">Recent Orders</h2>
-        <span class="orders-count" id="ordersCount">2 Orders</span>
+<!-- Embed sample orders data for demo purposes -->
+<script id="client-order-data" type="application/json">
+[
+    {
+        "id": 1,
+        "title": "Buku cerita anak Aku Sayang Nenek",
+        "client": "Denada F",
+        "client_avatar": "https://ui-avatars.com/api/?name=Denada+F&background=38C1B9&color=fff&size=50",
+        "category": "Illustrator",
+        "status": "new",
+        "budget": "150000-200000",
+        "description": "Saya membutuhkan ilustrasi untuk buku cerita anak dengan tema keluarga. Buku ini akan terdiri dari 20 halaman dengan gaya kartun yang menarik untuk anak usia 4-8 tahun.",
+        "date": "2025-08-25",
+        "deadline": "2025-09-01",
+        "requirements": ["Adobe Illustrator", "Character Design", "Children Book Style"],
+        "priority": "medium"
+    },
+    {
+        "id": 2,
+        "title": "Pembuatan design Kaos Barongsai",
+        "client": "Ira Maria",
+        "client_avatar": "https://ui-avatars.com/api/?name=Ira+Maria&background=FF6B6B&color=fff&size=50",
+        "category": "Graphic Design",
+        "status": "urgent",
+        "budget": "300000-500000",
+        "description": "Membutuhkan design kaos untuk acara festival Barongsai. Design harus mencerminkan budaya Tionghoa dengan warna yang cerah dan menarik.",
+        "date": "2025-08-25",
+        "deadline": "2025-08-28",
+        "requirements": ["Vector Design", "Cultural Design", "Print Ready"],
+        "priority": "high"
+    },
+    {
+        "id": 3,
+        "title": "Logo Design untuk Startup Teknologi",
+        "client": "Ahmad Rizki",
+        "client_avatar": "https://ui-avatars.com/api/?name=Ahmad+Rizki&background=4ECDC4&color=fff&size=50",
+        "category": "Graphic Design",
+        "status": "new",
+        "budget": "500000-750000",
+        "description": "Startup teknologi membutuhkan logo yang modern, clean, dan profesional. Logo akan digunakan untuk berbagai media digital dan print.",
+        "date": "2025-08-24",
+        "deadline": "2025-09-05",
+        "requirements": ["Logo Design", "Brand Identity", "Vector Format"],
+        "priority": "medium"
+    },
+    {
+        "id": 4,
+        "title": "Website Design untuk Toko Online",
+        "client": "Sarah Putri",
+        "client_avatar": "https://ui-avatars.com/api/?name=Sarah+Putri&background=95E1D3&color=fff&size=50",
+        "category": "Web Design",
+        "status": "new",
+        "budget": "1000000-1500000",
+        "description": "Membutuhkan design website e-commerce untuk produk fashion wanita. Design harus responsive dan user-friendly dengan aesthetic yang modern.",
+        "date": "2025-08-23",
+        "deadline": "2025-09-10",
+        "requirements": ["UI/UX Design", "Responsive Design", "E-commerce"],
+        "priority": "medium"
+    },
+    {
+        "id": 5,
+        "title": "Animasi Video Promosi Produk",
+        "client": "Budi Santoso",
+        "client_avatar": "https://ui-avatars.com/api/?name=Budi+Santoso&background=F38BA8&color=fff&size=50",
+        "category": "Animation",
+        "status": "urgent",
+        "budget": "800000-1200000",
+        "description": "Video animasi 2D untuk promosi produk makanan. Durasi 30-60 detik dengan style yang fun dan engaging untuk target market remaja.",
+        "date": "2025-08-25",
+        "deadline": "2025-08-30",
+        "requirements": ["2D Animation", "After Effects", "Motion Graphics"],
+        "priority": "high"
+    }
+]
+</script>
+
+<!-- Client Orders Section -->
+<div class="client-orders-section">
+    <div class="section-header">
+        <div class="header-left">
+            <h2 class="section-title">
+                <iconify-icon icon="material-symbols:work-outline" class="title-icon"></iconify-icon>
+                Client Orders Available
+            </h2>
+            <p class="section-subtitle">Find and apply to projects that match your skills</p>
+        </div>
+        <div class="header-right">
+            <span class="orders-count" id="ordersCount">5 Orders Available</span>
+            <div class="view-toggle">
+                <button class="toggle-btn active" data-view="cards" id="cardView">
+                    <iconify-icon icon="material-symbols:grid-view"></iconify-icon>
+                </button>
+                <button class="toggle-btn" data-view="list" id="listView">
+                    <iconify-icon icon="material-symbols:list"></iconify-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="filter-section">
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">
+                <iconify-icon icon="material-symbols:select-all"></iconify-icon>
+                All Orders
+            </button>
+            <button class="filter-btn" data-filter="new">
+                <iconify-icon icon="material-symbols:new-releases"></iconify-icon>
+                New
+            </button>
+            <button class="filter-btn" data-filter="urgent">
+                <iconify-icon icon="material-symbols:priority-high"></iconify-icon>
+                Urgent
+            </button>
+        </div>
+        <div class="sort-dropdown">
+            <select id="sortSelect" class="sort-select">
+                <option value="date">Sort by Date</option>
+                <option value="budget">Sort by Budget</option>
+                <option value="deadline">Sort by Deadline</option>
+                <option value="priority">Sort by Priority</option>
+            </select>
+        </div>
     </div>
 
     <!-- Search Results Info -->
     <div class="search-results-info" id="searchResultsInfo">
         <span id="searchResultsText"></span>
-        <button class="clear-search-btn" onclick="clearSearch()">Clear</button>
+        <button class="clear-search-btn" onclick="clearSearch()">
+            <iconify-icon icon="material-symbols:close"></iconify-icon>
+            Clear
+        </button>
     </div>
 
-    <div class="orders-list" id="ordersList">
-        <!-- Order Card 1 -->
-        <div class="order-card" data-client="denada f" data-skill="illustrator" data-description="buku cerita anak aku sayang nenek" data-date="thursday, 18 september 2025">
-            <div class="order-skill">illustrator</div>
-            <div class="order-info">
-                <div class="order-date">Thursday, 18 September 2025</div>
-                <div class="order-client">Client: Denada F</div>
-                <div class="order-description">Buku cerita anak Aku Sayang Nenek</div>
-            </div>
-            <div class="order-actions">
-                <button class="details-btn" onclick="showOrderDetails('Denada F', 'illustrator', 'Thursday, 18 September 2025', 'Buku cerita anak Aku Sayang Nenek')">Details</button>
-            </div>
-        </div>
-
-        <!-- Order Card 2 -->
-        <div class="order-card" data-client="ira maria" data-skill="graphic design" data-description="pembuatan design kaos barongsai" data-date="sunday, 21 september 2025">
-            <div class="order-skill">graphic design</div>
-            <div class="order-info">
-                <div class="order-date">Sunday, 21 September 2025</div>
-                <div class="order-client">Client: Ira Maria</div>
-                <div class="order-description">Pembuatan design kaos Barongsai</div>
-            </div>
-            <div class="order-actions">
-                <button class="details-btn" onclick="showOrderDetails('Ira Maria', 'graphic design', 'Sunday, 21 September 2025', 'Pembuatan design kaos Barongsai')">Details</button>
-            </div>
-        </div>
+    <!-- Orders Grid/List -->
+    <div class="orders-container" id="ordersContainer">
+        <!-- Orders will be populated by JavaScript -->
     </div>
 
     <!-- Empty State -->
@@ -89,16 +187,43 @@
             <iconify-icon icon="material-symbols:search-off"></iconify-icon>
         </div>
         <h3>No orders found</h3>
-        <p>Try adjusting your search criteria or check back later for new orders.</p>
-        <button onclick="clearSearch()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #38C1B9; color: white; border: none; border-radius: 6px; cursor: pointer;">Clear Search</button>
+        <p>Try adjusting your search criteria or filters to find more projects.</p>
+        <button onclick="clearSearch()" class="btn btn-primary">
+            <iconify-icon icon="material-symbols:refresh"></iconify-icon>
+            Clear Filters
+        </button>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-state" id="loadingState">
+        <div class="loading-spinner"></div>
+        <p>Loading orders...</p>
+    </div>
+</div>
+
+<!-- Order Detail Modal -->
+<div class="modal-overlay" id="orderModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle">Order Details</h3>
+            <button class="modal-close" onclick="closeOrderModal()">
+                <iconify-icon icon="material-symbols:close"></iconify-icon>
+            </button>
+        </div>
+        <div class="modal-body" id="modalBody">
+            <!-- Content will be populated by JavaScript -->
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeOrderModal()">Close</button>
+        </div>
     </div>
 </div>
 @endsection
 
 @push('styles')
 <style>
-/* Orders Section Specific Styles */
-.orders-section {
+/* Client Orders Section Styles */
+.client-orders-section {
     background: var(--bg-primary);
     border-radius: 16px;
     padding: 2rem;
@@ -106,156 +231,445 @@
     box-shadow: var(--shadow-sm);
     border: 1px solid var(--border-light);
     width: 100%;
-    max-width: 1000px;
-    overflow: hidden;
-    position: relative;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
-.orders-header {
+/* Section Header */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border-light);
+}
+
+.header-left {
+    flex: 1;
+}
+
+.section-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.title-icon {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+.section-subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin: 0;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.orders-count {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: var(--shadow-sm);
+}
+
+.view-toggle {
+    display: flex;
+    background: var(--bg-muted);
+    border-radius: 8px;
+    padding: 0.25rem;
+}
+
+.toggle-btn {
+    padding: 0.5rem;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-btn.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.toggle-btn:hover:not(.active) {
+    background: var(--border-color);
+}
+
+/* Filter Section */
+.filter-section {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border-light);
+    gap: 1rem;
 }
 
-.orders-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
+.filter-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
-.orders-count {
+.filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    border: 2px solid var(--border-color);
+    background: white;
+    color: var(--text-secondary);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: translateY(-1px);
+}
+
+.filter-btn.active {
     background: var(--primary-color);
     color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 600;
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-md);
 }
 
-.orders-list {
+.sort-dropdown {
+    position: relative;
+}
+
+.sort-select {
+    padding: 0.6rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    background: white;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.3s ease;
+    min-width: 160px;
+}
+
+.sort-select:focus {
+    border-color: var(--primary-color);
+}
+
+/* Search Results Info */
+.search-results-info {
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, rgba(56, 193, 185, 0.1), rgba(126, 142, 241, 0.1));
+    border-radius: 12px;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid rgba(56, 193, 185, 0.2);
+}
+
+.search-results-info.show {
     display: flex;
-    flex-direction: column;
+}
+
+.clear-search-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.clear-search-btn:hover {
+    background: var(--primary-hover);
+}
+
+/* Orders Container */
+.orders-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    min-height: 200px;
+}
+
+.orders-container.list-view {
+    grid-template-columns: 1fr;
     gap: 1rem;
-    width: 100%;
 }
 
 /* Order Card */
 .order-card {
-    background: #d1d5db;
-    border-radius: 12px;
+    background: white;
+    border: 2px solid var(--border-light);
+    border-radius: 16px;
     padding: 1.5rem;
-    border: none;
     transition: all 0.3s ease;
+    cursor: pointer;
     position: relative;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    width: 100%;
+    overflow: hidden;
 }
 
 .order-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-color);
+}
+
+.order-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.order-card:hover::before {
+    opacity: 1;
 }
 
 .order-card.hidden {
-    display: none !important;
+    display: none;
 }
 
-.order-skill {
+/* Order Card Header */
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.client-info {
     display: flex;
     align-items: center;
-    justify-content: center;
-    background: var(--primary-color);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    min-width: 140px;
-    text-align: center;
-    flex-shrink: 0;
+    gap: 0.75rem;
 }
 
-.order-info {
-    flex: 1;
+.client-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border-light);
 }
 
-.order-date {
-    font-size: 1.1rem;
+.client-details h4 {
+    font-size: 0.9rem;
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 0.25rem;
+    margin: 0 0 0.25rem 0;
 }
 
-.order-client {
+.client-details p {
+    font-size: 0.75rem;
     color: var(--text-secondary);
-    font-size: 0.9rem;
-    margin-bottom: 0.25rem;
+    margin: 0;
+}
+
+.order-status {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    position: relative;
+    overflow: hidden;
+}
+
+.status-new {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.1));
+    color: #16a34a;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.status-urgent {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.1));
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    animation: pulse-urgent 2s infinite;
+}
+
+@keyframes pulse-urgent {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+}
+
+/* Order Content */
+.order-category {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-transform: capitalize;
+}
+
+.order-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .order-description {
-    color: var(--text-primary);
     font-size: 0.9rem;
-    line-height: 1.4;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.order-requirements {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.requirement-tag {
+    background: var(--bg-muted);
+    color: var(--text-secondary);
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+/* Order Footer */
+.order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-light);
+}
+
+.order-budget {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.order-deadline {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.deadline-urgent {
+    color: #dc2626;
+    font-weight: 600;
 }
 
 .order-actions {
     display: flex;
     gap: 0.5rem;
-    align-items: center;
-    flex-shrink: 0;
+    justify-content: center;
+    margin-top: 1rem;
 }
 
-.details-btn {
-    background: var(--secondary-color);
-    color: white;
-    border: none;
+.action-btn {
     padding: 0.6rem 1.2rem;
+    border: none;
     border-radius: 8px;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.details-btn:hover {
-    background: var(--secondary-hover);
+.btn-details {
+    background: var(--primary-color);
+    color: white;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.btn-details:hover {
+    background: var(--primary-hover);
     transform: translateY(-1px);
 }
 
-/* Search Results */
-.search-results-info {
-    margin-bottom: 1rem;
-    padding: 0.75rem 1rem;
-    background: var(--bg-muted);
-    border-radius: 8px;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    display: none;
+/* List View Styles */
+.orders-container.list-view .order-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem 1.5rem;
 }
 
-.search-results-info.show {
-    display: block;
+.orders-container.list-view .order-content {
+    flex: 1;
 }
 
-.clear-search-btn {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 0.25rem 0.75rem;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    cursor: pointer;
-    margin-left: 0.5rem;
+.orders-container.list-view .order-title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
 }
 
-.clear-search-btn:hover {
-    background: var(--primary-hover);
+.orders-container.list-view .order-description {
+    -webkit-line-clamp: 1;
+    margin-bottom: 0.5rem;
+}
+
+.orders-container.list-view .order-requirements {
+    margin-bottom: 0;
+}
+
+.orders-container.list-view .order-actions {
+    margin-top: 0;
 }
 
 /* Empty State */
@@ -264,6 +678,7 @@
     padding: 4rem 2rem;
     color: var(--text-secondary);
     display: none;
+    grid-column: 1 / -1;
 }
 
 .empty-state.show {
@@ -274,10 +689,11 @@
     font-size: 4rem;
     margin-bottom: 1rem;
     opacity: 0.5;
+    color: var(--primary-color);
 }
 
 .empty-state h3 {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: 0.5rem;
@@ -286,35 +702,214 @@
 .empty-state p {
     font-size: 1rem;
     line-height: 1.5;
+    margin-bottom: 2rem;
 }
 
-/* Mobile Responsive */
+/* Loading State */
+.loading-state {
+    display: none;
+    text-align: center;
+    padding: 4rem 2rem;
+    grid-column: 1 / -1;
+}
+
+.loading-state.show {
+    display: block;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--border-color);
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-xl);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.modal-header h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+    background: var(--bg-muted);
+    color: var(--text-primary);
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-top: 1px solid var(--border-light);
+}
+
+.btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: var(--bg-muted);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: var(--border-color);
+    color: var(--text-primary);
+}
+
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
-    .orders-section {
-        padding: 1.5rem;
-        max-width: 100%;
-        margin: 0;
-        width: 100%;
-    }
-
-    .order-card {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-        max-width: 100%;
-        margin: 0;
+    .client-orders-section {
         padding: 1rem;
+        margin: 0;
     }
 
-    .order-actions {
-        align-self: flex-end;
+    .section-header {
         flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .header-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .filter-section {
+        flex-direction: column;
+        gap: 1rem;
         align-items: stretch;
     }
 
-    .details-btn {
+    .filter-buttons {
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+    }
+
+    .orders-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .orders-container.list-view .order-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-title {
+        font-size: 1.5rem;
+    }
+
+    .filter-btn {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.8rem;
+    }
+
+    .order-card {
+        padding: 1rem;
+    }
+
+    .order-title {
+        font-size: 1rem;
+    }
+
+    .order-actions {
         width: 100%;
-        text-align: center;
+    }
+
+    .action-btn {
+        flex: 1;
+        justify-content: center;
     }
 }
 </style>
@@ -322,190 +917,520 @@
 
 @push('scripts')
 <script>
-// Define global variables first
+// Global variables
+let clientOrderData = [];
 let allOrderCards = [];
 let currentSearchQuery = '';
+let currentFilter = 'all';
+let currentSort = 'date';
+let currentView = 'cards';
 
 // Cache DOM elements
-let searchInput, searchBtn, ordersList, emptyState, searchResultsInfo, searchResultsText, ordersCount;
-
-// Search function - defined globally first
-function performSearch(query) {
-    console.log('Performing search for:', query);
-    
-    currentSearchQuery = query.toLowerCase().trim();
-    let hasResults = false;
-    let matchCount = 0;
-
-    if (currentSearchQuery === '') {
-        // Show all orders
-        allOrderCards.forEach(card => {
-            card.classList.remove('hidden');
-        });
-        hasResults = true;
-        hideSearchInfo();
-        hideEmptyState();
-    } else {
-        // Filter orders
-        allOrderCards.forEach(card => {
-            const client = (card.getAttribute('data-client') || '').toLowerCase();
-            const skill = (card.getAttribute('data-skill') || '').toLowerCase();
-            const description = (card.getAttribute('data-description') || '').toLowerCase();
-            const date = (card.getAttribute('data-date') || '').toLowerCase();
-
-            const hasMatch = client.includes(currentSearchQuery) ||
-                          skill.includes(currentSearchQuery) ||
-                          description.includes(currentSearchQuery) ||
-                          date.includes(currentSearchQuery);
-
-            if (hasMatch) {
-                card.classList.remove('hidden');
-                hasResults = true;
-                matchCount++;
-            } else {
-                card.classList.add('hidden');
-            }
-        });
-
-        // Show search results info
-        if (hasResults) {
-            showSearchInfo(matchCount, currentSearchQuery);
-            hideEmptyState();
-        } else {
-            hideSearchInfo();
-            showEmptyState();
-        }
-    }
-
-    updateOrdersCount();
-    console.log('Search completed. Results found:', hasResults);
-}
-
-// Clear search function - defined globally
-function clearSearch() {
-    if (searchInput) {
-        searchInput.value = '';
-    }
-    performSearch('');
-}
-
-// Update orders count
-function updateOrdersCount() {
-    if (!ordersCount) return;
-    const visibleOrders = allOrderCards.filter(card => !card.classList.contains('hidden'));
-    const count = visibleOrders.length;
-    ordersCount.textContent = `${count} Order${count !== 1 ? 's' : ''}`;
-}
-
-// Show search results info
-function showSearchInfo(count, query) {
-    if (searchResultsInfo && searchResultsText) {
-        searchResultsText.textContent = `Found ${count} result${count !== 1 ? 's' : ''} for "${query}"`;
-        searchResultsInfo.classList.add('show');
-    }
-}
-
-// Hide search results info
-function hideSearchInfo() {
-    if (searchResultsInfo) {
-        searchResultsInfo.classList.remove('show');
-    }
-}
-
-// Show empty state
-function showEmptyState() {
-    if (emptyState) {
-        emptyState.classList.add('show');
-    }
-    if (ordersList) {
-        ordersList.style.display = 'none';
-    }
-}
-
-// Hide empty state
-function hideEmptyState() {
-    if (emptyState) {
-        emptyState.classList.remove('show');
-    }
-    if (ordersList) {
-        ordersList.style.display = 'flex';
-    }
-}
+let searchInput, searchBtn, ordersContainer, emptyState, loadingState;
+let searchResultsInfo, searchResultsText, ordersCount;
+let filterButtons, sortSelect, viewToggleButtons;
+let orderModal, modalTitle, modalBody;
 
 // Initialize function
 function initFreelancerDashboard() {
+    console.log('Initializing freelancer dashboard...');
+    
     // Cache DOM elements
+    cacheElements();
+    
+    // Load order data
+    loadOrderData();
+    
+    // Setup event listeners
+    setupEventListeners();
+    
+    // Initial render
+    renderOrders();
+    
+    console.log('Freelancer dashboard initialized successfully');
+}
+
+function cacheElements() {
     searchInput = document.getElementById('globalSearch');
     searchBtn = document.getElementById('searchBtn');
-    ordersList = document.getElementById('ordersList');
+    ordersContainer = document.getElementById('ordersContainer');
     emptyState = document.getElementById('emptyState');
+    loadingState = document.getElementById('loadingState');
     searchResultsInfo = document.getElementById('searchResultsInfo');
     searchResultsText = document.getElementById('searchResultsText');
     ordersCount = document.getElementById('ordersCount');
+    filterButtons = document.querySelectorAll('.filter-btn');
+    sortSelect = document.getElementById('sortSelect');
+    viewToggleButtons = document.querySelectorAll('.toggle-btn');
+    orderModal = document.getElementById('orderModal');
+    modalTitle = document.getElementById('modalTitle');
+    modalBody = document.getElementById('modalBody');
+}
 
-    // Get all order cards
-    allOrderCards = Array.from(document.querySelectorAll('.order-card'));
-    updateOrdersCount();
-    
-    console.log('Found', allOrderCards.length, 'order cards');
+function loadOrderData() {
+    try {
+        const orderScript = document.getElementById('client-order-data');
+        if (orderScript && orderScript.textContent) {
+            clientOrderData = JSON.parse(orderScript.textContent);
+            console.log('Loaded', clientOrderData.length, 'client orders');
+        }
+    } catch (error) {
+        console.error('Failed to parse client order data:', error);
+        clientOrderData = [];
+    }
+}
 
-    // Setup search event listeners
+function setupEventListeners() {
+    // Search functionality
     if (searchInput) {
-        // Real-time search as user types with debounce
         let searchTimeout;
         searchInput.addEventListener('input', function(e) {
             const query = e.target.value;
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
-                console.log('Search input changed:', query);
                 performSearch(query);
-            }, 300); // 300ms debounce
+            }, 300);
         });
 
-        // Enter key search
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                const query = e.target.value;
-                console.log('Search enter key pressed:', query);
                 clearTimeout(searchTimeout);
-                performSearch(query);
+                performSearch(e.target.value);
             }
         });
     }
 
-    // Search button functionality
     if (searchBtn) {
         searchBtn.addEventListener('click', function(e) {
             e.preventDefault();
             if (searchInput) {
-                const query = searchInput.value;
-                console.log('Search button clicked:', query);
-                performSearch(query);
+                performSearch(searchInput.value);
             }
         });
     }
 
-    console.log('Freelancer dashboard initialized successfully');
+    // Filter buttons
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const filter = this.getAttribute('data-filter');
+            setActiveFilter(filter);
+            renderOrders();
+        });
+    });
+
+    // Sort dropdown
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function(e) {
+            currentSort = e.target.value;
+            renderOrders();
+        });
+    }
+
+    // View toggle buttons
+    viewToggleButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const view = this.getAttribute('data-view');
+            setActiveView(view);
+            renderOrders();
+        });
+    });
+
+    // Modal close on overlay click
+    if (orderModal) {
+        orderModal.addEventListener('click', function(e) {
+            if (e.target === orderModal) {
+                closeOrderModal();
+            }
+        });
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && orderModal && orderModal.classList.contains('show')) {
+            closeOrderModal();
+        }
+        
+        // Number keys for quick filtering (1-3)
+        if (e.key >= '1' && e.key <= '3' && !e.target.matches('input, select, textarea')) {
+            e.preventDefault();
+            const filters = ['all', 'new', 'urgent'];
+            const filterIndex = parseInt(e.key) - 1;
+            if (filters[filterIndex]) {
+                setActiveFilter(filters[filterIndex]);
+                renderOrders();
+            }
+        }
+    });
 }
 
-// Make functions available globally for layout compatibility
+function setActiveFilter(filter) {
+    currentFilter = filter;
+    filterButtons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-filter') === filter) {
+            btn.classList.add('active');
+        }
+    });
+}
+
+function setActiveView(view) {
+    currentView = view;
+    viewToggleButtons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-view') === view) {
+            btn.classList.add('active');
+        }
+    });
+    
+    // Update container class
+    if (ordersContainer) {
+        ordersContainer.className = `orders-container ${view === 'list' ? 'list-view' : ''}`;
+    }
+}
+
+function performSearch(query) {
+    currentSearchQuery = query.toLowerCase().trim();
+    renderOrders();
+}
+
+function clearSearch() {
+    if (searchInput) {
+        searchInput.value = '';
+    }
+    currentSearchQuery = '';
+    renderOrders();
+}
+
+function filterOrders() {
+    return clientOrderData.filter(order => {
+        // Filter by search query
+        if (currentSearchQuery) {
+            const searchableText = [
+                order.title,
+                order.client,
+                order.category,
+                order.description,
+                ...order.requirements
+            ].join(' ').toLowerCase();
+            
+            if (!searchableText.includes(currentSearchQuery)) {
+                return false;
+            }
+        }
+        
+        // Filter by status
+        if (currentFilter !== 'all' && order.status !== currentFilter) {
+            return false;
+        }
+        
+        return true;
+    });
+}
+
+function sortOrders(orders) {
+    return [...orders].sort((a, b) => {
+        switch (currentSort) {
+            case 'budget':
+                const budgetA = parseInt(a.budget.split('-')[1]) || 0;
+                const budgetB = parseInt(b.budget.split('-')[1]) || 0;
+                return budgetB - budgetA;
+                
+            case 'deadline':
+                return new Date(a.deadline) - new Date(b.deadline);
+                
+            case 'priority':
+                const priorityOrder = { high: 3, medium: 2, low: 1 };
+                return (priorityOrder[b.priority] || 0) - (priorityOrder[a.priority] || 0);
+                
+            case 'date':
+            default:
+                return new Date(b.date) - new Date(a.date);
+        }
+    });
+}
+
+function formatCurrency(amount) {
+    return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(amount);
+}
+
+function formatBudgetRange(budgetString) {
+    const [min, max] = budgetString.split('-').map(Number);
+    return `${formatCurrency(min)} - ${formatCurrency(max)}`;
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('id-ID', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}
+
+function getTimeUntilDeadline(deadlineString) {
+    const deadline = new Date(deadlineString);
+    const now = new Date();
+    const timeDiff = deadline - now;
+    const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+    
+    if (daysDiff < 0) return 'Overdue';
+    if (daysDiff === 0) return 'Today';
+    if (daysDiff === 1) return 'Tomorrow';
+    if (daysDiff <= 3) return `${daysDiff} days`;
+    return `${daysDiff} days`;
+}
+
+function isDeadlineUrgent(deadlineString) {
+    const deadline = new Date(deadlineString);
+    const now = new Date();
+    const timeDiff = deadline - now;
+    const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+    return daysDiff <= 3;
+}
+
+function createOrderCard(order) {
+    const deadlineText = getTimeUntilDeadline(order.deadline);
+    const isUrgent = isDeadlineUrgent(order.deadline);
+    
+    return `
+        <div class="order-card" 
+             data-order-id="${order.id}"
+             data-status="${order.status}"
+             onclick="showOrderDetails(${order.id})">
+            
+            <div class="order-header">
+                <div class="client-info">
+                    <img src="${order.client_avatar}" alt="${order.client}" class="client-avatar">
+                    <div class="client-details">
+                        <h4>${order.client}</h4>
+                        <p>${formatDate(order.date)}</p>
+                    </div>
+                </div>
+                <div class="order-status status-${order.status}">
+                    ${order.status}
+                </div>
+            </div>
+            
+            <div class="order-content">
+                <div class="order-category">${order.category}</div>
+                <h3 class="order-title">${order.title}</h3>
+                <p class="order-description">${order.description}</p>
+                
+                <div class="order-requirements">
+                    ${order.requirements.map(req => 
+                        `<span class="requirement-tag">${req}</span>`
+                    ).join('')}
+                </div>
+            </div>
+            
+            <div class="order-footer">
+                <div class="order-budget">
+                    ${formatBudgetRange(order.budget)}
+                </div>
+                <div class="order-deadline ${isUrgent ? 'deadline-urgent' : ''}">
+                    <iconify-icon icon="material-symbols:schedule"></iconify-icon>
+                    ${deadlineText}
+                </div>
+            </div>
+            
+            <div class="order-actions" onclick="event.stopPropagation()">
+                <button class="action-btn btn-details" onclick="showOrderDetails(${order.id})">
+                    <iconify-icon icon="material-symbols:info"></iconify-icon>
+                    Details
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+function renderOrders() {
+    if (!ordersContainer) return;
+    
+    // Show loading state
+    showLoadingState();
+    
+    setTimeout(() => {
+        const filteredOrders = filterOrders();
+        const sortedOrders = sortOrders(filteredOrders);
+        
+        // Update orders count
+        updateOrdersCount(sortedOrders.length);
+        
+        // Show search results info
+        updateSearchResultsInfo(sortedOrders.length);
+        
+        // Render orders or empty state
+        if (sortedOrders.length === 0) {
+            showEmptyState();
+        } else {
+            hideEmptyState();
+            hideLoadingState();
+            
+            const ordersHTML = sortedOrders.map(order => createOrderCard(order)).join('');
+            ordersContainer.innerHTML = ordersHTML;
+            
+            // Update cached cards
+            allOrderCards = Array.from(document.querySelectorAll('.order-card'));
+        }
+    }, 500); // Simulate loading time
+}
+
+function updateOrdersCount(count) {
+    if (ordersCount) {
+        const text = count === 1 ? 'Order Available' : 'Orders Available';
+        ordersCount.textContent = `${count} ${text}`;
+    }
+}
+
+function updateSearchResultsInfo(count) {
+    if (currentSearchQuery && searchResultsInfo && searchResultsText) {
+        const text = count === 1 ? 'result' : 'results';
+        searchResultsText.textContent = `Found ${count} ${text} for "${currentSearchQuery}"`;
+        searchResultsInfo.classList.add('show');
+    } else if (searchResultsInfo) {
+        searchResultsInfo.classList.remove('show');
+    }
+}
+
+function showLoadingState() {
+    if (loadingState) {
+        loadingState.classList.add('show');
+    }
+    if (ordersContainer) {
+        ordersContainer.style.display = 'none';
+    }
+    hideEmptyState();
+}
+
+function hideLoadingState() {
+    if (loadingState) {
+        loadingState.classList.remove('show');
+    }
+    if (ordersContainer) {
+        ordersContainer.style.display = 'grid';
+    }
+}
+
+function showEmptyState() {
+    hideLoadingState();
+    if (emptyState) {
+        emptyState.classList.add('show');
+    }
+    if (ordersContainer) {
+        ordersContainer.style.display = 'none';
+    }
+}
+
+function hideEmptyState() {
+    if (emptyState) {
+        emptyState.classList.remove('show');
+    }
+}
+
+function showOrderDetails(orderId) {
+    const order = clientOrderData.find(o => o.id === orderId);
+    if (!order || !orderModal || !modalTitle || !modalBody) return;
+    
+    modalTitle.textContent = order.title;
+    
+    const deadlineText = getTimeUntilDeadline(order.deadline);
+    const isUrgent = isDeadlineUrgent(order.deadline);
+    
+    modalBody.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+            <img src="${order.client_avatar}" alt="${order.client}" 
+                 style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+            <div>
+                <h4 style="margin: 0 0 0.25rem 0; font-size: 1.1rem; font-weight: 600;">${order.client}</h4>
+                <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">${formatDate(order.date)}</p>
+            </div>
+            <div style="margin-left: auto;">
+                <span class="order-status status-${order.status}" style="display: inline-block;">
+                    ${order.status}
+                </span>
+            </div>
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <span class="order-category" style="display: inline-block; margin-bottom: 1rem;">
+                ${order.category}
+            </span>
+            <h3 style="margin: 0 0 1rem 0; font-size: 1.2rem; font-weight: 700; line-height: 1.4;">
+                ${order.title}
+            </h3>
+            <p style="margin: 0 0 1.5rem 0; color: var(--text-secondary); line-height: 1.6;">
+                ${order.description}
+            </p>
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <h5 style="margin: 0 0 0.75rem 0; font-size: 1rem; font-weight: 600;">Requirements:</h5>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                ${order.requirements.map(req => 
+                    `<span class="requirement-tag">${req}</span>`
+                ).join('')}
+            </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 1rem; background: var(--bg-muted); border-radius: 8px;">
+            <div>
+                <strong style="color: var(--text-primary); font-size: 0.9rem;">Budget:</strong>
+                <p style="margin: 0.25rem 0 0 0; font-size: 1.1rem; font-weight: 700; color: var(--primary-color);">
+                    ${formatBudgetRange(order.budget)}
+                </p>
+            </div>
+            <div>
+                <strong style="color: var(--text-primary); font-size: 0.9rem;">Deadline:</strong>
+                <p style="margin: 0.25rem 0 0 0; font-size: 1rem; font-weight: 600; color: ${isUrgent ? '#dc2626' : 'var(--text-secondary)'};">
+                    ${deadlineText} (${formatDate(order.deadline)})
+                </p>
+            </div>
+        </div>
+    `;
+    
+    orderModal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeOrderModal() {
+    if (orderModal) {
+        orderModal.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+}
+
+// Global functions for compatibility
 window.performSearch = performSearch;
 window.clearSearch = clearSearch;
+window.showOrderDetails = showOrderDetails;
+window.closeOrderModal = closeOrderModal;
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
-    initFreelancerDashboard();
-    console.log('Freelancer dashboard loaded');
+    // Small delay to ensure all elements are rendered
+    setTimeout(() => {
+        initFreelancerDashboard();
+    }, 100);
 });
 
-// Global utility functions
-function showOrderDetails(client, skill, date, description) {
-    const message = `Order Details:\n\nClient: ${client}\nSkill: ${skill}\nDate: ${date}\nDescription: ${description}`;
-    alert(message);
-    
-    // In a real application, you would navigate to a detailed order page
-    // window.location.href = `/freelancer/orders/${orderId}`;
-}
+// Handle window resize for responsive behavior
+window.addEventListener('resize', function() {
+    if (window.innerWidth <= 768 && currentView === 'cards') {
+        // Auto-switch to list view on mobile for better UX
+        setActiveView('list');
+        if (ordersContainer) {
+            ordersContainer.className = 'orders-container list-view';
+        }
+    }
+});
 </script>
 @endpush
