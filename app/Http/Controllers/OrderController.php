@@ -14,7 +14,7 @@ class OrderController extends Controller
         $user = Auth::user();
 
     // ambil semua order berdasarkan client lewat relasi offer -> job -> user
-        $orders = Order::whereHas('offer.job', function ($q) use ($user) {
+        $order = Order::whereHas('offer.job', function ($q) use ($user) {
             $q->where('client_id', $user->id);
         })->with(['offer.job.freelancer'])->get();
 
@@ -24,11 +24,12 @@ class OrderController extends Controller
     // mengambil semua order milik freelance dari client
     public function freelancerIndex()
     {
-        $user = Auth::user();
+        $freelancerId = Auth::user();
 
-        $orders = Order::whereHas('offer.job', function ($q) use ($user) {
-            $q->where('freelancer_id', $user->id);
-        })->with(['offer.job.client'])->get();
+        $order = Order::whereHas('offer.job', function ($query) use ($freelancerId) {
+            $query->where('freelancer_id', $freelancerId);
+        })->with(['offer.job', 'client']) // eager load biar ga N+1
+          ->get();
 
         return view('order.freelancer.order', compact('order'));
     }
