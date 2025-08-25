@@ -26,4 +26,10 @@ class Order extends Model
     {
     return $this->amount - $this->amount_paid;
     }
+
+    public function client()
+    {
+    return $this->belongsTo(User::class, 'client_id');
+    }
+
 }
