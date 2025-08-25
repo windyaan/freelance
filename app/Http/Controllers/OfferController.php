@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Offer;
+use App\Models\Job;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -34,10 +35,12 @@ class OfferController extends Controller
             'deadline' => 'required|date|after:today',
         ]);
 
+        $job = Job::findOrFail($request->job_id);
+
         Offer::create([
-            'job_id' => $request->job_id,
+            'job_id' => $job->id,
             'freelancer_id' => Auth::id(),
-            'client_id' => $request->client_id, // harus disesuaikan
+            'client_id' => $job->client_id, // harus disesuaikan
             'title' => $request->title,
             'description' => $request->description,
             'final_price' => $request->final_price,

@@ -44,22 +44,22 @@
             --danger-hover: #dc2626;
             --success-color: #10b981;
             --warning-color: #f59e0b;
-            
+
             --text-primary: #1e293b;
             --text-secondary: #64748b;
             --text-muted: #94a3b8;
-            
+
             --bg-primary: #ffffff;
             --bg-secondary: #f8fafc;
             --bg-muted: #f1f5f9;
-            
+
             --border-color: #e2e8f0;
             --border-light: #f1f5f9;
-            
+
             --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
             --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
             --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.15);
-            
+
             --navbar-height: 70px;
             --sidebar-width: 240px;
         }
@@ -602,11 +602,14 @@
         }
     </style>
 
+    @vite(['resources/css/app.css','resources/js/app.js'])
+
+
     @stack('styles')
 </head>
 <body>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    
+
     @yield('body')
 
     <!-- Global JavaScript -->
@@ -641,7 +644,7 @@
             // Initialize common functionality
             init() {
                 console.log('SkillMatch core initialized');
-                
+
                 // Prevent horizontal scroll
                 document.body.style.overflowX = 'hidden';
                 document.documentElement.style.overflowX = 'hidden';
@@ -679,7 +682,7 @@
                             this.closeSidebar();
                         }
                     }
-                    
+
                     // Ctrl/Cmd + K to focus search
                     if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
                         e.preventDefault();

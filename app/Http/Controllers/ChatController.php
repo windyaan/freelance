@@ -123,7 +123,7 @@ class ChatController extends Controller
         return back()->with('success', 'Pesan berhasil dikirim');
     }
 
-    /*** Tandai 1 pesan sebagai sudah dibaca*/
+    //ini lebih membaca seluruh ruangan chat
     public function markAsRead(Message $message)
     {
         $this->authorize('view', $message->chat);
