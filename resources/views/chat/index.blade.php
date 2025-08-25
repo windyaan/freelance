@@ -701,6 +701,11 @@
 </div>
 @endsection
 
+<script>
+    window.currentChatId = "{{ $activeChat ? $activeChat->id : '' }}";
+    window.userId = "{{ auth()->id() }}";
+</script>
+
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {

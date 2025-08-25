@@ -20,4 +20,10 @@ class Order extends Model
     public function offer() {
         return $this->belongsTo(Offer::class);
     }
+
+    //menghitung sisa yg belum dibayar jika stts dp
+    public function getRemainingAmountAttribute()
+    {
+    return $this->amount - $this->amount_paid;
+    }
 }
