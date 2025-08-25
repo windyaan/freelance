@@ -26,13 +26,6 @@
         <span class="nav-badge">3</span>
     </a>
 
-    <a href="{{ route('freelancer.order') }}" class="nav-item {{ request()->routeIs('freelancer.order*') ? 'active' : '' }}">
-        <div class="nav-icon">
-            <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
-        </div>
-        <span class="nav-text">Order</span>
-    </a>
-
      <a href="{{ route('freelancer.services') }}" class="nav-item {{ request()->routeIs('freelancer.services*') ? 'active' : '' }}">
         <div class="nav-icon">
             <iconify-icon icon="material-symbols:work"></iconify-icon>
@@ -215,6 +208,10 @@
         </div>
         <div class="modal-footer">
             <button class="btn btn-secondary" onclick="closeOrderModal()">Close</button>
+            <button class="btn btn-primary" onclick="applyToOrder()">
+                <iconify-icon icon="material-symbols:send"></iconify-icon>
+                Apply Now
+            </button>
         </div>
     </div>
 </div>
@@ -918,18 +915,18 @@
 @push('scripts')
 <script>
 // Global variables
-let clientOrderData = [];
-let allOrderCards = [];
-let currentSearchQuery = '';
-let currentFilter = 'all';
-let currentSort = 'date';
-let currentView = 'cards';
+var clientOrderData = [];
+var allOrderCards = [];
+var currentSearchQuery = '';
+var currentFilter = 'all';
+var currentSort = 'date';
+var currentView = 'cards';
 
 // Cache DOM elements
-let searchInput, searchBtn, ordersContainer, emptyState, loadingState;
-let searchResultsInfo, searchResultsText, ordersCount;
-let filterButtons, sortSelect, viewToggleButtons;
-let orderModal, modalTitle, modalBody;
+var searchInput, searchBtn, ordersContainer, emptyState, loadingState;
+var searchResultsInfo, searchResultsText, ordersCount;
+var filterButtons, sortSelect, viewToggleButtons;
+var orderModal, modalTitle, modalBody;
 
 // Initialize function
 function initFreelancerDashboard() {
@@ -969,7 +966,7 @@ function cacheElements() {
 
 function loadOrderData() {
     try {
-        const orderScript = document.getElementById('client-order-data');
+        var orderScript = document.getElementById('client-order-data');
         if (orderScript && orderScript.textContent) {
             clientOrderData = JSON.parse(orderScript.textContent);
             console.log('Loaded', clientOrderData.length, 'client orders');
@@ -983,11 +980,11 @@ function loadOrderData() {
 function setupEventListeners() {
     // Search functionality
     if (searchInput) {
-        let searchTimeout;
+        var searchTimeout;
         searchInput.addEventListener('input', function(e) {
-            const query = e.target.value;
+            var query = e.target.value;
             clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
+            searchTimeout = setTimeout(function() {
                 performSearch(query);
             }, 300);
         });
@@ -1011,14 +1008,14 @@ function setupEventListeners() {
     }
 
     // Filter buttons
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
+    for (var i = 0; i < filterButtons.length; i++) {
+        filterButtons[i].addEventListener('click', function(e) {
             e.preventDefault();
-            const filter = this.getAttribute('data-filter');
+            var filter = this.getAttribute('data-filter');
             setActiveFilter(filter);
             renderOrders();
         });
-    });
+    }
 
     // Sort dropdown
     if (sortSelect) {
@@ -1029,14 +1026,14 @@ function setupEventListeners() {
     }
 
     // View toggle buttons
-    viewToggleButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
+    for (var j = 0; j < viewToggleButtons.length; j++) {
+        viewToggleButtons[j].addEventListener('click', function(e) {
             e.preventDefault();
-            const view = this.getAttribute('data-view');
+            var view = this.getAttribute('data-view');
             setActiveView(view);
             renderOrders();
         });
-    });
+    }
 
     // Modal close on overlay click
     if (orderModal) {
@@ -1056,8 +1053,8 @@ function setupEventListeners() {
         // Number keys for quick filtering (1-3)
         if (e.key >= '1' && e.key <= '3' && !e.target.matches('input, select, textarea')) {
             e.preventDefault();
-            const filters = ['all', 'new', 'urgent'];
-            const filterIndex = parseInt(e.key) - 1;
+            var filters = ['all', 'new', 'urgent'];
+            var filterIndex = parseInt(e.key) - 1;
             if (filters[filterIndex]) {
                 setActiveFilter(filters[filterIndex]);
                 renderOrders();
@@ -1068,26 +1065,26 @@ function setupEventListeners() {
 
 function setActiveFilter(filter) {
     currentFilter = filter;
-    filterButtons.forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.getAttribute('data-filter') === filter) {
-            btn.classList.add('active');
+    for (var i = 0; i < filterButtons.length; i++) {
+        filterButtons[i].classList.remove('active');
+        if (filterButtons[i].getAttribute('data-filter') === filter) {
+            filterButtons[i].classList.add('active');
         }
-    });
+    }
 }
 
 function setActiveView(view) {
     currentView = view;
-    viewToggleButtons.forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.getAttribute('data-view') === view) {
-            btn.classList.add('active');
+    for (var i = 0; i < viewToggleButtons.length; i++) {
+        viewToggleButtons[i].classList.remove('active');
+        if (viewToggleButtons[i].getAttribute('data-view') === view) {
+            viewToggleButtons[i].classList.add('active');
         }
-    });
+    }
     
     // Update container class
     if (ordersContainer) {
-        ordersContainer.className = `orders-container ${view === 'list' ? 'list-view' : ''}`;
+        ordersContainer.className = 'orders-container' + (view === 'list' ? ' list-view' : '');
     }
 }
 
@@ -1105,44 +1102,54 @@ function clearSearch() {
 }
 
 function filterOrders() {
-    return clientOrderData.filter(order => {
+    var filteredOrders = [];
+    
+    for (var i = 0; i < clientOrderData.length; i++) {
+        var order = clientOrderData[i];
+        var shouldInclude = true;
+        
         // Filter by search query
         if (currentSearchQuery) {
-            const searchableText = [
+            var searchableText = [
                 order.title,
                 order.client,
                 order.category,
-                order.description,
-                ...order.requirements
-            ].join(' ').toLowerCase();
+                order.description
+            ].concat(order.requirements).join(' ').toLowerCase();
             
-            if (!searchableText.includes(currentSearchQuery)) {
-                return false;
+            if (searchableText.indexOf(currentSearchQuery) === -1) {
+                shouldInclude = false;
             }
         }
         
         // Filter by status
         if (currentFilter !== 'all' && order.status !== currentFilter) {
-            return false;
+            shouldInclude = false;
         }
         
-        return true;
-    });
+        if (shouldInclude) {
+            filteredOrders.push(order);
+        }
+    }
+    
+    return filteredOrders;
 }
 
 function sortOrders(orders) {
-    return [...orders].sort((a, b) => {
+    var sortedOrders = orders.slice(); // Create copy
+    
+    sortedOrders.sort(function(a, b) {
         switch (currentSort) {
             case 'budget':
-                const budgetA = parseInt(a.budget.split('-')[1]) || 0;
-                const budgetB = parseInt(b.budget.split('-')[1]) || 0;
+                var budgetA = parseInt(a.budget.split('-')[1]) || 0;
+                var budgetB = parseInt(b.budget.split('-')[1]) || 0;
                 return budgetB - budgetA;
                 
             case 'deadline':
                 return new Date(a.deadline) - new Date(b.deadline);
                 
             case 'priority':
-                const priorityOrder = { high: 3, medium: 2, low: 1 };
+                var priorityOrder = { high: 3, medium: 2, low: 1 };
                 return (priorityOrder[b.priority] || 0) - (priorityOrder[a.priority] || 0);
                 
             case 'date':
@@ -1150,6 +1157,8 @@ function sortOrders(orders) {
                 return new Date(b.date) - new Date(a.date);
         }
     });
+    
+    return sortedOrders;
 }
 
 function formatCurrency(amount) {
@@ -1162,12 +1171,14 @@ function formatCurrency(amount) {
 }
 
 function formatBudgetRange(budgetString) {
-    const [min, max] = budgetString.split('-').map(Number);
-    return `${formatCurrency(min)} - ${formatCurrency(max)}`;
+    var parts = budgetString.split('-');
+    var min = parseInt(parts[0]);
+    var max = parseInt(parts[1]);
+    return formatCurrency(min) + ' - ' + formatCurrency(max);
 }
 
 function formatDate(dateString) {
-    const date = new Date(dateString);
+    var date = new Date(dateString);
     return date.toLocaleDateString('id-ID', {
         weekday: 'long',
         year: 'numeric',
@@ -1177,79 +1188,73 @@ function formatDate(dateString) {
 }
 
 function getTimeUntilDeadline(deadlineString) {
-    const deadline = new Date(deadlineString);
-    const now = new Date();
-    const timeDiff = deadline - now;
-    const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+    var deadline = new Date(deadlineString);
+    var now = new Date();
+    var timeDiff = deadline - now;
+    var daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
     
     if (daysDiff < 0) return 'Overdue';
     if (daysDiff === 0) return 'Today';
     if (daysDiff === 1) return 'Tomorrow';
-    if (daysDiff <= 3) return `${daysDiff} days`;
-    return `${daysDiff} days`;
+    if (daysDiff <= 3) return daysDiff + ' days';
+    return daysDiff + ' days';
 }
 
 function isDeadlineUrgent(deadlineString) {
-    const deadline = new Date(deadlineString);
-    const now = new Date();
-    const timeDiff = deadline - now;
-    const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+    var deadline = new Date(deadlineString);
+    var now = new Date();
+    var timeDiff = deadline - now;
+    var daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
     return daysDiff <= 3;
 }
 
+// Updated createOrderCard function with Details button
 function createOrderCard(order) {
-    const deadlineText = getTimeUntilDeadline(order.deadline);
-    const isUrgent = isDeadlineUrgent(order.deadline);
+    var deadlineText = getTimeUntilDeadline(order.deadline);
+    var isUrgent = isDeadlineUrgent(order.deadline);
     
-    return `
-        <div class="order-card" 
-             data-order-id="${order.id}"
-             data-status="${order.status}"
-             onclick="showOrderDetails(${order.id})">
-            
-            <div class="order-header">
-                <div class="client-info">
-                    <img src="${order.client_avatar}" alt="${order.client}" class="client-avatar">
-                    <div class="client-details">
-                        <h4>${order.client}</h4>
-                        <p>${formatDate(order.date)}</p>
-                    </div>
-                </div>
-                <div class="order-status status-${order.status}">
-                    ${order.status}
-                </div>
-            </div>
-            
-            <div class="order-content">
-                <div class="order-category">${order.category}</div>
-                <h3 class="order-title">${order.title}</h3>
-                <p class="order-description">${order.description}</p>
-                
-                <div class="order-requirements">
-                    ${order.requirements.map(req => 
-                        `<span class="requirement-tag">${req}</span>`
-                    ).join('')}
-                </div>
-            </div>
-            
-            <div class="order-footer">
-                <div class="order-budget">
-                    ${formatBudgetRange(order.budget)}
-                </div>
-                <div class="order-deadline ${isUrgent ? 'deadline-urgent' : ''}">
-                    <iconify-icon icon="material-symbols:schedule"></iconify-icon>
-                    ${deadlineText}
-                </div>
-            </div>
-            
-            <div class="order-actions" onclick="event.stopPropagation()">
-                <button class="action-btn btn-details" onclick="showOrderDetails(${order.id})">
-                    <iconify-icon icon="material-symbols:info"></iconify-icon>
-                    Details
-                </button>
-            </div>
-        </div>
-    `;
+    var requirementTags = '';
+    for (var i = 0; i < order.requirements.length; i++) {
+        requirementTags += '<span class="requirement-tag">' + order.requirements[i] + '</span>';
+    }
+    
+    return '<div class="order-card" data-order-id="' + order.id + '" data-status="' + order.status + '" onclick="showOrderDetails(' + order.id + ')">' +
+        '<div class="order-header">' +
+            '<div class="client-info">' +
+                '<img src="' + order.client_avatar + '" alt="' + order.client + '" class="client-avatar">' +
+                '<div class="client-details">' +
+                    '<h4>' + order.client + '</h4>' +
+                    '<p>' + formatDate(order.date) + '</p>' +
+                '</div>' +
+            '</div>' +
+            '<div class="order-status status-' + order.status + '">' +
+                order.status +
+            '</div>' +
+        '</div>' +
+        '<div class="order-content">' +
+            '<div class="order-category">' + order.category + '</div>' +
+            '<h3 class="order-title">' + order.title + '</h3>' +
+            '<p class="order-description">' + order.description + '</p>' +
+            '<div class="order-requirements">' +
+                requirementTags +
+            '</div>' +
+        '</div>' +
+        '<div class="order-footer">' +
+            '<div class="order-budget">' +
+                formatBudgetRange(order.budget) +
+            '</div>' +
+            '<div class="order-deadline' + (isUrgent ? ' deadline-urgent' : '') + '">' +
+                '<iconify-icon icon="material-symbols:schedule"></iconify-icon>' +
+                deadlineText +
+            '</div>' +
+        '</div>' +
+        '<div class="order-actions" onclick="event.stopPropagation()">' +
+            '<button class="action-btn btn-details" onclick="showOrderDetails(' + order.id + ')">' +
+                '<iconify-icon icon="material-symbols:info"></iconify-icon>' +
+                'Details' +
+            '</button>' +
+        '</div>' +
+    '</div>';
 }
 
 function renderOrders() {
@@ -1258,9 +1263,9 @@ function renderOrders() {
     // Show loading state
     showLoadingState();
     
-    setTimeout(() => {
-        const filteredOrders = filterOrders();
-        const sortedOrders = sortOrders(filteredOrders);
+    setTimeout(function() {
+        var filteredOrders = filterOrders();
+        var sortedOrders = sortOrders(filteredOrders);
         
         // Update orders count
         updateOrdersCount(sortedOrders.length);
@@ -1275,7 +1280,10 @@ function renderOrders() {
             hideEmptyState();
             hideLoadingState();
             
-            const ordersHTML = sortedOrders.map(order => createOrderCard(order)).join('');
+            var ordersHTML = '';
+            for (var i = 0; i < sortedOrders.length; i++) {
+                ordersHTML += createOrderCard(sortedOrders[i]);
+            }
             ordersContainer.innerHTML = ordersHTML;
             
             // Update cached cards
@@ -1286,15 +1294,15 @@ function renderOrders() {
 
 function updateOrdersCount(count) {
     if (ordersCount) {
-        const text = count === 1 ? 'Order Available' : 'Orders Available';
-        ordersCount.textContent = `${count} ${text}`;
+        var text = count === 1 ? 'Order Available' : 'Orders Available';
+        ordersCount.textContent = count + ' ' + text;
     }
 }
 
 function updateSearchResultsInfo(count) {
     if (currentSearchQuery && searchResultsInfo && searchResultsText) {
-        const text = count === 1 ? 'result' : 'results';
-        searchResultsText.textContent = `Found ${count} ${text} for "${currentSearchQuery}"`;
+        var text = count === 1 ? 'result' : 'results';
+        searchResultsText.textContent = 'Found ' + count + ' ' + text + ' for "' + currentSearchQuery + '"';
         searchResultsInfo.classList.add('show');
     } else if (searchResultsInfo) {
         searchResultsInfo.classList.remove('show');
@@ -1336,69 +1344,98 @@ function hideEmptyState() {
     }
 }
 
+// Updated showOrderDetails function to show modal with order details
 function showOrderDetails(orderId) {
-    const order = clientOrderData.find(o => o.id === orderId);
-    if (!order || !orderModal || !modalTitle || !modalBody) return;
+    var order = clientOrderData.find(function(o) { return o.id === orderId; });
+    if (!order) return;
     
-    modalTitle.textContent = order.title;
+    // Show loading indication
+    var button = null;
+    if (window.event && window.event.target) {
+        button = window.event.target.closest('.btn-details');
+    }
     
-    const deadlineText = getTimeUntilDeadline(order.deadline);
-    const isUrgent = isDeadlineUrgent(order.deadline);
-    
-    modalBody.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-            <img src="${order.client_avatar}" alt="${order.client}" 
-                 style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
-            <div>
-                <h4 style="margin: 0 0 0.25rem 0; font-size: 1.1rem; font-weight: 600;">${order.client}</h4>
-                <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">${formatDate(order.date)}</p>
-            </div>
-            <div style="margin-left: auto;">
-                <span class="order-status status-${order.status}" style="display: inline-block;">
-                    ${order.status}
-                </span>
-            </div>
-        </div>
+    if (button) {
+        var originalContent = button.innerHTML;
+        button.innerHTML = '<div style="display: flex; align-items: center; gap: 0.5rem;">' +
+            '<div style="width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>' +
+            'Loading...' +
+            '</div>';
+        button.disabled = true;
         
-        <div style="margin-bottom: 1.5rem;">
-            <span class="order-category" style="display: inline-block; margin-bottom: 1rem;">
-                ${order.category}
-            </span>
-            <h3 style="margin: 0 0 1rem 0; font-size: 1.2rem; font-weight: 700; line-height: 1.4;">
-                ${order.title}
-            </h3>
-            <p style="margin: 0 0 1.5rem 0; color: var(--text-secondary); line-height: 1.6;">
-                ${order.description}
-            </p>
-        </div>
-        
-        <div style="margin-bottom: 1.5rem;">
-            <h5 style="margin: 0 0 0.75rem 0; font-size: 1rem; font-weight: 600;">Requirements:</h5>
-            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-                ${order.requirements.map(req => 
-                    `<span class="requirement-tag">${req}</span>`
-                ).join('')}
-            </div>
-        </div>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 1rem; background: var(--bg-muted); border-radius: 8px;">
-            <div>
-                <strong style="color: var(--text-primary); font-size: 0.9rem;">Budget:</strong>
-                <p style="margin: 0.25rem 0 0 0; font-size: 1.1rem; font-weight: 700; color: var(--primary-color);">
-                    ${formatBudgetRange(order.budget)}
-                </p>
-            </div>
-            <div>
-                <strong style="color: var(--text-primary); font-size: 0.9rem;">Deadline:</strong>
-                <p style="margin: 0.25rem 0 0 0; font-size: 1rem; font-weight: 600; color: ${isUrgent ? '#dc2626' : 'var(--text-secondary)'};">
-                    ${deadlineText} (${formatDate(order.deadline)})
-                </p>
-            </div>
-        </div>
-    `;
+        // Restore button after loading modal content
+        setTimeout(function() {
+            button.innerHTML = originalContent;
+            button.disabled = false;
+        }, 800);
+    }
     
-    orderModal.classList.add('show');
-    document.body.style.overflow = 'hidden';
+    // Build modal content
+    var requirementTags = '';
+    for (var i = 0; i < order.requirements.length; i++) {
+        requirementTags += '<span class="requirement-tag" style="margin-right: 0.5rem; margin-bottom: 0.5rem;">' + order.requirements[i] + '</span>';
+    }
+    
+    var modalContent = 
+        '<div class="modal-order-header" style="margin-bottom: 1.5rem;">' +
+            '<div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">' +
+                '<img src="' + order.client_avatar + '" alt="' + order.client + '" style="width: 60px; height: 60px; border-radius: 50%; border: 3px solid var(--primary-color);">' +
+                '<div>' +
+                    '<h4 style="font-size: 1.2rem; margin: 0 0 0.25rem 0; color: var(--text-primary);">' + order.client + '</h4>' +
+                    '<p style="margin: 0; color: var(--text-secondary);">Posted on ' + formatDate(order.date) + '</p>' +
+                    '<span class="order-status status-' + order.status + '" style="display: inline-block; margin-top: 0.5rem;">' + order.status + '</span>' +
+                '</div>' +
+            '</div>' +
+            '<div class="order-category" style="margin-bottom: 1rem;">' + order.category + '</div>' +
+        '</div>' +
+        
+        '<div class="modal-order-content">' +
+            '<h3 style="font-size: 1.3rem; color: var(--text-primary); margin-bottom: 1rem;">' + order.title + '</h3>' +
+            '<div style="margin-bottom: 1.5rem;">' +
+                '<h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Project Description</h4>' +
+                '<p style="line-height: 1.6; color: var(--text-secondary);">' + order.description + '</p>' +
+            '</div>' +
+            
+            '<div style="margin-bottom: 1.5rem;">' +
+                '<h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Required Skills</h4>' +
+                '<div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">' + requirementTags + '</div>' +
+            '</div>' +
+            
+            '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">' +
+                '<div>' +
+                    '<h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Budget Range</h4>' +
+                    '<p style="font-size: 1.2rem; font-weight: 700; color: var(--primary-color); margin: 0;">' + formatBudgetRange(order.budget) + '</p>' +
+                '</div>' +
+                '<div>' +
+                    '<h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Deadline</h4>' +
+                    '<p style="font-size: 1rem; color: ' + (isDeadlineUrgent(order.deadline) ? '#dc2626' : 'var(--text-secondary)') + '; margin: 0; font-weight: 600;">' +
+                        formatDate(order.deadline) + ' (' + getTimeUntilDeadline(order.deadline) + ')' +
+                    '</p>' +
+                '</div>' +
+            '</div>' +
+            
+            '<div style="background: var(--bg-muted); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">' +
+                '<h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Project Priority</h4>' +
+                '<p style="margin: 0; text-transform: capitalize; font-weight: 600; color: ' + (order.priority === 'high' ? '#dc2626' : order.priority === 'medium' ? '#f59e0b' : '#10b981') + ';">' + order.priority + '</p>' +
+            '</div>' +
+        '</div>';
+    
+    // Set modal content
+    if (modalTitle) {
+        modalTitle.textContent = 'Order Details';
+    }
+    
+    if (modalBody) {
+        modalBody.innerHTML = modalContent;
+    }
+    
+    // Show modal with animation
+    setTimeout(function() {
+        if (orderModal) {
+            orderModal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+    }, 300);
 }
 
 function closeOrderModal() {
@@ -1408,16 +1445,23 @@ function closeOrderModal() {
     }
 }
 
+function applyToOrder() {
+    // This function can be implemented to handle order applications
+    alert('Apply to Order functionality will be implemented here');
+    closeOrderModal();
+}
+
 // Global functions for compatibility
 window.performSearch = performSearch;
 window.clearSearch = clearSearch;
 window.showOrderDetails = showOrderDetails;
 window.closeOrderModal = closeOrderModal;
+window.applyToOrder = applyToOrder;
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     // Small delay to ensure all elements are rendered
-    setTimeout(() => {
+    setTimeout(function() {
         initFreelancerDashboard();
     }, 100);
 });

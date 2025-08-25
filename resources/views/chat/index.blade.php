@@ -20,12 +20,15 @@
         <span class="nav-badge">3</span>
     </a>
 
-    <a href="{{ route(auth()->user()->role . '.order') }}" class="nav-item {{ request()->routeIs(auth()->user()->role . '.order*') ? 'active' : '' }}">
-        <div class="nav-icon">
-            <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
-        </div>
-        <span class="nav-text">Order</span>
-    </a>
+    {{-- Hide Order navigation for freelancers, only show for clients --}}
+    @if(auth()->user()->role !== 'freelancer')
+        <a href="{{ route(auth()->user()->role . '.order') }}" class="nav-item {{ request()->routeIs(auth()->user()->role . '.order*') ? 'active' : '' }}">
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
+            </div>
+            <span class="nav-text">Order</span>
+        </a>
+    @endif
 
     {{-- Only show Service navigation for freelancers --}}
     @if(auth()->user()->role === 'freelancer')
