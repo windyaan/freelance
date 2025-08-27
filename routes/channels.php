@@ -14,10 +14,14 @@ use App\Models\Chat;
 //     return in_array($user->id, [$chat->client_id, $chat->freelancer_id]);
 // });
 
-Broadcast::channel('chat.{chatId}', function ($user, $chatId) {
-    return Chat::where('id', $chatId)
-            ->where(function ($q) use ($user) {
-                $q->where('client_id', $user->id)
-                  ->orWhere('freelancer_id', $user->id);
-            })->exists();
+// Broadcast::channel('chat.{chatId}', function ($user, $chatId) {
+//     return Chat::where('id', $chatId)
+//             ->where(function ($q) use ($user) {
+//                 $q->where('client_id', $user->id)
+//                   ->orWhere('freelancer_id', $user->id);
+//             })->exists();
+// });
+
+Broadcast::channel('chat', function () {
+return true;
 });

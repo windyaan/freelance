@@ -728,7 +728,7 @@ body {
         </a> --}}
 
         <a href="{{ route('chat.start', $job->id) }}" class="service-chat-btn">
-    <iconify-icon icon="material-symbols:chat"></iconify-icon>
+                        <iconify-icon icon="material-symbols:chat"></iconify-icon>
     Chat
 </a>
 

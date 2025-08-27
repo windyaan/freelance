@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\Message;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -28,7 +29,8 @@ class MessageSent implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-    return new PrivateChannel('chat.' . $this->message->chat_id);
+    return new Channel('chat');
+    // return new PrivateChannel('chat.' . $this->message->chat_id);
     }
 
     //nama event yg diterima frontend

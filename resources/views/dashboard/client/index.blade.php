@@ -149,12 +149,12 @@
         <iconify-icon icon="material-symbols:tune"></iconify-icon>
         Filter
     </div>
-    
+
     <div class="filter-button" id="priceBtn">
         <iconify-icon icon="material-symbols:payments"></iconify-icon>
         Price
         <span class="filter-arrow">▼</span>
-        
+
         <!-- Price Filter Dropdown -->
         <div class="price-dropdown" id="priceDropdown">
             <div class="price-inputs">

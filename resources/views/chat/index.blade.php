@@ -551,12 +551,47 @@
 </div>
 @endsection
 
+@push('scripts')
+<script type="module">
+    Echo.channel('example')
+        .listen("Example", (e) => {
+            console.log("Pesan baru:", e);
+            // tampilkan pesan ke UI
+        });
+    // console.log('test');
+
+    // window.currentChatId = @json($chat->id);
+
+    // if (window.currentChatId && window.Echo) {
+    // } else {
+    //     console.error("Echo belum siap atau chatId tidak ada");
+    // }
+</script>
+@endpush
+
+
+{{-- @push('scripts')
+<script type="module">
+       console.log('test');
+
+    window.currentChatId = @json($chat->id);
+
+    if (window.currentChatId && window.Echo) {
+        Echo.private(`chat.${window.currentChatId}`)
+            .listen('MessageSent', (e) => {
+                console.log("Pesan baru:", e);
+                // tampilkan pesan ke UI
+            });
+    } else {
+        console.error("Echo belum siap atau chatId tidak ada");
+    }
+</script>
 <script>
     window.currentChatId = "{{ $activeChat ? $activeChat->id : '' }}";
     window.userId = "{{ auth()->id() }}";
 </script>
 
-@push('scripts')
+
 <script>
 // Chat functionality
 document.addEventListener('DOMContentLoaded', function() {
@@ -778,4 +813,4 @@ if (messageInput) {
     console.log('Chat page initialized successfully');
 });
 </script>
-@endpush
+@endpush --}}

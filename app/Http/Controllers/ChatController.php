@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Example;
 use App\Models\Chat;
 use App\Models\Message;
 use Illuminate\Http\Request;
@@ -123,7 +124,9 @@ class ChatController extends Controller
         ]);
 
         // Broadcast ke channel private chat.{chat_id}
-        broadcast(new MessageSent($message))->toOthers();
+        // broadcast(new MessageSent($message))->toOthers();
+
+        // event(new Example("asjhdasdkas"));
 
         return back()->with('success', 'Pesan berhasil dikirim');
     }
