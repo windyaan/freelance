@@ -124,7 +124,7 @@ class ChatController extends Controller
         ]);
 
         // Broadcast ke channel private chat.{chat_id}
-        // broadcast(new MessageSent($message))->toOthers();
+        broadcast(new MessageSent($message))->toOthers();
 
         // event(new Example("asjhdasdkas"));
 
