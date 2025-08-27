@@ -41,13 +41,7 @@
     @endif
 @endsection
 
-@section('navbar-center')
-    <div class="search-container">
-        <iconify-icon icon="material-symbols:search" class="search-icon"></iconify-icon>
-        <input type="text" class="search-input" placeholder="Search conversations..." id="globalSearch">
-        <button class="search-btn" id="searchBtn">Search</button>
-    </div>
-@endsection
+
 
 @push('styles')
 <style>

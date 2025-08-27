@@ -6,7 +6,7 @@
 
 @section('navbar-center')
     @component('components.search')
-        @slot('placeholder', 'Search orders, clients, skills...')
+      
     @endcomponent
 @endsection
 

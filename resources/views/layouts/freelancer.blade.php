@@ -6,7 +6,7 @@
 
 @section('navbar-center')
     @component('components.search')
-        @slot('placeholder', 'Search orders, clients...')
+       
     @endcomponent
 @endsection
 
@@ -28,12 +28,7 @@
         @endif
     </a>
     
-    <a href="{{ route('freelancer.order') ?? '#' }}" class="nav-item {{ request()->routeIs('freelancer.order*') ? 'active' : '' }}">
-        <div class="nav-icon">
-            <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
-        </div>
-        <span class="nav-text">Orders</span>
-    </a>
+   
     
     <a href="{{ route('freelancer.services') ?? '#' }}" class="nav-item {{ request()->routeIs('freelancer.services*') ? 'active' : '' }}">
         <div class="nav-icon">

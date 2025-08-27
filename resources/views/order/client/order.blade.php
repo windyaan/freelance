@@ -3,13 +3,6 @@
 @section('page-title', 'Order')
 @section('dashboard-route', route('client.dashboard'))
 
-@section('navbar-center')
-<div class="search-container">
-    <iconify-icon icon="material-symbols:search" class="search-icon"></iconify-icon>
-    <input type="text" class="search-input" placeholder="Search orders..." id="globalSearch">
-    <button class="search-btn" id="searchBtn">Search</button>
-</div>
-@endsection
 
 @section('navigation')
 <a href="{{ route('client.dashboard') }}" class="nav-item {{ request()->routeIs('client.dashboard') ? 'active' : '' }}">

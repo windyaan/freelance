@@ -126,16 +126,31 @@ Route::middleware('auth')->group(function () {
 
 });
 
-    // Admin routes
+// Admin routes
+Route::middleware('auth')->group(function () {
     Route::get('/admin-dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/export-users-profit', [AdminController::class, 'exportUsersProfitPdf'])->name('admin.exportUsersProfitPdf');
 
     // Search route for admin dashboard
-    Route::get('/search', [AdminController::class, 'search'])->name('search')->middleware('auth');
+    Route::get('/search', [AdminController::class, 'search'])->name('search');
 
     //route admin kelola laporan
     Route::get('/admin/reports', [AdminReportController::class, 'index'])->name('admin.reports.index');
     Route::get('/admin/reports/{id}', [AdminReportController::class, 'show'])->name('admin.reports.show');
     Route::post('/admin/reports/{id}/ban', [AdminReportController::class, 'banFreelancer'])->name('admin.reports.ban');
+
+    // ====== TAMBAHAN ROUTE UNTUK ADMIN ORDERS ======
+    Route::prefix('admin')->name('admin.')->group(function () {
+        // Admin orders management routes
+        Route::get('/orders', [OrderController::class, 'adminIndex'])->name('orders.index');
+        Route::get('/orders/{order}', [OrderController::class, 'adminShow'])->name('orders.show');
+        Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+        Route::delete('/orders/{order}', [OrderController::class, 'adminDestroy'])->name('orders.destroy');
+        
+        // Admin orders export
+        Route::get('/orders/export/pdf', [OrderController::class, 'exportPdf'])->name('orders.export.pdf');
+        Route::get('/orders/export/excel', [OrderController::class, 'exportExcel'])->name('orders.export.excel');
+    });
+});
 
 require __DIR__.'/auth.php';
