@@ -40,6 +40,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [ChatController::class, 'store'])->name('store');
         Route::post('/{chat}/messages', [ChatController::class, 'storeMessage'])->name('message.store');
         Route::patch('/messages/{message}/read', [ChatController::class, 'markAsRead'])->name('message.read');
+
+        //tambahan
+        Route::get('/chat/{chat}', [ChatController::class, 'show'])->name('chat.show');
+         // Tambahkan route POST untuk mengirim pesan
+        Route::post('/chat/{chat}/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+        Route::get('/chat/start/{job}', [JobController::class, 'startChat'])->name('chat.start');
+
+
     });
 
     // Profile routes - TANPA PARAMETER (untuk user yang sedang login)

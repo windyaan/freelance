@@ -55,7 +55,7 @@ class ChatController extends Controller
      */
     public function show(Chat $chat)
     {
-        $this->authorize('view', $chat); // cek policy apakah user boleh akses chat ini
+        // $this->authorize('view', $chat); // cek policy apakah user boleh akses chat ini
 
         // Ambil semua pesan dari lawan yang belum dibaca
         // $unreadMessages = $chat->messages()
@@ -75,8 +75,13 @@ class ChatController extends Controller
                          ->orderBy('created_at')
                          ->get();
 
-        return view('chat.show', compact('chat', 'messages'));
+         // Tentukan lawan chat (bukan user login)
+        $user = Auth::id() == $chat->client_id ? $chat->freelancer : $chat->client;
+
+        return view('chat.show', compact('chat', 'messages','user'));
     }
+
+
 
     /**
      * Buat chat baru (atau ambil jika sudah ada)
@@ -122,6 +127,40 @@ class ChatController extends Controller
 
         return back()->with('success', 'Pesan berhasil dikirim');
     }
+
+    /**
+ * Kirim pesan via AJAX (realtime)
+ */
+public function sendMessage(Request $request, Chat $chat)
+{
+    $this->authorize('sendMessage', $chat);
+
+    $request->validate([
+        'content' => 'required|string|max:2000',
+    ]);
+
+    // Simpan pesan
+    $message = Message::create([
+        'chat_id'   => $chat->id,
+        'sender_id' => Auth::id(),
+        'content'   => $request->input('content'),
+    ]);
+
+    // Broadcast ke channel chat.{id}
+    broadcast(new MessageSent($message))->toOthers();
+
+    // ✅ return JSON supaya bisa ditangani JS di frontend
+    return response()->json([
+        'success' => true,
+        'message' => [
+            'id'        => $message->id,
+            'chat_id'   => $message->chat_id,
+            'sender_id' => $message->sender_id,
+            'content'   => $message->content,
+            'created_at'=> $message->created_at->toISOString(),
+        ]
+    ]);
+}
 
     //ini lebih membaca seluruh ruangan chat
     public function markAsRead(Message $message)

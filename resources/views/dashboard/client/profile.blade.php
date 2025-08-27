@@ -356,7 +356,7 @@ body {
 }
 
 /* Fallback untuk gambar yang tidak load */
-.profile-image[src=""], 
+.profile-image[src=""],
 .profile-image:not([src]) {
     background: #f3f4f6 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%239ca3af' d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E") center/60% no-repeat;
 }
@@ -575,36 +575,36 @@ body {
         transform: translateX(-100%);
         transition: transform 0.3s ease;
     }
-    
+
     .sidebar.show {
         transform: translateX(0);
     }
-    
+
     .sidebar-toggle {
         display: flex !important;
     }
-    
+
     .main-content {
         margin-left: 0;
         max-width: 100vw;
         padding: 1.5rem;
     }
-    
+
     .profile-container {
         flex-direction: column;
         gap: 1rem;
     }
-    
+
     .profile-right {
         width: 100%;
         order: -1;
         margin-bottom: 1rem;
     }
-    
+
     .profile-picture-card {
         position: static;
     }
-    
+
     .profile-image {
         width: 200px;
         height: 250px;
@@ -615,25 +615,25 @@ body {
     .navbar-title {
         display: none;
     }
-    
+
     .profile-info-card,
     .profile-picture-card {
         padding: 1.5rem;
     }
-    
+
     .main-content {
         padding: 1rem;
     }
-    
+
     .profile-image {
         width: 150px;
         height: 200px;
     }
-    
+
     .profile-name-large {
         font-size: 1.5rem;
     }
-    
+
     .modal-content {
         padding: 1.5rem;
         width: 95%;
@@ -644,16 +644,16 @@ body {
     .navbar-brand span:last-child {
         display: none;
     }
-    
+
     .main-content {
         padding: 0.8rem;
     }
-    
+
     .profile-image {
         width: 120px;
         height: 160px;
     }
-    
+
     .modal-buttons {
         flex-direction: column;
     }
@@ -694,11 +694,11 @@ body {
     <div class="navbar-right">
         <!-- Profile Button -->
         <div class="navbar-profile" onclick="goToProfile()">
-            <img src="{{ Auth::user()->profile_image ?? 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face' }}" 
+            <img src="{{ Auth::user()->profile_image ?? 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face' }}"
                  alt="Profile"
                  onerror="this.src='https://via.placeholder.com/40x40/f3f4f6/9ca3af?text=👤'">
         </div>
-        
+
         <!-- Logout Form -->
         <form method="POST" action="{{ route('logout') }}" class="navbar-logout-form">
             @csrf
@@ -719,13 +719,19 @@ body {
             </div>
             <span class="nav-text">Dashboard</span>
         </a>
-        <a href="#" class="nav-item">
+        {{-- <a href="#" class="nav-item">
             <div class="nav-icon">
                 <iconify-icon icon="material-symbols:chat"></iconify-icon>
             </div>
             <span class="nav-text">Chat</span>
             <span class="nav-badge">3</span>
-        </a>
+        </a> --}}
+
+        <a href="{{ route('chat.start', $job->id) }}" class="service-chat-btn">
+    <iconify-icon icon="material-symbols:chat"></iconify-icon>
+    Chat
+</a>
+
         <a href="#" class="nav-item">
             <div class="nav-icon">
                 <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
@@ -773,14 +779,14 @@ body {
             <div class="profile-info-card">
                 <div class="profile-header">
                     <h1 class="profile-name-large" id="profileName">{{ Auth::user()->name }}</h1>
-                    
+
                     <div class="profile-contact-info">
                         <div class="contact-item">
                             <strong>EMAIL :</strong> <span id="profileEmail">{{ Auth::user()->email }}</span>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="profile-bio-section">
                     <p id="profileBio">{{ Auth::user()->bio ?? "I am a publishing professional at Gramedia Pustaka, responsible for managing the editing and design process throughout book production. With experience in ensuring visual and content quality, I focus on detail, aesthetics, and design consistency to create engaging and professional publications. My expertise includes coordinating with editorial teams, designers, and printers to deliver works that meet the highest publishing standards." }}</p>
                 </div>
@@ -795,9 +801,9 @@ body {
         <!-- Right Side - Profile Picture -->
         <div class="profile-right">
             <div class="profile-picture-card">
-                <img src="{{ Auth::user()->profile_image ?? 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=280&h=350&fit=crop&crop=faces' }}" 
-                     alt="Profile" 
-                     class="profile-image" 
+                <img src="{{ Auth::user()->profile_image ?? 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=280&h=350&fit=crop&crop=faces' }}"
+                     alt="Profile"
+                     class="profile-image"
                      id="profileImage"
                      onerror="this.src='https://via.placeholder.com/280x350/f3f4f6/9ca3af?text=Profile'">
             </div>
@@ -818,7 +824,7 @@ body {
         <form id="editProfileForm" method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
-            
+
             <div class="form-group">
                 <label class="form-label">Profile Picture</label>
                 <div class="file-upload-container">
@@ -861,26 +867,26 @@ body {
 document.addEventListener('DOMContentLoaded', function() {
     // Debug mode - uncomment to see layout borders
     // document.body.classList.add('debug');
-    
+
     // Auto-hide success/error messages after 5 seconds
     const successMessage = document.getElementById('successMessage');
     const errorMessage = document.getElementById('errorMessage');
     const validationErrors = document.getElementById('validationErrors');
-    
+
     if (successMessage) {
         setTimeout(() => {
             successMessage.style.opacity = '0';
             setTimeout(() => successMessage.remove(), 300);
         }, 5000);
     }
-    
+
     if (errorMessage) {
         setTimeout(() => {
             errorMessage.style.opacity = '0';
             setTimeout(() => errorMessage.remove(), 300);
         }, 5000);
     }
-    
+
     if (validationErrors) {
         setTimeout(() => {
             validationErrors.style.opacity = '0';
@@ -891,7 +897,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Sidebar functionality
     const sidebar = document.getElementById('sidebar');
     const sidebarToggle = document.getElementById('sidebarToggle');
-    
+
     if (sidebarToggle) {
         const sidebarOverlay = document.createElement('div');
         sidebarOverlay.style.cssText = `
@@ -906,12 +912,12 @@ document.addEventListener('DOMContentLoaded', function() {
             backdrop-filter: blur(4px);
         `;
         document.body.appendChild(sidebarOverlay);
-        
+
         sidebarToggle.addEventListener('click', function() {
             sidebar.classList.toggle('show');
             sidebarOverlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
         });
-        
+
         sidebarOverlay.addEventListener('click', function() {
             sidebar.classList.remove('show');
             sidebarOverlay.style.display = 'none';
@@ -924,19 +930,19 @@ document.addEventListener('DOMContentLoaded', function() {
         editForm.addEventListener('submit', function(e) {
             const name = document.getElementById('editName').value.trim();
             const email = document.getElementById('editEmail').value.trim();
-            
+
             if (!name) {
                 e.preventDefault();
                 alert('Name is required');
                 return;
             }
-            
+
             if (!email) {
                 e.preventDefault();
                 alert('Email is required');
                 return;
             }
-            
+
             // Email validation
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
@@ -944,7 +950,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Please enter a valid email address');
                 return;
             }
-            
+
             // Show loading state
             const submitButton = editForm.querySelector('.btn-save');
             if (submitButton) {
@@ -970,7 +976,7 @@ function closeEditModal() {
     if (modal) {
         modal.classList.remove('show');
         document.body.style.overflow = 'auto';
-        
+
         // Reset form if needed
         const form = document.getElementById('editProfileForm');
         const submitButton = form?.querySelector('.btn-save');
@@ -992,19 +998,19 @@ function handleFileSelect(input) {
             input.value = '';
             return;
         }
-        
+
         // Validate file size (max 2MB)
         if (file.size > 2 * 1024 * 1024) {
             alert('File size must be less than 2MB');
             input.value = '';
             return;
         }
-        
+
         const fileNameElement = document.getElementById('fileName');
         if (fileNameElement) {
             fileNameElement.textContent = file.name;
         }
-        
+
         // Preview image
         const reader = new FileReader();
         reader.onload = function(e) {

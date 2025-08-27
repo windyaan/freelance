@@ -310,11 +310,11 @@
 }
 </style>
 
-<!-- Back Button -->
+{{-- <!-- Back Button -->
 <a href="{{ route('freelancer.dashboard') }}" class="back-btn">
     <iconify-icon icon="material-symbols:arrow-back"></iconify-icon>
     Back
-</a>
+</a> --}}
 
 <!-- Services Section -->
 <div class="services-section">

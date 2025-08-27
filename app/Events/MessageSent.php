@@ -26,9 +26,9 @@ class MessageSent implements ShouldBroadcastNow
     /**
      * Channel spesifik per chat
      */
-    public function broadcastOn(): PrivateChannel
+    public function broadcastOn()
     {
-        return new PrivateChannel('chat.' . $this->message->chat_id);
+    return new PrivateChannel('chat.' . $this->message->chat_id);
     }
 
     //nama event yg diterima frontend
@@ -40,15 +40,21 @@ class MessageSent implements ShouldBroadcastNow
     /**
      * Data yang dikirim ke frontend
      */
-    public function broadcastWith(): array
+    public function broadcastWith()
     {
         return [
-            'message' => $this->message->content,
+            // 'id' => $this->message->id,
+            // 'message' => $this->message->content,
+            // 'sender_id' => $this->message->sender_id,
+            // 'sender_name' => $this->message->sender->name ?? 'Unknown',
+            // 'sender_avatar' => $this->message->sender->profile->avatar_url ?? null,
+            // 'chat_id' => $this->message->chat_id,
+            // 'created_at' => $this->message->created_at->toDateTimeString(),
+            'id'        => $this->message->id,
+            'chat_id'   => $this->message->chat_id,
             'sender_id' => $this->message->sender_id,
-            'sender_name' => $this->message->sender->name ?? 'Unknown',
-            'sender_avatar' => $this->message->sender->profile->avatar_url ?? null,
-            'chat_id' => $this->message->chat_id,
-            'created_at' => $this->message->created_at->toDateTimeString(),
+            'content'   => $this->message->content,
+            'created_at'=> $this->message->created_at->toISOString(),
         ];
     }
 }

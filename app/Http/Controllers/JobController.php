@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Job;
+use App\Models\Chat;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -101,6 +103,41 @@ class JobController extends Controller
 
      return view('dashboard.client.index', compact('jobs'));
 }
+
+// method baru
+public function startChat($jobId)
+{
+    $job = Job::with('freelancer')->findOrFail($jobId);
+
+    $freelancer = $job->freelancer;
+    if (!$freelancer) {
+        abort(404, 'Freelancer untuk job ini tidak ditemukan.');
+    }
+
+    // buat / ambil chat
+    $chat = Chat::firstOrCreate([
+        'job_id'        => $job->id,
+        'client_id'     => Auth::id(),
+        'freelancer_id' => $freelancer->id,
+    ]);
+
+    // redirect ke halaman chat dengan chat_id
+    return redirect()->route('chat.show', $chat);
+}
+
+
+// public function show($freelancerId)
+// {
+//     $freelancer = User::findOrFail($freelancerId);
+
+//     $chat = Chat::firstOrCreate([
+//         'client_id'     => Auth::id(),
+//         'freelancer_id' => $freelancer->id,
+//     ]);
+
+//     return view('chat.index', compact('chat', 'freelancer'));
+// }
+
 
 
 }

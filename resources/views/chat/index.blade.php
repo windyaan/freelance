@@ -425,148 +425,6 @@
 </style>
 @endpush
 
-{{-- @section('content')
-<div class="chat-container">
-    <!-- Chat Sidebar -->
-    <div class="chat-sidebar">
-        <div class="chat-sidebar-header">
-            <h2 class="chat-sidebar-title">Messages</h2>
-            <p class="chat-sidebar-subtitle">Recent conversations</p>
-        </div>
-
-        <div class="chat-list" id="chatList">
-            <!-- Chat Item 1 -->
-            <div class="chat-item active" data-chat-id="1" data-user-name="Nadia Irma">
-                <div class="chat-avatar">
-                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=50&h=50&fit=crop&crop=face" alt="Nadia Irma">
-                </div>
-                <div class="chat-info">
-                    <div class="chat-name">Nadia Irma</div>
-                    <div class="chat-preview">Baik Ibu, saya menghendaki 1 bulan untuk desainnya, sekaligus saya buatkan form penawarannya</div>
-                    <div class="chat-skills">
-                        <span class="chat-skill-tag">UI Design</span>
-                        <span class="chat-skill-tag">Front-End</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chat Item 2 -->
-            <div class="chat-item" data-chat-id="2" data-user-name="Tiara Hasna">
-                <div class="chat-avatar">
-                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face" alt="Tiara Hasna">
-                </div>
-                <div class="chat-info">
-                    <div class="chat-name">Tiara Hasna</div>
-                    <div class="chat-preview">Bisa Bu, untuk jasa fullstacknya saya tawarkan diskon 10%</div>
-                    <div class="chat-skills">
-                        <span class="chat-skill-tag">Back-End</span>
-                        <span class="chat-skill-tag">Fullstack</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chat Item 3 -->
-            <div class="chat-item" data-chat-id="3" data-user-name="Karina Carlo">
-                <div class="chat-avatar">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50&h=50&fit=crop&crop=face" alt="Karina Carlo">
-                </div>
-                <div class="chat-info">
-                    <div class="chat-name">Karina Carlo</div>
-                    <div class="chat-preview">Ini nih Bu untuk logo cafe dan toko pakaiannnya</div>
-                    <div class="chat-skills">
-                        <span class="chat-skill-tag">Graphic Design</span>
-                        <span class="chat-skill-tag">Illustrator</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chat Item 4 -->
-            <div class="chat-item" data-chat-id="4" data-user-name="Erma Nadila">
-                <div class="chat-avatar">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face" alt="Erma Nadila">
-                </div>
-                <div class="chat-info">
-                    <div class="chat-name">Erma Nadila</div>
-                    <div class="chat-preview">saya mau editannya nuansa ungu ya mbak</div>
-                    <div class="chat-skills">
-                        <span class="chat-skill-tag">Illustrator</span>
-                        <span class="chat-skill-tag">Video Editor</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Chat Main Area -->
-    <div class="chat-main">
-        <!-- Active Chat Header -->
-        <div class="chat-header" id="chatHeader">
-            <div class="chat-header-avatar">
-                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=45&h=45&fit=crop&crop=face" alt="Nadia Irma" id="headerAvatar">
-            </div>
-            <div class="chat-header-info">
-                <div class="chat-header-name" id="headerName">Nadia Irma</div>
-                <div class="chat-header-status" id="headerStatus">Online • UI Design, Front-End</div>
-            </div>
-        </div>
-
-        <!-- Chat Messages -->
-        <div class="chat-messages" id="chatMessages">
-            <!-- Sample messages for Nadia Irma -->
-            <div class="message received">
-                <div class="message-avatar">
-                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=36&h=36&fit=crop&crop=face" alt="Nadia Irma">
-                </div>
-                <div class="message-content">
-                    Halo Bu, terima kasih sudah menghubungi saya untuk proyek UI Design website cafe.
-                    <div class="message-time">10:30 AM</div>
-                </div>
-            </div>
-
-            <div class="message sent">
-                <div class="message-avatar">
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face" alt="You">
-                </div>
-                <div class="message-content">
-                    Halo Nadia, saya perlu desain untuk website cafe dan juga toko pakaian. Kira-kira berapa lama pengerjaannya?
-                    <div class="message-time">10:32 AM</div>
-                </div>
-            </div>
-
-            <div class="message received">
-                <div class="message-avatar">
-                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=36&h=36&fit=crop&crop=face" alt="Nadia Irma">
-                </div>
-                <div class="message-content">
-                    Baik Ibu, saya menghendaki 1 bulan untuk desainnya, sekaligus saya buatkan form penawarannya. Untuk 2 website, saya tawarkan harga Rp 8.500.000
-                    <div class="message-time">10:35 AM</div>
-                </div>
-            </div>
-
-            <div class="message sent">
-                <div class="message-avatar">
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face" alt="You">
-                </div>
-                <div class="message-content">
-                    Oke, bisa tolong kirimkan portfolionya dulu?
-                    <div class="message-time">10:36 AM</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Chat Input -->
-        <div class="chat-input-container">
-            <div class="chat-input-wrapper">
-                <textarea class="chat-input" id="messageInput" placeholder="Type your message..." rows="1"></textarea>
-                <button class="chat-send-btn" id="sendBtn">
-                    <iconify-icon icon="material-symbols:send"></iconify-icon>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-@endsection --}}
-
 
 @section('content')
 <div class="chat-container flex h-screen">
@@ -747,46 +605,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Function to send message
-    // function sendMessage() {
-    //     if (!messageInput || !messageInput.value.trim()) return;
-
-    //     const messageText = messageInput.value.trim();
-    //     const currentTime = new Date().toLocaleTimeString('en-US', {
-    //         hour: 'numeric',
-    //         minute: '2-digit',
-    //         hour12: true
-    //     });
-
-    //     // Create message element
-    //     const messageDiv = document.createElement('div');
-    //     messageDiv.className = 'message sent';
-    //     messageDiv.innerHTML = `
-    //         <div class="message-avatar">
-    //             <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=36&h=36&fit=crop&crop=face" alt="You">
-    //         </div>
-    //         <div class="message-content">
-    //             ${messageText}
-    //             <div class="message-time">${currentTime}</div>
-    //         </div>
-    //     `;
-
-    //     // Add to chat
-    //     if (chatMessages) {
-    //         chatMessages.appendChild(messageDiv);
-    //         chatMessages.scrollTop = chatMessages.scrollHeight;
-    //     }
-
-    //     // Clear input
-    //     messageInput.value = '';
-    //     autoResizeTextarea();
-
-    //     // Simulate typing indicator and response (optional)
-    //     setTimeout(() => {
-    //         simulateTypingResponse();
-    //     }, 1000);
-    // }
-
     function sendMessage() {
     if (!messageInput || !messageInput.value.trim()) return;
 
@@ -884,6 +702,39 @@ if (messageInput) {
     };
 
     // Event listeners
+    // Listener realtime Laravel Echo
+    if (window.currentChatId) {
+    Echo.private(`chat.${window.currentChatId}`)
+        .listen('MessageSent', (e) => {
+            console.log("Pesan baru:", e);
+
+            // Jangan render pesan sendiri, karena sudah ditangani oleh sendMessage()
+            if (e.message.sender_id !== parseInt(window.userId)) {
+                const chatMessages = document.getElementById('chatMessages');
+                if (chatMessages) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'message received flex justify-start mb-4';
+                    messageDiv.innerHTML = `
+                        <div class="flex items-end space-x-2">
+                            <div class="message-avatar">
+                                <img src="${e.message.sender.avatar_url ?? 'https://via.placeholder.com/36'}"
+                                     alt="${e.message.sender.name}"
+                                     class="w-9 h-9 rounded-full object-cover">
+                            </div>
+                            <div class="message-content max-w-xs px-4 py-2 rounded-lg bg-gray-200 text-gray-800">
+                                ${e.message.content}
+                                <div class="message-time text-xs mt-1 text-gray-400">
+                                    ${new Date(e.message.created_at).toLocaleTimeString()}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    chatMessages.appendChild(messageDiv);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            }
+        });
+}
 
     // Chat item selection
     chatItems.forEach(item => {
