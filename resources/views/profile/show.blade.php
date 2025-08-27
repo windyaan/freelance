@@ -311,7 +311,7 @@
             default => route('dashboard'),
         };
     @endphp
-    
+
     <!-- Back Button -->
     <a href="{{ $dashboardRoute }}" class="back-btn">
         <iconify-icon icon="material-symbols:chevron-left"></iconify-icon>
@@ -348,7 +348,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <button class="service-chat-btn" {{ !$job->is_active ? 'disabled' : '' }}>
+                            <button class="service-chat-btn" data-freelancer-id="{{ $job->freelancer_id }}"  {{ !$job->is_active ? 'disabled' : '' }}>
                                 <iconify-icon icon="{{ $job->is_active ? 'material-symbols:chat' : 'material-symbols:chat-disabled' }}"></iconify-icon>
                                 Chat
                             </button>
@@ -489,15 +489,28 @@
 
 @push('scripts')
 <script>
+// document.addEventListener('DOMContentLoaded', function() {
+//     // Chat button functionality
+//     document.querySelectorAll('.service-chat-btn:not([disabled])').forEach(btn => {
+//         btn.addEventListener('click', function() {
+//             const serviceItem = this.closest('.service-item');
+//             const serviceName = serviceItem.querySelector('.service-name').textContent;
+//             alert(`Starting chat for ${serviceName} service...`);
+//             // Here you would typically redirect to chat page or open chat modal
+//             // window.location.href = `/chat/{{ $user->id ?? 1 }}?service=${encodeURIComponent(serviceName)}`;
+//         });
+//     });
+// });
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Chat button functionality
     document.querySelectorAll('.service-chat-btn:not([disabled])').forEach(btn => {
         btn.addEventListener('click', function() {
-            const serviceItem = this.closest('.service-item');
-            const serviceName = serviceItem.querySelector('.service-name').textContent;
-            alert(`Starting chat for ${serviceName} service...`);
-            // Here you would typically redirect to chat page or open chat modal
-            // window.location.href = `/chat/{{ $user->id ?? 1 }}?service=${encodeURIComponent(serviceName)}`;
+            const freelancerId = this.dataset.freelancerId;
+            if (freelancerId) {
+                window.location.href = `/chat/${freelancerId}`;
+            } else {
+                console.error("Freelancer ID tidak ditemukan di tombol Chat");
+            }
         });
     });
 });

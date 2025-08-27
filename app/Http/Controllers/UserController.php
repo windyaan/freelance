@@ -53,6 +53,13 @@ class UserController extends Controller
             'status' => 'pending', // default sebelum bayar
         ]);
 
+        // Update semua milestone terkait → set start_time
+        foreach ($offer->milestones as $milestone) {
+        $milestone->update([
+            'start_time' => now(),
+        ]);
+    }
+
         // redirect ke halaman transaksi
         return redirect()->route('orders.show', $order->id)
             ->with('success', 'Offer diterima, silakan lanjut ke transaksi.');

@@ -573,16 +573,17 @@
 </style>
 @endpush
 
+
 @section('content')
-<div class="chat-container">
+<div class="chat-container flex h-screen">
     <!-- Chat Sidebar -->
-    <div class="chat-sidebar">
-        <div class="chat-sidebar-header">
-            <h2 class="chat-sidebar-title">Messages</h2>
-            <p class="chat-sidebar-subtitle">Recent conversations</p>
+    <div class="chat-sidebar w-1/3 border-r flex flex-col bg-white">
+        <div class="chat-sidebar-header p-4 border-b">
+            <h2 class="chat-sidebar-title text-lg font-bold">Messages</h2>
+            <p class="chat-sidebar-subtitle text-sm text-gray-500">Recent conversations</p>
         </div>
 
-        <div class="chat-list" id="chatList">
+        <div class="chat-list flex-1 overflow-y-auto" id="chatList">
             @foreach($chats as $chat)
                 @php
                     $otherUser = $chat->client_id == auth()->id()
@@ -711,18 +712,112 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatMessages = document.getElementById('chatMessages');
     const messageInput = document.getElementById('messageInput');
     const sendBtn = document.getElementById('sendBtn');
-    const chatForm = document.querySelector('form[action*="chat.message.store"]');
+    const headerName = document.getElementById('headerName');
+    const headerStatus = document.getElementById('headerStatus');
+    const headerAvatar = document.getElementById('headerAvatar');
+    const searchInput = document.getElementById('globalSearch');
 
-    // Auto resize textarea
-    function autoResizeTextarea() {
-        if (messageInput) {
-            messageInput.style.height = 'auto';
-            messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
+    // Function to load chat messages
+    function loadChatMessages(chatId) {
+        const chat = chatData[chatId];
+        if (!chat) return;
+
+        // Update header
+        if (headerName) headerName.textContent = chat.name;
+        if (headerStatus) headerStatus.textContent = chat.status;
+        if (headerAvatar) headerAvatar.src = chat.avatar;
+
+        // Clear messages
+        if (chatMessages) {
+            chatMessages.innerHTML = '';
+
+            // Add messages
+            chat.messages.forEach(message => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${message.type}`;
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">
+                        <img src="${message.avatar}" alt="Avatar">
+                    </div>
+                    <div class="message-content">
+                        ${message.content}
+                        <div class="message-time">${message.time}</div>
+                    </div>
+                `;
+                chatMessages.appendChild(messageDiv);
+            });
+
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
     }
 
-    // Scroll to bottom of messages
-    function scrollToBottom() {
+    function sendMessage() {
+    if (!messageInput || !messageInput.value.trim()) return;
+
+    const content = messageInput.value.trim();
+
+    // POST ke backend
+    axios.post(`/chat/{{ $activeChat->id }}/message`, { content })
+        .then(() => {
+            messageInput.value = '';
+            autoResizeTextarea();
+            // Pesan akan muncul otomatis via Echo listener
+        })
+        .catch(err => console.error(err));
+}
+
+// Event listener tombol kirim
+if (sendBtn) {
+    sendBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        sendMessage();
+    });
+}
+
+// Event listener enter key
+if (messageInput) {
+    messageInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+}
+
+
+    // Simulate typing response
+    function simulateTypingResponse() {
+        const responses = [
+            "Terima kasih atas pesannya, saya akan segera membalas.",
+            "Baik Bu, saya cek dulu detailnya ya.",
+            "Oke, nanti saya kirimkan proposal lengkapnya.",
+            "Siap Bu, akan saya kerjakan sesuai timeline yang disepakati."
+        ];
+
+        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        const currentTime = new Date().toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+        });
+
+        // Get current active chat avatar
+        const activeChat = document.querySelector('.chat-item.active');
+        const activeAvatar = activeChat ? activeChat.querySelector('.chat-avatar img').src : '';
+
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message received';
+        messageDiv.innerHTML = `
+            <div class="message-avatar">
+                <img src="${activeAvatar}" alt="Contact">
+            </div>
+            <div class="message-content">
+                ${randomResponse}
+                <div class="message-time">${currentTime}</div>
+            </div>
+        `;
+
         if (chatMessages) {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
@@ -743,6 +838,41 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     };
+
+    // Event listeners
+    // Listener realtime Laravel Echo
+    if (window.currentChatId) {
+    Echo.private(`chat.${window.currentChatId}`)
+        .listen('MessageSent', (e) => {
+            console.log("Pesan baru:", e);
+
+            // Jangan render pesan sendiri, karena sudah ditangani oleh sendMessage()
+            if (e.message.sender_id !== parseInt(window.userId)) {
+                const chatMessages = document.getElementById('chatMessages');
+                if (chatMessages) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'message received flex justify-start mb-4';
+                    messageDiv.innerHTML = `
+                        <div class="flex items-end space-x-2">
+                            <div class="message-avatar">
+                                <img src="${e.message.sender.avatar_url ?? 'https://via.placeholder.com/36'}"
+                                     alt="${e.message.sender.name}"
+                                     class="w-9 h-9 rounded-full object-cover">
+                            </div>
+                            <div class="message-content max-w-xs px-4 py-2 rounded-lg bg-gray-200 text-gray-800">
+                                ${e.message.content}
+                                <div class="message-time text-xs mt-1 text-gray-400">
+                                    ${new Date(e.message.created_at).toLocaleTimeString()}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    chatMessages.appendChild(messageDiv);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            }
+        });
+}
 
     // Chat item selection
     chatItems.forEach(item => {

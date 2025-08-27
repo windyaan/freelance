@@ -16,8 +16,14 @@ return new class extends Migration
             $table->foreignId('offer_id')->constrained('offers')->onDelete('cascade');
             $table->string('title');
             $table->text('description');
+
+            //status milestone real
             $table->enum('status', ['Start', 'Progress', 'Done', 'revisi_request','approved'])->default('Progress');
+
+            //waktu
             $table->timestamp('completed_at')->nullable();
+            $table->timestamp('start_time')->nullable();
+
             $table->timestamps();
         });
     }
