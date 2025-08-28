@@ -9,12 +9,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\JobController;
-use App\Http\Controllers\ChatController; // Import ChatController
-use App\Http\Controllers\OrderController; // Import OrderController
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminReportController;
 use App\Http\Controllers\ReportController;
-
-
+use App\Http\Controllers\OfferController; // Import OfferController
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -46,8 +45,23 @@ Route::middleware('auth')->group(function () {
          // Tambahkan route POST untuk mengirim pesan
         Route::post('/chat/{chat}/send', [ChatController::class, 'sendMessage'])->name('chat.send');
         Route::get('/chat/start/{job}', [JobController::class, 'startChat'])->name('chat.start');
+    });
 
-
+    // GLOBAL OFFER ROUTES (accessible by both client and freelancer)
+    Route::prefix('offers')->name('offers.')->group(function () {
+        Route::get('/', [OfferController::class, 'index'])->name('index');
+        Route::post('/', [OfferController::class, 'store'])->name('store');
+        Route::get('/{offer}', [OfferController::class, 'show'])->name('show');
+        Route::get('/{offer}/edit', [OfferController::class, 'edit'])->name('edit');
+        Route::put('/{offer}', [OfferController::class, 'update'])->name('update');
+        
+        // Offer actions
+        Route::patch('/{offer}/accept', [OfferController::class, 'accept'])->name('accept');
+        Route::patch('/{offer}/reject', [OfferController::class, 'reject'])->name('reject');
+        
+        // Payment routes
+        Route::get('/{offer}/payment', [OfferController::class, 'payment'])->name('payment');
+        Route::post('/{offer}/pay', [OfferController::class, 'pay'])->name('pay');
     });
 
     // Profile routes - TANPA PARAMETER (untuk user yang sedang login)
@@ -66,7 +80,7 @@ Route::middleware('auth')->group(function () {
         // Client dashboard
         Route::get('/dashboard', [JobController::class, 'dashboardIndex'])->name('dashboard');
 
-        // Client chat routes - FIXED to match your ChatController methods
+        // Client chat routes
         Route::get('/chat', [ChatController::class, 'index'])->name('chat');
         Route::get('/chat/{chat}', [ChatController::class, 'show'])->name('chat.show');
         Route::post('/chat', [ChatController::class, 'store'])->name('chat.store');
@@ -83,16 +97,12 @@ Route::middleware('auth')->group(function () {
         //route untuk client kirim laporan
         Route::get('/reports/create', [ReportController::class, 'create'])->name('reports.create');
         Route::post('/reports', [ReportController::class, 'store'])->name('reports.store');
-
     });
 
     // Freelancer routes group
     Route::prefix('freelancer')->name('freelancer.')->middleware('role:freelancer')->group(function () {
         // Freelancer dashboard
         Route::get('/dashboard', function(){return view('dashboard.freelancer.index');})->name('dashboard');
-
-        // Job routes untuk freelancer (CRUD penuh)
-
 
         // Freelancer chat routes
         Route::get('/chat', [ChatController::class, 'index'])->name('chat');
@@ -109,7 +119,7 @@ Route::middleware('auth')->group(function () {
         Route::patch('/order/{order}/complete', [OrderController::class, 'complete'])->name('order.complete');
         Route::post('/order/{order}/upload-deliverable', [OrderController::class, 'uploadDeliverable'])->name('order.upload');
 
-        // Freelancer services routes (for managing their own services)
+        // Freelancer services routes
         Route::get('/services', [JobController::class, 'index'])->name('services');
         Route::get('/services/create', [JobController::class, 'create'])->name('services.create');
         Route::post('/services', [JobController::class, 'store'])->name('services.store');
@@ -117,7 +127,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/services/{job}/edit', [JobController::class, 'edit'])->name('services.edit');
         Route::put('/services/{job}', [JobController::class, 'update'])->name('services.update');
         Route::delete('/services/{job}', [JobController::class, 'destroy'])->name('services.destroy');
-        // Route::resource('jobs', JobController::class)->except(['show']);
     });
 
     // General order creation routes (accessible by both roles)
@@ -131,7 +140,6 @@ Route::middleware('auth')->group(function () {
     // Global services routes (fallback for general access)
     Route::get('/services', [JobController::class, 'index'])->name('services');
     Route::get('/services/{job}', [JobController::class, 'show'])->name('services.show');
-
 });
 
 // Admin routes
@@ -147,9 +155,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/reports/{id}', [AdminReportController::class, 'show'])->name('admin.reports.show');
     Route::post('/admin/reports/{id}/ban', [AdminReportController::class, 'banFreelancer'])->name('admin.reports.ban');
 
-    // ====== TAMBAHAN ROUTE UNTUK ADMIN ORDERS ======
+    // Admin orders management routes
     Route::prefix('admin')->name('admin.')->group(function () {
-        // Admin orders management routes
         Route::get('/orders', [OrderController::class, 'adminIndex'])->name('orders.index');
         Route::get('/orders/{order}', [OrderController::class, 'adminShow'])->name('orders.show');
         Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
