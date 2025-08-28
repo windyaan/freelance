@@ -119,6 +119,7 @@ class DatabaseSeeder extends Seeder
          */
         $freelancers = User::where('role', 'freelancer')->get();
         $clients = User::where('role', 'client')->get();
+        $jobs = Job::all();
 
         foreach ($clients as $client) {
             $freelancer = $freelancers->random();
@@ -126,6 +127,7 @@ class DatabaseSeeder extends Seeder
             $chat = Chat::create([
                 'client_id' => $client->id,
                 'freelancer_id' => $freelancer->id,
+                'job_id' => $job->id, // 👈 isi job_id biar konsisten
             ]);
 
             Message::create([

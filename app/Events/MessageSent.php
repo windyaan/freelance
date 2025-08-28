@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\Message;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -28,6 +29,7 @@ class MessageSent implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
+    // return new Channel('chat');
     return new PrivateChannel('chat.' . $this->message->chat_id);
     }
 
@@ -50,8 +52,10 @@ class MessageSent implements ShouldBroadcastNow
             // 'sender_avatar' => $this->message->sender->profile->avatar_url ?? null,
             // 'chat_id' => $this->message->chat_id,
             // 'created_at' => $this->message->created_at->toDateTimeString(),
-            'id'        => $this->message->id,
+            // 'id'        => $this->message->id,
+
             'chat_id'   => $this->message->chat_id,
+            'job_id'  => $this->message->chat->job_id,
             'sender_id' => $this->message->sender_id,
             'content'   => $this->message->content,
             'created_at'=> $this->message->created_at->toISOString(),
