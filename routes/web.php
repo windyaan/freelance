@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
         Route::patch('/messages/{message}/read', [ChatController::class, 'markAsRead'])->name('message.read');
 
         //tambahan
+        Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
         Route::get('/chat/{chat}', [ChatController::class, 'show'])->name('chat.show');
          // Tambahkan route POST untuk mengirim pesan
         Route::post('/chat/{chat}/send', [ChatController::class, 'sendMessage'])->name('chat.send');

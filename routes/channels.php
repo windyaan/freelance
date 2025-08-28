@@ -21,3 +21,7 @@ Broadcast::channel('chat.{chatId}', function ($user, $chatId) {
                   ->orWhere('freelancer_id', $user->id);
             })->exists();
 });
+
+// Broadcast::channel('chat', function () {
+// return true;
+// });

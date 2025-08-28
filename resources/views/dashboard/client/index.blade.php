@@ -148,8 +148,13 @@
     <div class="filter-button" id="filterBtn">
         <iconify-icon icon="material-symbols:tune"></iconify-icon>
         Filter
+    </div>
+
+    <div class="filter-button" id="priceBtn">
+        <iconify-icon icon="material-symbols:payments"></iconify-icon>
+        Price
         <span class="filter-arrow">▼</span>
-        
+
         <!-- Main Filter Dropdown -->
         <div class="filter-dropdown" id="filterDropdown">
             <!-- Price Filter Section -->
@@ -169,9 +174,9 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- You can add more filter sections here in the future -->
-            <!-- 
+            <!--
             <div class="filter-section">
                 <div class="filter-section-header">
                     <iconify-icon icon="material-symbols:location-on"></iconify-icon>
@@ -184,7 +189,7 @@
                 </select>
             </div>
             -->
-            
+
             <div class="filter-actions">
                 <button class="filter-clear-btn" id="clearFilters">Clear</button>
                 <button class="filter-apply-btn" id="applyFilters">Apply</button>
@@ -1154,7 +1159,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get price values and handle empty strings
         const minPriceValue = minPriceInput ? minPriceInput.value.trim() : '';
         const maxPriceValue = maxPriceInput ? maxPriceInput.value.trim() : '';
-        
+
         const minPrice = minPriceValue !== '' ? parseInt(minPriceValue) : null;
         const maxPrice = maxPriceValue !== '' ? parseInt(maxPriceValue) : null;
 
@@ -1209,9 +1214,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateFilterButtonState() {
         if (!filterBtn) return;
 
-        const hasActiveFilters = activeFilters.skills.length > 0 || 
-                                activeFilters.priceMin !== null || 
-                                activeFilters.priceMax !== null || 
+        const hasActiveFilters = activeFilters.skills.length > 0 ||
+                                activeFilters.priceMin !== null ||
+                                activeFilters.priceMax !== null ||
                                 activeFilters.search;
 
         if (hasActiveFilters) {
@@ -1286,7 +1291,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         console.log('Visible cards:', visibleCount); // Debug log
         showNoResultsMessage(visibleCount === 0);
-        
+
         // Reset to first slide if current slide has no visible cards
         if (visibleCount > 0) {
             currentTalentSlide = 0;

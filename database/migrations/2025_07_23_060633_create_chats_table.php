@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('client_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('freelancer_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('offer_id')->nullable()->constrained('offers');
+            $table->foreignId('job_id')->nullable()->constrained('jobs')->onDelete('cascade'); // tambahan baru
             $table->timestamps();
         });
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Example;
 use App\Models\Chat;
 use App\Models\Message;
 use Illuminate\Http\Request;
@@ -75,10 +76,11 @@ class ChatController extends Controller
                          ->orderBy('created_at')
                          ->get();
 
+        $job = $chat->job;
          // Tentukan lawan chat (bukan user login)
         $user = Auth::id() == $chat->client_id ? $chat->freelancer : $chat->client;
 
-        return view('chat.show', compact('chat', 'messages','user'));
+        return view('chat.show', compact('chat', 'messages','user','job'));
     }
 
 
@@ -92,6 +94,7 @@ class ChatController extends Controller
             'client_id' => 'required|exists:users,id',
             'freelancer_id' => 'required|exists:users,id',
             'offer_id' => 'nullable|exists:offers,id',
+            'job_id'        => 'required|exists:jobs,id',
         ]);
 
         $chat = Chat::firstOrCreate([
@@ -99,6 +102,7 @@ class ChatController extends Controller
             'freelancer_id' => $request->freelancer_id,
         ], [
             'offer_id' => $request->offer_id,
+            'job_id'   => 'required|exists:jobs,id',
         ]);
 
         return redirect()->route('chat.show', $chat);
@@ -124,6 +128,8 @@ class ChatController extends Controller
 
         // Broadcast ke channel private chat.{chat_id}
         broadcast(new MessageSent($message))->toOthers();
+
+        // event(new Example("asjhdasdkas"));
 
         return back()->with('success', 'Pesan berhasil dikirim');
     }
