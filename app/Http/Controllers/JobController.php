@@ -122,8 +122,8 @@ public function startChat($jobId)
     ]);
 
     // redirect ke halaman chat dengan chat_id
-    // return redirect()->route('chat.show', $chat->id);
-    return redirect()->route('chat.index', ['chat_id' => $chat->id]);
+    return redirect()->route('chat.show', $chat->id);
+    // return redirect()->route('chat.show', ['chat_id' => $chat->id]);
 }
 
 

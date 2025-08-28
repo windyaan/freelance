@@ -52,8 +52,10 @@ class MessageSent implements ShouldBroadcastNow
             // 'sender_avatar' => $this->message->sender->profile->avatar_url ?? null,
             // 'chat_id' => $this->message->chat_id,
             // 'created_at' => $this->message->created_at->toDateTimeString(),
-            'id'        => $this->message->id,
+            // 'id'        => $this->message->id,
+
             'chat_id'   => $this->message->chat_id,
+            'job_id'  => $this->message->chat->job_id,
             'sender_id' => $this->message->sender_id,
             'content'   => $this->message->content,
             'created_at'=> $this->message->created_at->toISOString(),

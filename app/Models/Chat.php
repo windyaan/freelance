@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Chat extends Model
 {
     protected $fillable = [
+        'job_id',
         'client_id',
         'freelancer_id',
         'offer_id', //nullable
@@ -30,5 +31,10 @@ class Chat extends Model
     public function offer()
     {
         return $this->belongsTo(Offer::class, 'offer_id');
+    }
+
+    public function job()
+    {
+    return $this->belongsTo(Job::class);
     }
 }

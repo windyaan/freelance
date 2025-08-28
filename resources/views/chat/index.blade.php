@@ -497,7 +497,10 @@
                         {{ $otherUser->name }}
                     </div>
                     <div class="chat-header-status text-sm text-gray-500" id="headerStatus">
-                        Online • {{ $otherUser->profile->skills ?? '' }}
+                        Online
+                        @if($otherUser->role === 'freelancer')
+        • {{ $otherUser->profile->skills ?? '' }}
+    @endif
                     </div>
                 </div>
             </div>
@@ -552,25 +555,25 @@
 @endsection
 
 @push('scripts')
-<script type="module">
+{{-- <script type="module">
     Echo.channel('example')
         .listen("Example", (e) => {
-            console.log("Pesan baru:", e);
-            // tampilkan pesan ke UI
-        });
-    // console.log('test');
+            console.log("Pesan baru:", e); --}}
+            {{-- // tampilkan pesan ke UI
+        }); --}}
+    {{-- // console.log('test');
 
     // window.currentChatId = @json($chat->id);
 
     // if (window.currentChatId && window.Echo) {
     // } else {
     //     console.error("Echo belum siap atau chatId tidak ada");
-    // }
+    // } --}}
 </script>
 @endpush
 
 
-{{-- @push('scripts')
+@push('scripts')
 <script type="module">
        console.log('test');
 
@@ -813,4 +816,4 @@ if (messageInput) {
     console.log('Chat page initialized successfully');
 });
 </script>
-@endpush --}}
+@endpush
