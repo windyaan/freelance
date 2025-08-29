@@ -695,7 +695,8 @@ body {
         <!-- Profile Button -->
         <div class="navbar-profile" onclick="goToProfile()">
             <img src="{{ Auth::user()->profile_image ?? 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face' }}"
-                 alt="Profile"
+             {{-- <img src="{{ Auth::user()->profile->avatar_url ?? 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face' }}" --}}
+            alt="Profile"
                  onerror="this.src='https://via.placeholder.com/40x40/f3f4f6/9ca3af?text=👤'">
         </div>
 

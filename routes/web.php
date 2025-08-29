@@ -9,8 +9,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\JobController;
-use App\Http\Controllers\ChatController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\MilestoneController;
+use App\Http\Controllers\ChatController; // Import ChatController
+use App\Http\Controllers\OrderController; // Import OrderController
 use App\Http\Controllers\AdminReportController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\OfferController; // Import OfferController
@@ -55,11 +56,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/{offer}', [OfferController::class, 'show'])->name('show');
         Route::get('/{offer}/edit', [OfferController::class, 'edit'])->name('edit');
         Route::put('/{offer}', [OfferController::class, 'update'])->name('update');
-        
+
         // Offer actions
         Route::patch('/{offer}/accept', [OfferController::class, 'accept'])->name('accept');
         Route::patch('/{offer}/reject', [OfferController::class, 'reject'])->name('reject');
-        
+
         // Payment routes
         Route::get('/{offer}/payment', [OfferController::class, 'payment'])->name('payment');
         Route::post('/{offer}/pay', [OfferController::class, 'pay'])->name('pay');
@@ -75,6 +76,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/{id}/edit', [ProfileController::class, 'editWithId'])->name('profile.edit.id');
     Route::put('/profile/{id}', [ProfileController::class, 'updateWithId'])->name('profile.update.id');
     Route::patch('/profile/{id}', [ProfileController::class, 'updateWithId'])->name('profile.update.patch.id');
+
+    //tambahan
+    // === Milestone routes (client + freelancer) ===
+    Route::get('/offers/{offer}/milestones', [MilestoneController::class, 'index'])->name('milestones.index');
+    Route::post('/offers/{offer}/milestones', [MilestoneController::class, 'store'])->name('milestones.store');
+    Route::put('/milestones/{milestone}', [MilestoneController::class, 'update'])->name('milestones.update');
+    Route::delete('/milestones/{milestone}', [MilestoneController::class, 'destroy'])->name('milestones.destroy');
 
     // Client routes group
     Route::prefix('client')->name('client.')->middleware('role:client')->group(function () {
@@ -162,7 +170,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/orders/{order}', [OrderController::class, 'adminShow'])->name('orders.show');
         Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
         Route::delete('/orders/{order}', [OrderController::class, 'adminDestroy'])->name('orders.destroy');
-        
+
         // Admin orders export
         Route::get('/orders/export/pdf', [OrderController::class, 'exportPdf'])->name('orders.export.pdf');
         Route::get('/orders/export/excel', [OrderController::class, 'exportExcel'])->name('orders.export.excel');

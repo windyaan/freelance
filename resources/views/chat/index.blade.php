@@ -806,6 +806,39 @@
                 }
             @endphp
 
+        @if($otherUser)
+            <h2>Chat dengan {{ $otherUser->name ?? 'User' }}</h2>
+        @endif
+    @else
+        <p>Pilih chat untuk memulai percakapan.</p>
+    @endif
+</div>
+
+            <!-- Header -->
+            <div class="chat-header" id="chatHeader">
+                <div class="chat-header-avatar">
+                    <img src="{{ $otherUser->profile->avatar_url ?? 'https://via.placeholder.com/48' }}"
+                         alt="{{ $otherUser->name }}">
+                </div>
+                <div class="chat-header-info">
+                    <div class="chat-header-name" id="headerName">
+                        {{ $otherUser->name }}
+                    </div>
+                    <div class="chat-header-status" id="headerStatus">
+                        Online • {{ $otherUser->profile->skills ?? '' }}
+                    </div>
+                </div>
+
+                <!-- Add Offer Button (only for freelancers) -->
+                @if(auth()->user()->role === 'freelancer')
+                <div class="chat-header-actions">
+                    <button onclick="openOfferModal()" class="btn-create-offer">
+                        <iconify-icon icon="material-symbols:add" style="margin-right: 0.25rem;"></iconify-icon>
+                        Create Offer
+                    </button>
+                </div>
+                @endif
+            </div>
             @if($otherUser)
                 <!-- Header -->
                 <div class="chat-header">
@@ -856,6 +889,48 @@
                         </div>
                     @endforeach
 
+                <!-- Display Offers -->
+                @if(isset($activeChat->offers))
+                    @foreach($activeChat->offers as $offer)
+                        @if($offer->status === 'pending')
+                        <div class="offer-message {{ $offer->freelancer_id == auth()->id() ? 'sent' : 'received' }}">
+                            <div class="offer-card">
+                                <div class="offer-header">
+                                    <div class="offer-title">{{ $offer->title }}</div>
+                                    <div class="offer-meta">
+                                        <div>price : {{ $offer->formatted_price }}</div>
+                                        <div>revision : {{ $offer->revisions }}x</div>
+                                        <div>deadline : {{ $offer->formatted_deadline }}</div>
+                                        <div class="offer-time">{{ $offer->created_at->format('H:i A') }}</div>
+                                    </div>
+                                </div>
+
+                                <!-- @if($offer->client_id == auth()->id())
+                                <div class="offer-body">
+                                    <div class="offer-actions">
+                                        <a href="{{ route('offers.show', $offer) }}" class="btn-offer btn-details">
+                                            Details
+                                        </a>
+                                    </div>
+                                </div>
+                                @endif -->
+
+                                {{-- Offer Section --}}
+@if(!empty($offer) && isset($offer->client_id) && $offer->client_id == auth()->id())
+    <div class="offer-body">
+        <div class="offer-actions">
+            <a href="{{ route('offers.show', $offer) }}" class="btn-offer btn-details">
+                Details
+            </a>
+        </div>
+    </div>
+@endif
+                            </div>
+                        </div>
+                        @endif
+                    @endforeach
+                @endif
+            </div>
                     <!-- Display Offers -->
                     @if(isset($activeChat->offers))
                         @foreach($activeChat->offers as $offer)
@@ -930,6 +1005,33 @@
 
             <form id="offerForm" action="{{ route('offers.store') }}" method="POST">
                 @csrf
+                {{-- Tambahkan hidden input untuk client_id --}}
+                <input type="hidden" name="client_id" value="{{ $activeChat->client_id }}">
+
+               {{-- Pilih Job --}}
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Job/Project</label>
+            <select name="job_id" required
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <option value="">-- Pilih Job --</option>
+                @forelse($availableJobs as $job)
+                    <option value="{{ $job->id }}">
+                        {{ $job->title }} - Rp {{ number_format($job->budget, 0, ',', '.') }}
+                    </option>
+                @empty
+                    <option value="" disabled>Anda belum punya job</option>
+                @endforelse
+            </select>
+            <p class="text-xs text-gray-500 mt-1">Pilih job yang ingin Anda ajukan penawaran</p>
+        </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Judul Penawaran</label>
+                        <input type="text" name="title" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="Misal: UI Website Toko Pakaian">
+                    </div>
                 <input type="hidden" name="client_id" value="{{ $activeChat->client_id }}">
                 
                 <!-- Job Selection -->
@@ -962,6 +1064,20 @@
                               placeholder="Jelaskan detail project yang akan dikerjakan..."></textarea>
                 </div>
 
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Harga (Rp)</label>
+                            <input type="number" name="final_price" required min="0"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                   placeholder="700000">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Deadline</label>
+                            <input type="date" name="deadline" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                   min="{{ date('Y-m-d', strtotime('+1 day')) }}">
+                        </div>
                 <!-- Price and Deadline -->
                 <div class="form-grid">
                     <div class="form-group">
@@ -1021,6 +1137,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (offerForm) {
         offerForm.addEventListener('submit', function(e) {
             e.preventDefault();
+
             
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
@@ -1028,7 +1145,7 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.disabled = true;
             
             const formData = new FormData(this);
-            
+
             fetch(this.action, {
                 method: 'POST',
                 headers: {
@@ -1059,6 +1176,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Rest of the chat functionality
+    const chatItems = document.querySelectorAll('.chat-item');
+    const messageInput = document.getElementById('messageInput');
+
+
     // Chat item selection
     const chatItems = document.querySelectorAll('.chat-item');
     chatItems.forEach(item => {
@@ -1077,6 +1199,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.height = 'auto';
             this.style.height = (this.scrollHeight) + 'px';
         });
+
         
         // Submit on Enter (without Shift)
         messageInput.addEventListener('keydown', function(e) {

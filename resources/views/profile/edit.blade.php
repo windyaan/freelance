@@ -436,7 +436,7 @@
 
         <!-- Profile Image -->
         <div class="profile-image-card">
-            <img src="{{ $user->avatar_url ?? 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=350&h=400&fit=crop&crop=face' }}"
+            <img src="{{ $user->profile->avatar_url ?? 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=350&h=400&fit=crop&crop=face' }}"
                  alt="Profile Picture"
                  class="profile-image"
                  onerror="this.onerror=null; this.src='https://placehold.co/350x400/f3f4f6/9ca3af?text=Profile'">
@@ -458,11 +458,17 @@
                 <div class="form-group">
                     <label class="form-label">Profile Picture</label>
                     <div class="file-upload-container">
-                        <input type="file" id="profilePictureInput" name="avatar_url" class="file-upload-input" accept="image/*" onchange="handleFileSelect(this)">
-                        <label for="profilePictureInput" class="file-upload-button">
+                        {{-- <input type="file" id="profilePictureInput" name="avatar_url" class="file-upload-input" accept="image/*" onchange="handleFileSelect(this)"> --}}
+                        <input type="text"
+                   id="avatar_url"
+                   name="avatar_url"
+                   class="form-control"
+                   placeholder="Masukkan URL gambar profil"
+                   value="{{ $user->profile->avatar_url ?? '' }}">
+                        {{-- <label for="profilePictureInput" class="file-upload-button">
                             📁 Choose File
                         </label>
-                        <span class="file-name" id="fileName">{{ $user->avatar_url ? basename($user->avatar_url) : 'No file selected' }}</span>
+                        <span class="file-name" id="fileName">{{ $user->avatar_url ? basename($user->avatar_url) : 'No file selected' }}</span> --}}
                     </div>
                 </div>
 
