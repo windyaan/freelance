@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Chat - SkillMatch')
-
 @section('page-title', 'Chat')
 
 @section('navigation')
@@ -43,7 +42,6 @@
 
 @push('styles')
 <style>
-/* Modern Chat Styles - Same as before */
 :root {
     --chat-bg-primary: #f8fafc;
     --chat-bg-secondary: #ffffff;
@@ -69,7 +67,7 @@
     border: 1px solid var(--chat-border);
 }
 
-/* Chat Sidebar - Same as before */
+/* Chat Sidebar */
 .chat-sidebar {
     width: 320px;
     background: var(--chat-bg-secondary);
@@ -251,7 +249,6 @@
     color: var(--chat-text-secondary);
 }
 
-/* Add Offer Button in Header */
 .chat-header-actions {
     display: flex;
     align-items: center;
@@ -269,6 +266,9 @@
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: var(--chat-shadow);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
 }
 
 .btn-create-offer:hover {
@@ -419,6 +419,8 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-decoration: none;
+    text-align: center;
 }
 
 .btn-details {
@@ -428,6 +430,8 @@
 
 .btn-details:hover {
     background: #475569;
+    color: white;
+    text-decoration: none;
 }
 
 .message-time {
@@ -572,6 +576,117 @@
     overflow-y: auto;
 }
 
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.modal-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--chat-text-primary);
+}
+
+.modal-close {
+    color: var(--chat-text-muted);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 6px;
+    transition: colors 0.2s;
+}
+
+.modal-close:hover {
+    color: var(--chat-text-secondary);
+    background: #f1f5f9;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--chat-text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.form-input, .form-select, .form-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--chat-border);
+    border-radius: 8px;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+    outline: none;
+    border-color: #374557;
+    box-shadow: 0 0 0 3px rgba(55, 69, 87, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-help {
+    font-size: 0.75rem;
+    color: var(--chat-text-secondary);
+    margin-top: 0.25rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.btn {
+    padding: 0.625rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-secondary {
+    background: #f1f5f9;
+    color: var(--chat-text-secondary);
+}
+
+.btn-secondary:hover {
+    background: #e2e8f0;
+}
+
+.btn-primary {
+    background: #374557;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #2d3748;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .chat-container {
@@ -612,216 +727,184 @@
         padding: 0.375rem 0.75rem;
         font-size: 0.8rem;
     }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
 }
 </style>
 @endpush
 
 @section('content')
-<div class="chat-container flex h-screen">
+<div class="chat-container">
     <!-- Chat Sidebar -->
-    <div class="chat-sidebar w-1/3 border-r flex flex-col bg-white">
-        <div class="chat-sidebar-header p-4 border-b">
-            <h2 class="chat-sidebar-title text-lg font-bold">Messages</h2>
-            <p class="chat-sidebar-subtitle text-sm text-gray-500">Recent conversations</p>
+    <div class="chat-sidebar">
+        <div class="chat-sidebar-header">
+            <h2 class="chat-sidebar-title">Messages</h2>
+            <p class="chat-sidebar-subtitle">Recent conversations</p>
         </div>
 
-        <!-- <div class="chat-list flex-1 overflow-y-auto" id="chatList">
-            @foreach($chats as $chat)
+        <div class="chat-list" id="chatList">
+            @forelse($chats as $chat)
                 @php
-                    $otherUser = $chat->client_id == auth()->id()
-                        ? $chat->freelancer
-                        : $chat->client;
-                @endphp -->
+                    $otherUser = null;
+                    if (isset($chat->client_id) && $chat->client_id == auth()->id()) {
+                        $otherUser = $chat->freelancer ?? null;
+                    } else {
+                        $otherUser = $chat->client ?? null;
+                    }
+                @endphp
 
-                <div class="chat-list flex-1 overflow-y-auto" id="chatList">
-    @foreach($chats as $chat)
-        @php
-            // pastikan $chat punya client_id & freelancer
-            $otherUser = null;
-            if (isset($chat->client_id) && $chat->client_id == auth()->id()) {
-                $otherUser = $chat->freelancer ?? null;
-            } else {
-                $otherUser = $chat->client ?? null;
-            }
-        @endphp
-
-
-        @if($otherUser)
-            <div class="chat-item">
-                {{ $otherUser->name ?? 'User' }}
-            </div>
-        @endif
-    @endforeach
-</div>
-
-                <div class="chat-item {{ isset($activeChat) && $activeChat->id === $chat->id ? 'active' : '' }}"
-                     data-chat-id="{{ $chat->id }}"
-                     data-user-name="{{ $otherUser->name }}">
-
-                    <!-- Avatar -->
-                    <div class="chat-avatar">
-                        <img src="{{ $otherUser->profile->avatar_url ?? 'https://via.placeholder.com/52' }}"
-                             alt="{{ $otherUser->name }}">
-                    </div>
-
-                    <!-- Info -->
-                    <div class="chat-info">
-                        <div class="chat-name">{{ $otherUser->name }}</div>
-                        <div class="chat-preview">
-                            {{ $chat->messages->last()->content ?? 'Belum ada pesan' }}
+                @if($otherUser)
+                    <div class="chat-item {{ isset($activeChat) && $activeChat->id === $chat->id ? 'active' : '' }}"
+                         data-chat-id="{{ $chat->id }}"
+                         data-user-name="{{ $otherUser->name }}">
+                        
+                        <!-- Avatar -->
+                        <div class="chat-avatar">
+                            <img src="{{ $otherUser->profile->avatar_url ?? 'https://via.placeholder.com/52' }}"
+                                 alt="{{ $otherUser->name }}">
                         </div>
-                        @if($otherUser->profile && $otherUser->profile->skills)
-                            <div class="chat-skills">
-                                @foreach(array_slice(explode(',', $otherUser->profile->skills), 0, 2) as $skill)
-                                    <span class="chat-skill-tag">
-                                        {{ trim($skill) }}
-                                    </span>
-                                @endforeach
+
+                        <!-- Info -->
+                        <div class="chat-info">
+                            <div class="chat-name">{{ $otherUser->name }}</div>
+                            <div class="chat-preview">
+                                {{ $chat->messages->last()->content ?? 'Belum ada pesan' }}
                             </div>
-                        @endif
+                            @if($otherUser->profile && $otherUser->profile->skills)
+                                <div class="chat-skills">
+                                    @foreach(array_slice(explode(',', $otherUser->profile->skills), 0, 2) as $skill)
+                                        <span class="chat-skill-tag">
+                                            {{ trim($skill) }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
                     </div>
+                @endif
+            @empty
+                <div class="p-4 text-center text-gray-500">
+                    <iconify-icon icon="material-symbols:chat-bubble-outline" class="text-4xl mb-2"></iconify-icon>
+                    <p class="text-sm">Belum ada percakapan</p>
                 </div>
-            @endforeach
+            @endforelse
         </div>
     </div>
 
     <!-- Chat Main Area -->
-    <!-- <div class="chat-main">
-        @if($activeChat)
+    <div class="chat-main">
+        @if(isset($activeChat) && $activeChat)
             @php
-                $otherUser = $activeChat->client_id == auth()->id()
-                    ? $activeChat->freelancer
-                    : $activeChat->client;
-            @endphp -->
+                $otherUser = null;
+                if (isset($activeChat->client_id) && $activeChat->client_id == auth()->id()) {
+                    $otherUser = $activeChat->freelancer ?? null;
+                } else {
+                    $otherUser = $activeChat->client ?? null;
+                }
+            @endphp
 
-            <!-- Chat Main Area -->
-<div class="chat-main">
-    @if(!empty($activeChat))
-        @php
-            $otherUser = null;
-            if (isset($activeChat->client_id) && $activeChat->client_id == auth()->id()) {
-                $otherUser = $activeChat->freelancer ?? null;
-            } else {
-                $otherUser = $activeChat->client ?? null;
-            }
-        @endphp
-
-        @if($otherUser)
-            <h2>Chat dengan {{ $otherUser->name ?? 'User' }}</h2>
-        @endif
-    @else
-        <p>Pilih chat untuk memulai percakapan.</p>
-    @endif
-</div>
-
-            <!-- Header -->
-            <div class="chat-header" id="chatHeader">
-                <div class="chat-header-avatar">
-                    <img src="{{ $otherUser->profile->avatar_url ?? 'https://via.placeholder.com/48' }}"
-                         alt="{{ $otherUser->name }}">
-                </div>
-                <div class="chat-header-info">
-                    <div class="chat-header-name" id="headerName">
-                        {{ $otherUser->name }}
+            @if($otherUser)
+                <!-- Header -->
+                <div class="chat-header">
+                    <div class="chat-header-avatar">
+                        <img src="{{ $otherUser->profile->avatar_url ?? 'https://via.placeholder.com/48' }}"
+                             alt="{{ $otherUser->name }}">
                     </div>
-                    <div class="chat-header-status" id="headerStatus">
-                        Online • {{ $otherUser->profile->skills ?? '' }}
-                    </div>
-                </div>
-                
-                <!-- Add Offer Button (only for freelancers) -->
-                @if(auth()->user()->role === 'freelancer')
-                <div class="chat-header-actions">
-                    <button onclick="openOfferModal()" class="btn-create-offer">
-                        <iconify-icon icon="material-symbols:add" style="margin-right: 0.25rem;"></iconify-icon>
-                        Create Offer
-                    </button>
-                </div>
-                @endif
-            </div>
-
-            <!-- Messages -->
-            <div class="chat-messages" id="chatMessages">
-                @foreach($activeChat->messages as $msg)
-                    <div class="message {{ $msg->sender_id == auth()->id() ? 'sent' : 'received' }}">
-                        <div class="message-avatar">
-                            <img src="{{ $msg->sender->profile->avatar_url ?? 'https://via.placeholder.com/32' }}"
-                                 alt="{{ $msg->sender->name }}">
+                    <div class="chat-header-info">
+                        <div class="chat-header-name">
+                            {{ $otherUser->name }}
                         </div>
-                        <div class="message-content">
-                            {{ $msg->content }}
-                            <div class="message-time">
-                                {{ $msg->created_at->format('H:i A') }}
-                                @if($msg->sender_id == auth()->id())
-                                    <span class="message-status">
-                                        <iconify-icon icon="material-symbols:check" style="font-size: 0.75rem; color: var(--chat-accent-green);"></iconify-icon>
-                                        <iconify-icon icon="material-symbols:check" style="font-size: 0.75rem; margin-left: -0.25rem; color: var(--chat-accent-green);"></iconify-icon>
-                                    </span>
-                                @endif
-                            </div>
+                        <div class="chat-header-status">
+                            Online • {{ $otherUser->profile->skills ?? 'No skills listed' }}
                         </div>
                     </div>
-                @endforeach
-
-                <!-- Display Offers -->
-                @if(isset($activeChat->offers))
-                    @foreach($activeChat->offers as $offer)
-                        @if($offer->status === 'pending')
-                        <div class="offer-message {{ $offer->freelancer_id == auth()->id() ? 'sent' : 'received' }}">
-                            <div class="offer-card">
-                                <div class="offer-header">
-                                    <div class="offer-title">{{ $offer->title }}</div>
-                                    <div class="offer-meta">
-                                        <div>price : {{ $offer->formatted_price }}</div>
-                                        <div>revision : {{ $offer->revisions }}x</div>
-                                        <div>deadline : {{ $offer->formatted_deadline }}</div>
-                                        <div class="offer-time">{{ $offer->created_at->format('H:i A') }}</div>
-                                    </div>
-                                </div>
-                                
-                                <!-- @if($offer->client_id == auth()->id())
-                                <div class="offer-body">
-                                    <div class="offer-actions">
-                                        <a href="{{ route('offers.show', $offer) }}" class="btn-offer btn-details">
-                                            Details
-                                        </a>
-                                    </div>
-                                </div>
-                                @endif -->
-
-                                {{-- Offer Section --}}
-@if(!empty($offer) && isset($offer->client_id) && $offer->client_id == auth()->id())
-    <div class="offer-body">
-        <div class="offer-actions">
-            <a href="{{ route('offers.show', $offer) }}" class="btn-offer btn-details">
-                Details
-            </a>
-        </div>
-    </div>
-@endif
-                            </div>
-                        </div>
-                        @endif
-                    @endforeach
-                @endif
-            </div>
-
-            <!-- Chat Input -->
-            <div class="chat-input-container">
-                <form action="{{ route('chat.message.store', $activeChat) }}" method="POST">
-                    @csrf
-                    <div class="chat-input-wrapper">
-                        <textarea class="chat-input"
-                                  name="content"
-                                  placeholder="Ketik pesan Anda..."
-                                  rows="1"
-                                  id="messageInput"></textarea>
-                        <button type="submit" class="chat-send-btn" id="sendBtn">
-                            <iconify-icon icon="material-symbols:send" style="font-size: 1.25rem;"></iconify-icon>
+                    
+                    <!-- Add Offer Button (only for freelancers) -->
+                    @if(auth()->user()->role === 'freelancer')
+                    <div class="chat-header-actions">
+                        <button onclick="openOfferModal()" class="btn-create-offer">
+                            <iconify-icon icon="material-symbols:add"></iconify-icon>
+                            Create Offer
                         </button>
                     </div>
-                </form>
-            </div>
+                    @endif
+                </div>
+
+                <!-- Messages -->
+                <div class="chat-messages" id="chatMessages">
+                    @foreach($activeChat->messages as $msg)
+                        <div class="message {{ $msg->sender_id == auth()->id() ? 'sent' : 'received' }}">
+                            <div class="message-avatar">
+                                <img src="{{ $msg->sender->profile->avatar_url ?? 'https://via.placeholder.com/32' }}"
+                                     alt="{{ $msg->sender->name }}">
+                            </div>
+                            <div class="message-content">
+                                {{ $msg->content }}
+                                <div class="message-time">
+                                    {{ $msg->created_at->format('H:i A') }}
+                                    @if($msg->sender_id == auth()->id())
+                                        <span class="message-status">
+                                            <iconify-icon icon="material-symbols:check" style="font-size: 0.75rem; color: var(--chat-accent-green);"></iconify-icon>
+                                            <iconify-icon icon="material-symbols:check" style="font-size: 0.75rem; margin-left: -0.25rem; color: var(--chat-accent-green);"></iconify-icon>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+
+                    <!-- Display Offers -->
+                    @if(isset($activeChat->offers))
+                        @foreach($activeChat->offers as $offer)
+                            @if($offer->status === 'pending')
+                            <div class="offer-message {{ $offer->freelancer_id == auth()->id() ? 'sent' : 'received' }}">
+                                <div class="offer-card">
+                                    <div class="offer-header">
+                                        <div class="offer-title">{{ $offer->title }}</div>
+                                        <div class="offer-meta">
+                                            <div>Price: {{ $offer->formatted_price }}</div>
+                                            <div>Deadline: {{ $offer->formatted_deadline }}</div>
+                                            <div class="offer-time">{{ $offer->created_at->format('H:i A') }}</div>
+                                        </div>
+                                    </div>
+                                    
+                                    @if($offer->client_id == auth()->id())
+                                    <div class="offer-body">
+                                        <div class="offer-actions">
+                                            <a href="{{ route('offers.show', $offer) }}" class="btn-offer btn-details">
+                                                View Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+                            @endif
+                        @endforeach
+                    @endif
+                </div>
+
+                <!-- Chat Input -->
+                <div class="chat-input-container">
+                    <form action="{{ route('chat.message.store', $activeChat) }}" method="POST">
+                        @csrf
+                        <div class="chat-input-wrapper">
+                            <textarea class="chat-input"
+                                      name="content"
+                                      placeholder="Ketik pesan Anda..."
+                                      rows="1"
+                                      id="messageInput"
+                                      required></textarea>
+                            <button type="submit" class="chat-send-btn" id="sendBtn">
+                                <iconify-icon icon="material-symbols:send" style="font-size: 1.25rem;"></iconify-icon>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            @endif
         @else
             <!-- Empty State -->
             <div class="chat-empty-state">
@@ -834,80 +917,74 @@
 </div>
 
 <!-- Create Offer Modal (only show for freelancers) -->
-@if(auth()->user()->role === 'freelancer' && $activeChat)
+@if(auth()->user()->role === 'freelancer' && isset($activeChat) && $activeChat)
 <div id="createOfferModal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
         <div class="p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold text-gray-900">Buat Penawaran</h3>
-                <button onclick="closeOfferModal()" class="text-gray-400 hover:text-gray-600">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
+            <div class="modal-header">
+                <h3 class="modal-title">Buat Penawaran</h3>
+                <button onclick="closeOfferModal()" class="modal-close">
+                    <iconify-icon icon="material-symbols:close" style="font-size: 1.5rem;"></iconify-icon>
                 </button>
             </div>
 
             <form id="offerForm" action="{{ route('offers.store') }}" method="POST">
                 @csrf
+                <input type="hidden" name="client_id" value="{{ $activeChat->client_id }}">
                 
+                <!-- Job Selection -->
+                <div class="form-group">
+                    <label class="form-label">Pilih Job/Project</label>
+                    <select name="job_id" required class="form-select">
+                        <option value="">-- Pilih Job --</option>
+                        @forelse($availableJobs ?? [] as $job)
+                            <option value="{{ $job->id }}">
+                                {{ $job->title }} - Rp {{ number_format($job->budget, 0, ',', '.') }}
+                            </option>
+                        @empty
+                            <option value="" disabled>Anda belum punya job</option>
+                        @endforelse
+                    </select>
+                    <p class="form-help">Pilih job yang ingin Anda ajukan penawaran</p>
+                </div>
                 
-                
-               {{-- Pilih Job --}}
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Job/Project</label>
-            <select name="job_id" required 
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                <option value="">-- Pilih Job --</option>
-                @forelse($availableJobs as $job)
-                    <option value="{{ $job->id }}">
-                        {{ $job->title }} - Rp {{ number_format($job->budget, 0, ',', '.') }}
-                    </option>
-                @empty
-                    <option value="" disabled>Anda belum punya job</option>
-                @endforelse
-            </select>
-            <p class="text-xs text-gray-500 mt-1">Pilih job yang ingin Anda ajukan penawaran</p>
-        </div>
-                
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Judul Penawaran</label>
-                        <input type="text" name="title" required 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                               placeholder="Misal: UI Website Toko Pakaian">
-                    </div>
+                <!-- Offer Title -->
+                <div class="form-group">
+                    <label class="form-label">Judul Penawaran</label>
+                    <input type="text" name="title" required class="form-input"
+                           placeholder="Misal: UI Website Toko Pakaian">
+                </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Penawaran</label>
-                        <textarea name="description" rows="4" required
-                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                  placeholder="Jelaskan detail project yang akan dikerjakan..."></textarea>
-                    </div>
+                <!-- Offer Description -->
+                <div class="form-group">
+                    <label class="form-label">Deskripsi Penawaran</label>
+                    <textarea name="description" required class="form-textarea"
+                              placeholder="Jelaskan detail project yang akan dikerjakan..."></textarea>
+                </div>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Harga (Rp)</label>
-                            <input type="number" name="final_price" required min="0"
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                   placeholder="700000">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Deadline</label>
-                            <input type="date" name="deadline" required
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                   min="{{ date('Y-m-d', strtotime('+1 day')) }}">
-                        </div>
+                <!-- Price and Deadline -->
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Harga (Rp)</label>
+                        <input type="number" name="final_price" required min="0" class="form-input"
+                               placeholder="700000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Deadline</label>
+                        <input type="date" name="deadline" required class="form-input"
+                               min="{{ date('Y-m-d', strtotime('+1 day')) }}">
                     </div>
                 </div>
 
-                <div class="flex justify-end space-x-3 mt-6">
-                    <button type="button" onclick="closeOfferModal()"
-                            class="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="button" onclick="closeOfferModal()" class="btn btn-secondary">
                         Batal
                     </button>
-                    <button type="submit"
-                            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    <button type="submit" class="btn btn-primary">
                         Kirim Penawaran
                     </button>
                 </div>
@@ -930,12 +1007,25 @@ function closeOfferModal() {
     document.getElementById('createOfferModal').style.display = 'none';
 }
 
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+    const modal = document.getElementById('createOfferModal');
+    if (e.target === modal) {
+        closeOfferModal();
+    }
+});
+
 // Handle offer form submission
 document.addEventListener('DOMContentLoaded', function() {
     const offerForm = document.getElementById('offerForm');
     if (offerForm) {
         offerForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = 'Mengirim...';
+            submitBtn.disabled = true;
             
             const formData = new FormData(this);
             
@@ -951,54 +1041,104 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.success) {
                     closeOfferModal();
+                    // Show success message
+                    alert('Penawaran berhasil dikirim!');
                     location.reload(); // Refresh to show the offer
                 } else {
-                    alert('Terjadi kesalahan: ' + (data.message || 'Unknown error'));
+                    throw new Error(data.message || 'Unknown error');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Terjadi kesalahan saat mengirim penawaran');
+                alert('Terjadi kesalahan: ' + error.message);
+            })
+            .finally(() => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
             });
         });
     }
 
-    // Rest of the chat functionality
-    const chatItems = document.querySelectorAll('.chat-item');
-    const messageInput = document.getElementById('messageInput');
-    
     // Chat item selection
+    const chatItems = document.querySelectorAll('.chat-item');
     chatItems.forEach(item => {
         item.addEventListener('click', function() {
             const chatId = this.getAttribute('data-chat-id');
-            window.location.href = `{{ route(auth()->user()->role . '.chat') }}?chat_id=${chatId}`;
+            if (chatId) {
+                window.location.href = `{{ route(auth()->user()->role . '.chat') }}?chat_id=${chatId}`;
+            }
         });
     });
 
     // Auto resize textarea
+    const messageInput = document.getElementById('messageInput');
     if (messageInput) {
         messageInput.addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = (this.scrollHeight) + 'px';
         });
         
+        // Submit on Enter (without Shift)
         messageInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                this.form.submit();
+                const form = this.closest('form');
+                if (this.value.trim()) {
+                    form.submit();
+                }
             }
         });
     }
 
-    // Scroll to bottom
+    // Scroll to bottom of chat
     const chatMessages = document.getElementById('chatMessages');
     if (chatMessages) {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
+
+    // Real-time chat updates (if using Laravel Echo)
+    if (window.Echo && window.currentChatId) {
+        window.Echo.private(`chat.${window.currentChatId}`)
+            .listen('MessageSent', (e) => {
+                // Add new message to chat
+                appendMessage(e.message);
+            });
+    }
 });
 
+// Function to append new messages (for real-time updates)
+function appendMessage(message) {
+    const chatMessages = document.getElementById('chatMessages');
+    const isOwnMessage = message.sender_id == window.userId;
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${isOwnMessage ? 'sent' : 'received'}`;
+    
+    messageDiv.innerHTML = `
+        <div class="message-avatar">
+            <img src="${message.sender.profile?.avatar_url || 'https://via.placeholder.com/32'}"
+                 alt="${message.sender.name}">
+        </div>
+        <div class="message-content">
+            ${message.content}
+            <div class="message-time">
+                ${new Date(message.created_at).toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit'})}
+                ${isOwnMessage ? `
+                    <span class="message-status">
+                        <iconify-icon icon="material-symbols:check" style="font-size: 0.75rem; color: var(--chat-accent-green);"></iconify-icon>
+                        <iconify-icon icon="material-symbols:check" style="font-size: 0.75rem; margin-left: -0.25rem; color: var(--chat-accent-green);"></iconify-icon>
+                    </span>
+                ` : ''}
+            </div>
+        </div>
+    `;
+    
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
 // Set current chat data for Echo
-window.currentChatId = "{{ $activeChat ? $activeChat->id : '' }}";
+window.currentChatId = "{{ isset($activeChat) ? $activeChat->id : '' }}";
 window.userId = "{{ auth()->id() }}";
 </script>
 @endpush

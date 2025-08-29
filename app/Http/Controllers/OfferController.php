@@ -20,23 +20,23 @@ class OfferController extends Controller
     }
 
   
-    public function create(Request $request)
-    {
-        // Ambil semua job milik freelancer yang sedang login
-        $availableJobs = Job::where('freelancer_id', Auth::id())->get();
+    // public function create(Request $request)
+    // {
+       
+    //     $availableJobs = Job::where('freelancer_id', Auth::id())->get();
         
-        // Asumsi client_id dapat dikirim melalui parameter URL dari halaman chat/profil klien
-        $clientId = $request->query('client_id');
+    //     // Asumsi client_id dapat dikirim melalui parameter URL dari halaman chat/profil klien
+    //     $clientId = $request->query('client_id');
 
-        return view('offers.create', compact('availableJobs', 'clientId'));
-    }
+    //     return view('offers.create', compact('availableJobs', 'clientId'));
+    // }
 
    
     public function store(Request $request)
     {
         $request->validate([
             'job_id'       => 'required|exists:jobs,id',
-            'client_id'    => 'required|exists:users,id',
+            // 'client_id'    => 'required|exists:users,id',
             'title'        => 'required|string|max:255',
             'description'  => 'required|string',
             'final_price'  => 'required|numeric|min:0',
@@ -60,7 +60,9 @@ class OfferController extends Controller
             'status'        => 'pending',
         ]);
 
-        return redirect()->route('chat.index')->with('success', 'Offer berhasil dibuat.');
+        return response()->json(['success' => true, 'message' => 'Penawaran berhasil dibuat.']);
+
+        // return redirect()->route('chat.index')->with('success', 'Offer berhasil dibuat.');
     }
 
     
