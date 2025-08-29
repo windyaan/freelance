@@ -27,7 +27,7 @@ class ProfileUpdateRequest extends FormRequest
                 Rule::unique(User::class)->ignore($this->user()->id)],
             //untuk model profile
             'bio' => ['nullable', 'string', 'max:1000'],
-            'avatar_url' => ['nullable', 'url'],
+            'avatar_url' => ['nullable', 'url', 'max:255'],
             'skills' => ['nullable', 'string', 'max:1000'],
         ];
     }

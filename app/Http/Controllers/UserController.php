@@ -16,6 +16,8 @@ class UserController extends Controller
 {
     public function index()
     {
+        //baru
+
         return view('dashboard.client.index');
     }
 

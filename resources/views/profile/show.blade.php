@@ -436,8 +436,10 @@
         <!-- Right Side - Profile Info -->
         <div class="profile-right">
             <div class="profile-card">
-                <img src="https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=200&h=200&fit=crop&crop=face" alt="Profile" class="profile-image">
-
+                {{-- <img src="https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=200&h=200&fit=crop&crop=face" alt="Profile" class="profile-image"> --}}
+        <img src="{{ $user->profile->avatar_url ?? 'https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=200&h=200&fit=crop&crop=face' }}"
+             alt="Profile"
+             class="profile-image">
                 <h1 class="profile-name">{{ $user->name ?? 'Nadia Ima' }}</h1>
 
                 <div class="profile-skills">
