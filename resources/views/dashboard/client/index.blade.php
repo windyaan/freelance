@@ -155,19 +155,45 @@
         Price
         <span class="filter-arrow">▼</span>
 
-        <!-- Price Filter Dropdown -->
-        <div class="price-dropdown" id="priceDropdown">
-            <div class="price-inputs">
-                <div class="price-input-group">
-                    <label class="price-label">MIN</label>
-                    <input type="number" class="price-input" id="minPrice" placeholder="0" min="0">
+        <!-- Main Filter Dropdown -->
+        <div class="filter-dropdown" id="filterDropdown">
+            <!-- Price Filter Section -->
+            <div class="filter-section">
+                <div class="filter-section-header">
+                    <iconify-icon icon="material-symbols:payments"></iconify-icon>
+                    Price Range
                 </div>
-                <div class="price-input-group">
-                    <label class="price-label">MAX</label>
-                    <input type="number" class="price-input" id="maxPrice" placeholder="1000000" min="0">
+                <div class="price-inputs">
+                    <div class="price-input-group">
+                        <label class="price-label">MIN</label>
+                        <input type="number" class="price-input" id="minPrice" placeholder="0" min="0">
+                    </div>
+                    <div class="price-input-group">
+                        <label class="price-label">MAX</label>
+                        <input type="number" class="price-input" id="maxPrice" placeholder="1000000" min="0">
+                    </div>
                 </div>
             </div>
-            <button class="price-apply-btn" id="applyPriceFilter">Apply</button>
+
+            <!-- You can add more filter sections here in the future -->
+            <!--
+            <div class="filter-section">
+                <div class="filter-section-header">
+                    <iconify-icon icon="material-symbols:location-on"></iconify-icon>
+                    Location
+                </div>
+                <select class="filter-select">
+                    <option value="">All Locations</option>
+                    <option value="jakarta">Jakarta</option>
+                    <option value="bandung">Bandung</option>
+                </select>
+            </div>
+            -->
+
+            <div class="filter-actions">
+                <button class="filter-clear-btn" id="clearFilters">Clear</button>
+                <button class="filter-apply-btn" id="applyFilters">Apply</button>
+            </div>
         </div>
     </div>
 </div>
@@ -484,31 +510,56 @@
     transform: rotate(180deg);
 }
 
-/* Price Filter Dropdown */
-.price-dropdown {
+/* Main Filter Dropdown */
+.filter-dropdown {
     position: absolute;
     top: 100%;
     left: 0;
-    right: 0;
     background: var(--bg-primary);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    box-shadow: var(--shadow-md);
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
     margin-top: 8px;
-    padding: 1.5rem;
-    min-width: 300px;
+    padding: 0;
+    min-width: 350px;
     z-index: 1000;
     display: none;
+    overflow: hidden;
 }
 
-.price-dropdown.show {
+.filter-dropdown.show {
     display: block;
 }
 
+/* Filter Sections */
+.filter-section {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.filter-section:last-of-type {
+    border-bottom: none;
+}
+
+.filter-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.filter-section-header iconify-icon {
+    color: var(--primary-color);
+    font-size: 1rem;
+}
+
+/* Price inputs styling */
 .price-inputs {
     display: flex;
     gap: 1rem;
-    margin-bottom: 1rem;
 }
 
 .price-input-group {
@@ -517,42 +568,91 @@
 
 .price-label {
     display: block;
-    font-size: 0.8rem;
-    font-weight: 500;
+    font-size: 0.75rem;
+    font-weight: 600;
     color: var(--text-secondary);
     margin-bottom: 0.5rem;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .price-input {
     width: 100%;
-    padding: 0.75rem;
+    padding: 0.75rem 1rem;
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 0.9rem;
     outline: none;
-    transition: border-color 0.2s ease;
+    transition: all 0.2s ease;
+    background: var(--bg-secondary);
 }
 
 .price-input:focus {
     border-color: var(--primary-color);
+    background: var(--bg-primary);
+    box-shadow: 0 0 0 3px rgba(56, 193, 185, 0.1);
 }
 
-.price-apply-btn {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 0.75rem 2rem;
-    border-radius: 6px;
+/* Filter select styling */
+.filter-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.2s ease;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.filter-select:focus {
+    border-color: var(--primary-color);
+    background: var(--bg-primary);
+    box-shadow: 0 0 0 3px rgba(56, 193, 185, 0.1);
+}
+
+/* Filter actions */
+.filter-actions {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--bg-secondary);
+}
+
+.filter-clear-btn,
+.filter-apply-btn {
+    flex: 1;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    width: 100%;
     transition: all 0.2s ease;
+    border: none;
 }
 
-.price-apply-btn:hover {
+.filter-clear-btn {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.filter-clear-btn:hover {
+    background: var(--bg-primary);
+    border-color: var(--text-secondary);
+    color: var(--text-primary);
+}
+
+.filter-apply-btn {
+    background: var(--primary-color);
+    color: white;
+}
+
+.filter-apply-btn:hover {
     background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(56, 193, 185, 0.3);
 }
 
 /* Selected Filters */
@@ -793,6 +893,10 @@
         gap: 1rem;
     }
 
+    .filter-dropdown {
+        min-width: 300px;
+    }
+
     .filters-section {
         flex-wrap: wrap;
         gap: 0.8rem;
@@ -803,7 +907,7 @@
         font-size: 0.85rem;
     }
 
-    .price-dropdown {
+    .filter-dropdown {
         min-width: 250px;
     }
 }
@@ -829,6 +933,11 @@
         padding: 1rem 0.5rem;
     }
 
+    .filter-dropdown {
+        min-width: 200px;
+        left: -50px;
+    }
+
     .filters-section {
         gap: 0.5rem;
     }
@@ -836,11 +945,6 @@
     .filter-button {
         padding: 0.5rem 1rem;
         font-size: 0.8rem;
-    }
-
-    .price-dropdown {
-        min-width: 200px;
-        padding: 1rem;
     }
 }
 
@@ -871,8 +975,28 @@
         gap: 0.5rem;
     }
 
+    .filter-dropdown {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90vw;
+        max-width: 300px;
+        margin-top: 0;
+    }
+
     .selected-filters {
         justify-content: center;
+    }
+
+    .price-inputs {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .filter-actions {
+        flex-direction: column;
+        gap: 1rem;
     }
 }
 </style>
@@ -880,7 +1004,7 @@
 
 @push('scripts')
 <script>
-// Enhanced JavaScript code for Dashboard with Filters
+// Enhanced JavaScript code for Dashboard with Nested Filters
 document.addEventListener('DOMContentLoaded', function() {
     // Get jobs data from the embedded JSON script
     let jobsData = [];
@@ -896,11 +1020,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Cache DOM elements
     const searchInput = document.getElementById('globalSearch');
-    const priceBtn = document.getElementById('priceBtn');
-    const priceDropdown = document.getElementById('priceDropdown');
+    const filterBtn = document.getElementById('filterBtn');
+    const filterDropdown = document.getElementById('filterDropdown');
     const minPriceInput = document.getElementById('minPrice');
     const maxPriceInput = document.getElementById('maxPrice');
-    const applyPriceBtn = document.getElementById('applyPriceFilter');
+    const applyFiltersBtn = document.getElementById('applyFilters');
+    const clearFiltersBtn = document.getElementById('clearFilters');
     const selectedFiltersDiv = document.getElementById('selectedFilters');
 
     // Filter state
@@ -1010,13 +1135,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Price filter functions
-    function togglePriceDropdown() {
-        if (priceDropdown && priceBtn) {
-            const isOpen = priceDropdown.classList.contains('show');
+    // Filter dropdown functions
+    function toggleFilterDropdown() {
+        if (filterDropdown && filterBtn) {
+            const isOpen = filterDropdown.classList.contains('show');
 
             // Close all dropdowns first
-            document.querySelectorAll('.price-dropdown').forEach(dropdown => {
+            document.querySelectorAll('.filter-dropdown').forEach(dropdown => {
                 dropdown.classList.remove('show');
             });
             document.querySelectorAll('.filter-button').forEach(btn => {
@@ -1024,35 +1149,80 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             if (!isOpen) {
-                priceDropdown.classList.add('show');
-                priceBtn.classList.add('open');
+                filterDropdown.classList.add('show');
+                filterBtn.classList.add('open');
             }
         }
     }
 
-    function applyPriceFilter() {
-        const minPrice = minPriceInput ? parseInt(minPriceInput.value) || null : null;
-        const maxPrice = maxPriceInput ? parseInt(maxPriceInput.value) || null : null;
+    function applyAllFilters() {
+        // Get price values and handle empty strings
+        const minPriceValue = minPriceInput ? minPriceInput.value.trim() : '';
+        const maxPriceValue = maxPriceInput ? maxPriceInput.value.trim() : '';
+
+        const minPrice = minPriceValue !== '' ? parseInt(minPriceValue) : null;
+        const maxPrice = maxPriceValue !== '' ? parseInt(maxPriceValue) : null;
+
+        // Validate price range
+        if (minPrice !== null && maxPrice !== null && minPrice > maxPrice) {
+            alert('Minimum price cannot be greater than maximum price');
+            return;
+        }
 
         activeFilters.priceMin = minPrice;
         activeFilters.priceMax = maxPrice;
 
+        console.log('Applying filters:', activeFilters); // Debug log
+
         applyFilters();
         updateSelectedFilters();
+        updateFilterButtonState();
 
         // Close dropdown
-        if (priceDropdown && priceBtn) {
-            priceDropdown.classList.remove('show');
-            priceBtn.classList.remove('open');
+        if (filterDropdown && filterBtn) {
+            filterDropdown.classList.remove('show');
+            filterBtn.classList.remove('open');
         }
+    }
 
-        // Update price button appearance
-        if (priceBtn) {
-            if (minPrice !== null || maxPrice !== null) {
-                priceBtn.classList.add('active');
-            } else {
-                priceBtn.classList.remove('active');
-            }
+    function clearAllFiltersFromDropdown() {
+        // Clear price inputs
+        if (minPriceInput) minPriceInput.value = '';
+        if (maxPriceInput) maxPriceInput.value = '';
+
+        // Clear all filter states
+        activeFilters = {
+            skills: [],
+            priceMin: null,
+            priceMax: null,
+            search: ''
+        };
+
+        // Clear UI elements
+        document.querySelectorAll('.skill-card').forEach(card => {
+            card.classList.remove('active');
+        });
+
+        if (searchInput) searchInput.value = '';
+
+        // Apply filters (show all)
+        applyFilters();
+        updateSelectedFilters();
+        updateFilterButtonState();
+    }
+
+    function updateFilterButtonState() {
+        if (!filterBtn) return;
+
+        const hasActiveFilters = activeFilters.skills.length > 0 ||
+                                activeFilters.priceMin !== null ||
+                                activeFilters.priceMax !== null ||
+                                activeFilters.search;
+
+        if (hasActiveFilters) {
+            filterBtn.classList.add('active');
+        } else {
+            filterBtn.classList.remove('active');
         }
     }
 
@@ -1061,7 +1231,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const cards = document.querySelectorAll('.talent-card[data-name]');
         let visibleCount = 0;
 
-        cards.forEach(card => {
+        console.log('Filter state:', activeFilters); // Debug log
+        console.log('Total cards found:', cards.length); // Debug log
+
+        cards.forEach((card, index) => {
             let show = true;
 
             // Filter by skills/categories
@@ -1081,12 +1254,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Filter by price range
             if (show && (activeFilters.priceMin !== null || activeFilters.priceMax !== null)) {
-                const cardPrice = parseInt(card.getAttribute('data-price')) || 0;
+                const cardPriceAttr = card.getAttribute('data-price');
+                const cardPrice = cardPriceAttr ? parseInt(cardPriceAttr) : 0;
+
+                console.log(`Card ${index + 1} price:`, cardPrice, 'Min:', activeFilters.priceMin, 'Max:', activeFilters.priceMax);
 
                 if (activeFilters.priceMin !== null && cardPrice < activeFilters.priceMin) {
+                    console.log(`Card ${index + 1} filtered out: price ${cardPrice} < min ${activeFilters.priceMin}`);
                     show = false;
                 }
                 if (activeFilters.priceMax !== null && cardPrice > activeFilters.priceMax) {
+                    console.log(`Card ${index + 1} filtered out: price ${cardPrice} > max ${activeFilters.priceMax}`);
                     show = false;
                 }
             }
@@ -1111,7 +1289,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
+        console.log('Visible cards:', visibleCount); // Debug log
         showNoResultsMessage(visibleCount === 0);
+
+        // Reset to first slide if current slide has no visible cards
+        if (visibleCount > 0) {
+            currentTalentSlide = 0;
+            updateTalentSlider();
+        }
     }
 
     // Update selected filters display
@@ -1188,6 +1373,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         applyFilters();
         updateSelectedFilters();
+        updateFilterButtonState();
     }
 
     function removePriceFilter() {
@@ -1196,10 +1382,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (minPriceInput) minPriceInput.value = '';
         if (maxPriceInput) maxPriceInput.value = '';
-        if (priceBtn) priceBtn.classList.remove('active');
 
         applyFilters();
         updateSelectedFilters();
+        updateFilterButtonState();
     }
 
     function removeSearchFilter() {
@@ -1208,6 +1394,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         applyFilters();
         updateSelectedFilters();
+        updateFilterButtonState();
     }
 
     // Global function to remove individual filters
@@ -1227,27 +1414,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Global function to clear all filters
     window.clearAllFilters = function() {
-        // Clear all filter states
-        activeFilters = {
-            skills: [],
-            priceMin: null,
-            priceMax: null,
-            search: ''
-        };
-
-        // Clear UI elements
-        document.querySelectorAll('.skill-card').forEach(card => {
-            card.classList.remove('active');
-        });
-
-        if (minPriceInput) minPriceInput.value = '';
-        if (maxPriceInput) maxPriceInput.value = '';
-        if (priceBtn) priceBtn.classList.remove('active');
-        if (searchInput) searchInput.value = '';
-
-        // Apply filters (show all)
-        applyFilters();
-        updateSelectedFilters();
+        clearAllFiltersFromDropdown();
     };
 
     // Search functionality
@@ -1255,6 +1422,7 @@ document.addEventListener('DOMContentLoaded', function() {
         activeFilters.search = query;
         applyFilters();
         updateSelectedFilters();
+        updateFilterButtonState();
     }
 
     // Show no results message
@@ -1307,26 +1475,71 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Price filter event listeners
-    if (priceBtn) {
-        priceBtn.addEventListener('click', function(e) {
+    // Filter dropdown event listeners
+    if (filterBtn) {
+        filterBtn.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            togglePriceDropdown();
+            toggleFilterDropdown();
         });
     }
 
-    if (applyPriceBtn) {
-        applyPriceBtn.addEventListener('click', function(e) {
+    if (applyFiltersBtn) {
+        applyFiltersBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            applyPriceFilter();
+            applyAllFilters();
+        });
+    }
+
+    // Price input event listeners for real-time validation
+    if (minPriceInput) {
+        minPriceInput.addEventListener('input', function() {
+            const value = parseInt(this.value);
+            if (value < 0) {
+                this.value = '';
+            }
+        });
+    }
+
+    if (maxPriceInput) {
+        maxPriceInput.addEventListener('input', function() {
+            const value = parseInt(this.value);
+            if (value < 0) {
+                this.value = '';
+            }
+        });
+    }
+
+    // Allow Enter key to apply filters
+    if (minPriceInput) {
+        minPriceInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                applyAllFilters();
+            }
+        });
+    }
+
+    if (maxPriceInput) {
+        maxPriceInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                applyAllFilters();
+            }
+        });
+    }
+
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            clearAllFiltersFromDropdown();
         });
     }
 
     // Close dropdowns when clicking outside
     document.addEventListener('click', function(e) {
         if (!e.target.closest('.filter-button')) {
-            document.querySelectorAll('.price-dropdown').forEach(dropdown => {
+            document.querySelectorAll('.filter-dropdown').forEach(dropdown => {
                 dropdown.classList.remove('show');
             });
             document.querySelectorAll('.filter-button').forEach(btn => {
@@ -1392,6 +1605,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 applyFilters();
                 updateSelectedFilters();
+                updateFilterButtonState();
             }
         }
 
@@ -1417,12 +1631,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize filters
     applyFilters();
     updateSelectedFilters();
+    updateFilterButtonState();
 
     // Override global search function from app layout
     window.performSearch = performSearch;
     window.searchItems = performSearch;
 
-    console.log('Enhanced Dashboard with filters initialized successfully');
+    console.log('Enhanced Dashboard with nested filters initialized successfully');
 });
 </script>
 @endpush

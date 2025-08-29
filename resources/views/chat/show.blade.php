@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-{{-- @section('title', 'Chat with ' . $user->name) --}}
 @section('title', 'Chat with ' . $user->name)
 
 @section('content')
@@ -50,11 +49,11 @@
 
             <!-- Message Input -->
             <div class="border-t bg-white px-6 py-4">
-                {{-- <form id="message-form" action="{{ route(auth()->user()->role . '.chat.send', $user->id) }}" method="POST" class="flex space-x-4">
+                <form id="message-form" action="{{ route('chat.send', $chat->id ?? $user->id) }}" method="POST" class="flex space-x-4">
                     @csrf
                     <div class="flex-1">
                         <input type="text"
-                               name="message"
+                               name="content"
                                id="message-input"
                                placeholder="Type your message..."
                                required
@@ -67,92 +66,133 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
                         </svg>
                     </button>
-                </form> --}}
-        <form id="message-form" action="{{ route('chat.chat.send', $chat->id) }}" method="POST">
-    @csrf
-    <div class="flex-1">
-        <input type="text"
-               name="content"
-               id="message-input"
-               placeholder="Type your message..."
-               required
-               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-    </div>
-    <button type="submit"
-            class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2">
-        <span>Send</span>
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-        </svg>
-    </button>
-    </form>
+                </form>
             </div>
         </div>
+
+        <!-- Hidden data for JavaScript -->
+        <div id="chat-data" 
+             data-chat-id="{{ $chat->id ?? '' }}" 
+             data-user-id="{{ auth()->id() }}" 
+             style="display: none;"></div>
     </div>
 </div>
 
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const messagesContainer = document.getElementById('messages-container');
-    const messageForm = document.getElementById('message-form');
-    const messageInput = document.getElementById('message-input');
+    var messagesContainer = document.getElementById('messages-container');
+    var messageForm = document.getElementById('message-form');
+    var messageInput = document.getElementById('message-input');
+    var chatData = document.getElementById('chat-data');
 
     function scrollToBottom() {
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        if (messagesContainer) {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
     }
+
+    function escapeHtml(text) {
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Initial scroll
     scrollToBottom();
 
-    // Kirim pesan sendiri
-    messageForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const message = messageInput.value.trim();
-        if (!message) return;
+    // Handle form submission
+    if (messageForm) {
+        messageForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var message = messageInput.value.trim();
+            if (!message) return;
 
-        // Bubble kita
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'flex justify-end';
-        messageDiv.innerHTML = `
-            <div class="max-w-xs lg:max-w-md px-4 py-2 rounded-lg bg-blue-600 text-white">
-                <p class="text-sm">${message}</p>
-                <p class="text-xs mt-1 text-blue-200">${new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</p>
-            </div>`;
-        messagesContainer.appendChild(messageDiv);
-        scrollToBottom();
+            // Add message bubble immediately
+            var messageDiv = document.createElement('div');
+            messageDiv.className = 'flex justify-end';
+            messageDiv.innerHTML = 
+                '<div class="max-w-xs lg:max-w-md px-4 py-2 rounded-lg bg-blue-600 text-white">' +
+                    '<p class="text-sm">' + escapeHtml(message) + '</p>' +
+                    '<p class="text-xs mt-1 text-blue-200">' + 
+                        new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'}) + 
+                    '</p>' +
+                '</div>';
+            
+            if (messagesContainer) {
+                messagesContainer.appendChild(messageDiv);
+                scrollToBottom();
+            }
 
-        messageInput.value = '';
+            messageInput.value = '';
 
-        fetch(this.action, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify({ content: message })
-        }).catch(error => console.error('Error sending message:', error));
-    });
-
-    // Listener realtime Echo
-    const chatId = @json($chat->id);
-    Echo.private(`chat.${chatId}`)
-        .listen('MessageSent', (e) => {
-            console.log('Pesan baru diterima:', e);
-
-            // Jangan render ulang kalau pesan dari kita
-            if (e.message.sender_id === {{ auth()->id() }}) return;
-
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'flex justify-start';
-            messageDiv.innerHTML = `
-                <div class="max-w-xs lg:max-w-md px-4 py-2 rounded-lg bg-white text-gray-800">
-                    <p class="text-sm">${e.message.content}</p>
-                    <p class="text-xs mt-1 text-gray-500">
-                        ${new Date(e.message.created_at).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}
-                    </p>
-                </div>`;
-            messagesContainer.appendChild(messageDiv);
-            scrollToBottom();
+            // Send to server
+            fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ content: message })
+            }).catch(function(error) {
+                console.error('Error sending message:', error);
+                // Optional: Show error message to user
+            });
         });
+    }
+
+    // Laravel Echo Listener (Safe Implementation)
+    if (chatData) {
+        var chatId = chatData.getAttribute('data-chat-id');
+        var currentUserId = parseInt(chatData.getAttribute('data-user-id'));
+        
+        if (chatId && typeof Echo !== 'undefined') {
+            Echo.private('chat.' + chatId)
+                .listen('MessageSent', function(e) {
+                    console.log('New message received:', e);
+                    
+                    // Don't show message if it's from current user
+                    if (e.message && e.message.sender_id === currentUserId) {
+                        return;
+                    }
+                    
+                    // Add received message
+                    var messageDiv = document.createElement('div');
+                    messageDiv.className = 'flex justify-start';
+                    messageDiv.innerHTML = 
+                        '<div class="max-w-xs lg:max-w-md px-4 py-2 rounded-lg bg-white text-gray-800">' +
+                            '<p class="text-sm">' + escapeHtml(e.message.content || '') + '</p>' +
+                            '<p class="text-xs mt-1 text-gray-500">' +
+                                new Date(e.message.created_at).toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'}) +
+                            '</p>' +
+                        '</div>';
+                    
+                    if (messagesContainer) {
+                        messagesContainer.appendChild(messageDiv);
+                        scrollToBottom();
+                    }
+                })
+                .error(function(error) {
+                    console.error('Echo connection error:', error);
+                });
+        } else if (!chatId) {
+            console.log('No chat ID available for real-time messaging');
+        } else {
+            console.warn('Laravel Echo is not loaded');
+        }
+    }
+
+    // Enter key to send message
+    if (messageInput) {
+        messageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (messageForm) {
+                    messageForm.dispatchEvent(new Event('submit'));
+                }
+            }
+        });
+    }
 });
 </script>
 @endpush

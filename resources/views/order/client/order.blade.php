@@ -3,13 +3,6 @@
 @section('page-title', 'Order')
 @section('dashboard-route', route('client.dashboard'))
 
-@section('navbar-center')
-<div class="search-container">
-    <iconify-icon icon="material-symbols:search" class="search-icon"></iconify-icon>
-    <input type="text" class="search-input" placeholder="Search orders..." id="globalSearch">
-    <button class="search-btn" id="searchBtn">Search</button>
-</div>
-@endsection
 
 @section('navigation')
 <a href="{{ route('client.dashboard') }}" class="nav-item {{ request()->routeIs('client.dashboard') ? 'active' : '' }}">
@@ -42,7 +35,7 @@
         "title": "Buku cerita anak Aku Sayang Nenek",
         "freelancer": "Namira Enggar",
         "category": "Illustrator",
-        "status": "completed",
+        "status": "paid",
         "price": 150000,
         "date": "2025-09-18",
         "deadline": "2025-09-25"
@@ -52,7 +45,7 @@
         "title": "Pembuatan design Kaos Barangsai",
         "freelancer": "Namira Enggar",
         "category": "Graphic Design",
-        "status": "in_progress",
+        "status": "dp",
         "price": 250000,
         "date": "2025-09-21",
         "deadline": "2025-09-28"
@@ -62,10 +55,20 @@
         "title": "Buku mewarnai tema bermain di Pantai",
         "freelancer": "Nadia Ima",
         "category": "Illustrator",
-        "status": "pending",
+        "status": "failed",
         "price": 200000,
         "date": "2025-09-24",
         "deadline": "2025-10-01"
+    },
+    {
+        "id": 4,
+        "title": "Logo Design untuk Startup",
+        "freelancer": "Ahmad Rizki",
+        "category": "Graphic Design",
+        "status": "paid",
+        "price": 300000,
+        "date": "2025-09-22",
+        "deadline": "2025-09-30"
     }
 ]
 </script>
@@ -79,22 +82,21 @@
         </h1>
         <div class="filter-buttons flex gap-2">
             <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="pending">Pending</button>
-            <button class="filter-btn" data-filter="in_progress">In Progress</button>
-            <button class="filter-btn" data-filter="completed">Completed</button>
-            <button class="filter-btn" data-filter="cancelled">Cancelled</button>
+            <button class="filter-btn" data-filter="paid">Paid</button>
+            <button class="filter-btn" data-filter="dp">DP</button>
+            <button class="filter-btn" data-filter="failed">Failed</button>
         </div>
     </div>
 
     <div class="order-grid" id="orderGrid">
         <!-- Sample Order Cards -->
-        <div class="order-card" data-status="completed" data-order-id="1">
+        <div class="order-card" data-status="paid" data-order-id="1">
             <div class="order-header">
                 <div>
                     <div class="order-date">Thursday, 18 September 2025</div>
                     <div class="order-day">Sep 18, 2025</div>
                 </div>
-                <div class="order-status status-completed">Completed</div>
+                <div class="order-status status-paid">Paid</div>
             </div>
             
             <div class="order-content">
@@ -111,19 +113,18 @@
                 <div class="order-price">Rp150.000</div>
                 <div class="order-actions">
                     <button class="action-btn btn-details" onclick="viewOrderDetails(1)">Details</button>
-                   <button class="action-btn btn-pay" onclick="makePayment(2)">Pay Now</button>
-                </div>
+                    <button class="action-btn btn-contact" onclick="contactFreelancer('Namira Enggar')">Contact</button>
                 </div>
             </div>
         </div>
 
-        <div class="order-card" data-status="in_progress" data-order-id="2">
+        <div class="order-card" data-status="dp" data-order-id="2">
             <div class="order-header">
                 <div>
                     <div class="order-date">Sunday, 21 September 2025</div>
                     <div class="order-day">Sep 21, 2025</div>
                 </div>
-                <div class="order-status status-in_progress">In Progress</div>
+                <div class="order-status status-dp">DP</div>
             </div>
             
             <div class="order-content">
@@ -140,18 +141,18 @@
                 <div class="order-price">Rp250.000</div>
                 <div class="order-actions">
                     <button class="action-btn btn-details" onclick="viewOrderDetails(2)">Details</button>
-                    <button class="action-btn btn-pay" onclick="makePayment(2)">Pay Now</button>
+                    <button class="action-btn btn-pay" onclick="makePayment(2)">Pay Remaining</button>
                 </div>
             </div>
         </div>
 
-        <div class="order-card" data-status="pending" data-order-id="3">
+        <div class="order-card" data-status="failed" data-order-id="3">
             <div class="order-header">
                 <div>
                     <div class="order-date">Wednesday, 24 September 2025</div>
                     <div class="order-day">Sep 24, 2025</div>
                 </div>
-                <div class="order-status status-pending">Pending</div>
+                <div class="order-status status-failed">Failed</div>
             </div>
             
             <div class="order-content">
@@ -169,6 +170,34 @@
                 <div class="order-actions">
                     <button class="action-btn btn-details" onclick="viewOrderDetails(3)">Details</button>
                     <button class="action-btn btn-pay" onclick="makePayment(3)">Pay Now</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="order-card" data-status="paid" data-order-id="4">
+            <div class="order-header">
+                <div>
+                    <div class="order-date">Friday, 22 September 2025</div>
+                    <div class="order-day">Sep 22, 2025</div>
+                </div>
+                <div class="order-status status-paid">Paid</div>
+            </div>
+            
+            <div class="order-content">
+                <div class="order-category">graphic design</div>
+                <div class="order-freelancer">Freelancer: Ahmad Rizki</div>
+                <div class="order-title">Logo Design untuk Startup</div>
+                <div class="order-deadline">
+                    <iconify-icon icon="material-symbols:schedule"></iconify-icon>
+                    Deadline: Sep 30, 2025
+                </div>
+            </div>
+            
+            <div class="order-footer">
+                <div class="order-price">Rp300.000</div>
+                <div class="order-actions">
+                    <button class="action-btn btn-details" onclick="viewOrderDetails(4)">Details</button>
+                    <button class="action-btn btn-contact" onclick="contactFreelancer('Ahmad Rizki')">Contact</button>
                 </div>
             </div>
         </div>
@@ -284,25 +313,19 @@
     text-transform: capitalize;
 }
 
-.status-completed {
+.status-paid {
     background: rgba(34, 197, 94, 0.1);
     color: #16a34a;
     border: 1px solid rgba(34, 197, 94, 0.2);
 }
 
-.status-in_progress {
+.status-dp {
     background: rgba(251, 191, 36, 0.1);
     color: #d97706;
     border: 1px solid rgba(251, 191, 36, 0.2);
 }
 
-.status-pending {
-    background: rgba(156, 163, 175, 0.1);
-    color: #6b7280;
-    border: 1px solid rgba(156, 163, 175, 0.2);
-}
-
-.status-cancelled {
+.status-failed {
     background: rgba(239, 68, 68, 0.1);
     color: #dc2626;
     border: 1px solid rgba(239, 68, 68, 0.2);
@@ -601,9 +624,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Number keys for quick filtering
     document.addEventListener('keydown', function(e) {
-        if (e.key >= '1' && e.key <= '5' && !e.target.matches('input')) {
+        if (e.key >= '1' && e.key <= '4' && !e.target.matches('input')) {
             e.preventDefault();
-            const filters = ['all', 'pending', 'in_progress', 'completed', 'cancelled'];
+            const filters = ['all', 'paid', 'dp', 'failed'];
             const filterIndex = parseInt(e.key) - 1;
             if (filters[filterIndex]) {
                 filterOrders(filters[filterIndex]);

@@ -20,103 +20,139 @@
         <span class="nav-badge">3</span>
     </a>
 
-    <a href="{{ route(auth()->user()->role . '.order') }}" class="nav-item {{ request()->routeIs(auth()->user()->role . '.order*') ? 'active' : '' }}">
-        <div class="nav-icon">
-            <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
-        </div>
-        <span class="nav-text">Order</span>
-    </a>
+    {{-- Hide Order navigation for freelancers, only show for clients --}}
+    @if(auth()->user()->role !== 'freelancer')
+        <a href="{{ route(auth()->user()->role . '.order') }}" class="nav-item {{ request()->routeIs(auth()->user()->role . '.order*') ? 'active' : '' }}">
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
+            </div>
+            <span class="nav-text">Order</span>
+        </a>
+    @endif
 
-      <a href="{{ route('freelancer.services') }}" class="nav-item {{ request()->routeIs('freelancer.services*') ? 'active' : '' }}">
-        <div class="nav-icon">
-            <iconify-icon icon="material-symbols:work"></iconify-icon>
-        </div>
-        <span class="nav-text">Service</span>
-    </a>
-
-@endsection
-
-@section('navbar-center')
-    <div class="search-container">
-        <iconify-icon icon="material-symbols:search" class="search-icon"></iconify-icon>
-        <input type="text" class="search-input" placeholder="Search conversations..." id="globalSearch">
-        <button class="search-btn" id="searchBtn">Search</button>
-    </div>
+    {{-- Only show Service navigation for freelancers --}}
+    @if(auth()->user()->role === 'freelancer')
+        <a href="{{ route('freelancer.services') }}" class="nav-item {{ request()->routeIs('freelancer.services*') ? 'active' : '' }}">
+            <div class="nav-icon">
+                <iconify-icon icon="material-symbols:work"></iconify-icon>
+            </div>
+            <span class="nav-text">Service</span>
+        </a>
+    @endif
 @endsection
 
 @push('styles')
 <style>
-/* Chat-specific styles */
+/* Modern Chat Styles - Same as before */
+:root {
+    --chat-bg-primary: #f8fafc;
+    --chat-bg-secondary: #ffffff;
+    --chat-border: #e2e8f0;
+    --chat-text-primary: #1a202c;
+    --chat-text-secondary: #718096;
+    --chat-text-muted: #a0aec0;
+    --chat-sent-bg: #374557;
+    --chat-received-bg: #ffffff;
+    --chat-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    --chat-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+    --chat-accent-green: #4CBC9A;
+    --offer-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
 .chat-container {
     display: flex;
     height: calc(100vh - var(--navbar-height));
-    background: white;
-    border-radius: 16px;
+    background: var(--chat-bg-primary);
+    border-radius: 20px;
     overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--border-light);
+    box-shadow: var(--chat-shadow-lg);
+    border: 1px solid var(--chat-border);
 }
 
-/* Chat Sidebar */
+/* Chat Sidebar - Same as before */
 .chat-sidebar {
-    width: 350px;
-    background: white;
-    border-right: 1px solid var(--border-color);
+    width: 320px;
+    background: var(--chat-bg-secondary);
+    border-right: 1px solid var(--chat-border);
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
 }
 
 .chat-sidebar-header {
-    padding: 2rem 1.5rem 1rem 1.5rem;
-    border-bottom: 1px solid var(--border-light);
-    background: var(--bg-muted);
+    padding: 1.5rem 1.25rem 1rem 1.25rem;
+    border-bottom: 1px solid var(--chat-border);
+    background: var(--chat-bg-secondary);
 }
 
 .chat-sidebar-title {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
+    color: var(--chat-text-primary);
+    margin-bottom: 0.25rem;
 }
 
 .chat-sidebar-subtitle {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
+    font-size: 0.8rem;
+    color: var(--chat-text-secondary);
 }
 
 .chat-list {
     flex: 1;
     overflow-y: auto;
-    padding: 0.5rem 0;
+    padding: 0.25rem 0;
 }
 
 .chat-item {
     display: flex;
     align-items: flex-start;
-    gap: 1rem;
-    padding: 1rem 1.5rem;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     border-left: 3px solid transparent;
+    position: relative;
+}
+
+.chat-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #374557 0%, #4a5568 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 0 12px 12px 0;
+}
+
+.chat-item:hover::before {
+    opacity: 0.03;
+}
+
+.chat-item.active::before {
+    opacity: 0.08;
 }
 
 .chat-item:hover {
-    background: var(--bg-secondary);
+    background: rgba(55, 69, 87, 0.02);
 }
 
 .chat-item.active {
-    background: #f0fdfc;
-    border-left-color: var(--primary-color);
+    background: rgba(55, 69, 87, 0.05);
+    border-left-color: #374557;
 }
 
 .chat-avatar {
-    width: 50px;
-    height: 50px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
-    border: 2px solid var(--border-light);
+    border: 2px solid #e2e8f0;
+    position: relative;
+    z-index: 1;
 }
 
 .chat-avatar img {
@@ -128,36 +164,38 @@
 .chat-info {
     flex: 1;
     min-width: 0;
+    position: relative;
+    z-index: 1;
 }
 
 .chat-name {
     font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-    font-size: 0.95rem;
+    color: var(--chat-text-primary);
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
 }
 
 .chat-preview {
     font-size: 0.8rem;
-    color: var(--text-secondary);
-    line-height: 1.4;
+    color: var(--chat-text-secondary);
+    line-height: 1.3;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
 }
 
 .chat-skills {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.25rem;
     flex-wrap: wrap;
 }
 
 .chat-skill-tag {
-    background: #e0f7ff;
+    background: linear-gradient(135deg, #e0f7ff 0%, #f0f9ff 100%);
     color: #0891b2;
-    padding: 0.25rem 0.5rem;
+    padding: 0.125rem 0.5rem;
     border-radius: 12px;
     font-size: 0.65rem;
     font-weight: 500;
@@ -169,25 +207,26 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: white;
+    background: var(--chat-bg-primary);
     min-width: 0;
 }
 
 .chat-header {
-    padding: 1.5rem 2rem;
-    border-bottom: 1px solid var(--border-color);
-    background: white;
+    padding: 1.25rem 1.75rem;
+    border-bottom: 1px solid var(--chat-border);
+    background: var(--chat-bg-secondary);
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.75rem;
+    box-shadow: var(--chat-shadow);
 }
 
 .chat-header-avatar {
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     overflow: hidden;
-    border: 2px solid var(--border-color);
+    border: 2px solid var(--chat-border);
 }
 
 .chat-header-avatar img {
@@ -202,32 +241,69 @@
 
 .chat-header-name {
     font-weight: 600;
-    color: var(--text-primary);
-    font-size: 1.1rem;
-    margin-bottom: 0.25rem;
+    color: var(--chat-text-primary);
+    font-size: 1rem;
+    margin-bottom: 0.125rem;
 }
 
 .chat-header-status {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
+    font-size: 0.8rem;
+    color: var(--chat-text-secondary);
+}
+
+/* Add Offer Button in Header */
+.chat-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-create-offer {
+    background: var(--offer-bg);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--chat-shadow);
+}
+
+.btn-create-offer:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
 /* Chat Messages */
 .chat-messages {
     flex: 1;
     overflow-y: auto;
-    padding: 1.5rem 2rem;
+    padding: 1rem 1.75rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    background: var(--bg-secondary);
+    gap: 1rem;
+    background: var(--chat-bg-primary);
 }
 
 .message {
     display: flex;
     align-items: flex-start;
-    gap: 1rem;
-    max-width: 75%;
+    gap: 0.5rem;
+    max-width: 70%;
+    animation: slideInMessage 0.3s ease-out;
+}
+
+@keyframes slideInMessage {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .message.sent {
@@ -240,12 +316,12 @@
 }
 
 .message-avatar {
-    width: 36px;
-    height: 36px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--chat-border);
 }
 
 .message-avatar img {
@@ -255,176 +331,290 @@
 }
 
 .message-content {
-    background: white;
-    padding: 1rem 1.25rem;
-    border-radius: 18px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    border: 1px solid var(--border-light);
     position: relative;
+    padding: 0.75rem 1rem;
+    border-radius: 16px;
+    box-shadow: var(--chat-shadow);
     word-wrap: break-word;
-    line-height: 1.5;
+    line-height: 1.4;
+    font-size: 0.9rem;
+    max-width: 100%;
 }
 
 .message.sent .message-content {
-    background: var(--primary-color);
+    background: var(--chat-sent-bg);
     color: white;
-    border-color: var(--primary-color);
+    border-bottom-right-radius: 8px;
 }
 
 .message.received .message-content {
+    background: var(--chat-bg-secondary);
+    color: var(--chat-text-primary);
+    border: 1px solid var(--chat-border);
+    border-bottom-left-radius: 8px;
+}
+
+/* Offer Message Styles */
+.offer-message {
+    max-width: 80%;
+    margin: 1rem 0;
+}
+
+.offer-card {
     background: white;
-    color: var(--text-primary);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+}
+
+.offer-header {
+    background: var(--offer-bg);
+    color: white;
+    padding: 1rem;
+}
+
+.offer-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.offer-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.offer-body {
+    padding: 1rem;
+}
+
+.offer-price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 0.5rem;
+}
+
+.offer-time {
+    font-size: 0.75rem;
+    color: #718096;
+    margin-bottom: 1rem;
+}
+
+.offer-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-offer {
+    flex: 1;
+    padding: 0.625rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-details {
+    background: #64748b;
+    color: white;
+}
+
+.btn-details:hover {
+    background: #475569;
 }
 
 .message-time {
     font-size: 0.7rem;
-    color: var(--text-muted);
-    margin-top: 0.5rem;
-    text-align: center;
+    margin-top: 0.25rem;
+    text-align: right;
+    opacity: 0.8;
 }
 
 .message.sent .message-time {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.message.received .message-time {
+    color: var(--chat-text-muted);
 }
 
 /* Chat Input */
 .chat-input-container {
-    padding: 1.5rem 2rem;
-    border-top: 1px solid var(--border-color);
-    background: white;
+    padding: 1rem 1.75rem;
+    border-top: 1px solid var(--chat-border);
+    background: var(--chat-bg-secondary);
 }
 
 .chat-input-wrapper {
     display: flex;
     align-items: flex-end;
-    gap: 1rem;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
+    gap: 0.75rem;
+    background: var(--chat-bg-primary);
+    border: 2px solid var(--chat-border);
     border-radius: 16px;
-    padding: 0.75rem;
+    padding: 0.75rem 1rem;
     transition: all 0.3s ease;
+    position: relative;
 }
 
 .chat-input-wrapper:focus-within {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(56, 193, 185, 0.1);
+    border-color: #374557;
+    box-shadow: 0 0 0 3px rgba(55, 69, 87, 0.1);
 }
 
 .chat-input {
     flex: 1;
     border: none;
     background: transparent;
-    padding: 0.5rem;
-    font-size: 0.9rem;
-    color: var(--text-primary);
+    padding: 0.5rem 0;
+    font-size: 0.95rem;
+    color: var(--chat-text-primary);
     resize: none;
     outline: none;
-    min-height: 44px;
+    min-height: 24px;
     max-height: 120px;
     line-height: 1.5;
     font-family: inherit;
 }
 
 .chat-input::placeholder {
-    color: var(--text-muted);
+    color: var(--chat-text-muted);
 }
 
 .chat-send-btn {
-    background: var(--primary-color);
+    background: var(--chat-sent-bg);
     color: white;
     border: none;
     border-radius: 12px;
-    padding: 0.75rem;
+    padding: 0.625rem;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
-    height: 44px;
+    width: 36px;
+    height: 36px;
     flex-shrink: 0;
+    box-shadow: var(--chat-shadow);
 }
 
 .chat-send-btn:hover {
-    background: var(--primary-hover);
     transform: scale(1.05);
+    background: #2d3748;
+    box-shadow: 0 6px 20px rgba(55, 69, 87, 0.3);
 }
 
 .chat-send-btn:disabled {
     background: #cbd5e1;
     cursor: not-allowed;
     transform: none;
+    box-shadow: none;
 }
 
-/* Mobile Responsive */
+/* Empty State */
+.chat-empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--chat-text-secondary);
+    padding: 2rem;
+}
+
+.chat-empty-state iconify-icon {
+    font-size: 4rem;
+    color: var(--chat-text-muted);
+    margin-bottom: 1rem;
+}
+
+.chat-empty-state h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--chat-text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.chat-empty-state p {
+    font-size: 0.9rem;
+    color: var(--chat-text-secondary);
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
     .chat-container {
         flex-direction: column;
-        height: calc(100vh - var(--navbar-height) - 2rem);
+        height: calc(100vh - var(--navbar-height) - 1rem);
+        border-radius: 16px;
     }
 
     .chat-sidebar {
         width: 100%;
-        height: 200px;
+        height: 180px;
         border-right: none;
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--chat-border);
     }
 
     .chat-main {
-        height: calc(100% - 200px);
+        height: calc(100% - 180px);
     }
 
-    .message {
+    .message, .offer-message {
         max-width: 85%;
     }
 
     .chat-messages {
         padding: 1rem;
+        gap: 0.75rem;
     }
 
     .chat-input-container {
         padding: 1rem;
     }
-}
 
-@media (max-width: 640px) {
-    .chat-sidebar {
-        height: 160px;
+    .chat-header {
+        padding: 1rem;
     }
 
-    .chat-main {
-        height: calc(100% - 160px);
+    .btn-create-offer {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.8rem;
     }
-
-    .message {
-        max-width: 90%;
-    }
-}
-
-/* Scrollbar Styling */
-.chat-messages::-webkit-scrollbar,
-.chat-list::-webkit-scrollbar {
-    width: 6px;
-}
-
-.chat-messages::-webkit-scrollbar-track,
-.chat-list::-webkit-scrollbar-track {
-    background: var(--border-light);
-}
-
-.chat-messages::-webkit-scrollbar-thumb,
-.chat-list::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 3px;
-}
-
-.chat-messages::-webkit-scrollbar-thumb:hover,
-.chat-list::-webkit-scrollbar-thumb:hover {
-    background: var(--text-muted);
 }
 </style>
 @endpush
-
 
 @section('content')
 <div class="chat-container flex h-screen">
@@ -435,41 +625,60 @@
             <p class="chat-sidebar-subtitle text-sm text-gray-500">Recent conversations</p>
         </div>
 
-        <div class="chat-list flex-1 overflow-y-auto" id="chatList">
+        <!-- <div class="chat-list flex-1 overflow-y-auto" id="chatList">
             @foreach($chats as $chat)
                 @php
                     $otherUser = $chat->client_id == auth()->id()
                         ? $chat->freelancer
                         : $chat->client;
-                @endphp
+                @endphp -->
 
-                <div class="chat-item flex items-center p-4 cursor-pointer hover:bg-gray-100
-                            {{ isset($activeChat) && $activeChat->id === $chat->id ? 'bg-gray-200' : '' }}"
+                <div class="chat-list flex-1 overflow-y-auto" id="chatList">
+    @foreach($chats as $chat)
+        @php
+            // pastikan $chat punya client_id & freelancer
+            $otherUser = null;
+            if (isset($chat->client_id) && $chat->client_id == auth()->id()) {
+                $otherUser = $chat->freelancer ?? null;
+            } else {
+                $otherUser = $chat->client ?? null;
+            }
+        @endphp
+
+
+        @if($otherUser)
+            <div class="chat-item">
+                {{ $otherUser->name ?? 'User' }}
+            </div>
+        @endif
+    @endforeach
+</div>
+
+                <div class="chat-item {{ isset($activeChat) && $activeChat->id === $chat->id ? 'active' : '' }}"
                      data-chat-id="{{ $chat->id }}"
                      data-user-name="{{ $otherUser->name }}">
 
                     <!-- Avatar -->
-                    <div class="chat-avatar mr-3">
-                        <img src="{{ $otherUser->profile->avatar_url ?? 'https://via.placeholder.com/50' }}"
-                             alt="{{ $otherUser->name }}"
-                             class="w-12 h-12 rounded-full object-cover">
+                    <div class="chat-avatar">
+                        <img src="{{ $otherUser->profile->avatar_url ?? 'https://via.placeholder.com/52' }}"
+                             alt="{{ $otherUser->name }}">
                     </div>
 
                     <!-- Info -->
-                    <div class="chat-info flex-1">
-                        <div class="chat-name font-semibold">{{ $otherUser->name }}</div>
-                        <div class="chat-preview text-sm text-gray-500 truncate">
+                    <div class="chat-info">
+                        <div class="chat-name">{{ $otherUser->name }}</div>
+                        <div class="chat-preview">
                             {{ $chat->messages->last()->content ?? 'Belum ada pesan' }}
                         </div>
-                        <div class="chat-skills text-xs text-gray-400 mt-1">
-                            @if($otherUser->profile && $otherUser->profile->skills)
-                                @foreach(explode(',', $otherUser->profile->skills) as $skill)
-                                    <span class="chat-skill-tag bg-gray-100 px-2 py-0.5 rounded mr-1">
+                        @if($otherUser->profile && $otherUser->profile->skills)
+                            <div class="chat-skills">
+                                @foreach(array_slice(explode(',', $otherUser->profile->skills), 0, 2) as $skill)
+                                    <span class="chat-skill-tag">
                                         {{ trim($skill) }}
                                     </span>
                                 @endforeach
-                            @endif
-                        </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             @endforeach
@@ -477,343 +686,319 @@
     </div>
 
     <!-- Chat Main Area -->
-    <div class="chat-main flex-1 flex flex-col">
+    <!-- <div class="chat-main">
         @if($activeChat)
             @php
                 $otherUser = $activeChat->client_id == auth()->id()
                     ? $activeChat->freelancer
                     : $activeChat->client;
-            @endphp
+            @endphp -->
+
+            <!-- Chat Main Area -->
+<div class="chat-main">
+    @if(!empty($activeChat))
+        @php
+            $otherUser = null;
+            if (isset($activeChat->client_id) && $activeChat->client_id == auth()->id()) {
+                $otherUser = $activeChat->freelancer ?? null;
+            } else {
+                $otherUser = $activeChat->client ?? null;
+            }
+        @endphp
+
+        @if($otherUser)
+            <h2>Chat dengan {{ $otherUser->name ?? 'User' }}</h2>
+        @endif
+    @else
+        <p>Pilih chat untuk memulai percakapan.</p>
+    @endif
+</div>
 
             <!-- Header -->
-            <div class="chat-header flex items-center p-4 border-b bg-white" id="chatHeader">
-                <div class="chat-header-avatar mr-3">
-                    <img src="{{ $otherUser->profile->avatar_url ?? 'https://via.placeholder.com/45' }}"
-                         alt="{{ $otherUser->name }}"
-                         class="w-10 h-10 rounded-full object-cover">
+            <div class="chat-header" id="chatHeader">
+                <div class="chat-header-avatar">
+                    <img src="{{ $otherUser->profile->avatar_url ?? 'https://via.placeholder.com/48' }}"
+                         alt="{{ $otherUser->name }}">
                 </div>
                 <div class="chat-header-info">
-                    <div class="chat-header-name font-semibold text-gray-800" id="headerName">
+                    <div class="chat-header-name" id="headerName">
                         {{ $otherUser->name }}
                     </div>
-                    <div class="chat-header-status text-sm text-gray-500" id="headerStatus">
-                        Online
-                        @if($otherUser->role === 'freelancer')
-        • {{ $otherUser->profile->skills ?? '' }}
-    @endif
+                    <div class="chat-header-status" id="headerStatus">
+                        Online • {{ $otherUser->profile->skills ?? '' }}
                     </div>
                 </div>
+                
+                <!-- Add Offer Button (only for freelancers) -->
+                @if(auth()->user()->role === 'freelancer')
+                <div class="chat-header-actions">
+                    <button onclick="openOfferModal()" class="btn-create-offer">
+                        <iconify-icon icon="material-symbols:add" style="margin-right: 0.25rem;"></iconify-icon>
+                        Create Offer
+                    </button>
+                </div>
+                @endif
             </div>
 
             <!-- Messages -->
-            <div class="chat-messages flex-1 p-4 overflow-y-auto bg-gray-50" id="chatMessages">
+            <div class="chat-messages" id="chatMessages">
                 @foreach($activeChat->messages as $msg)
-                    <div class="message {{ $msg->sender_id == auth()->id() ? 'sent flex justify-end mb-4' : 'received flex justify-start mb-4' }}">
-
-                        <div class="flex items-end space-x-2 {{ $msg->sender_id == auth()->id() ? 'flex-row-reverse space-x-reverse' : '' }}">
-                            <!-- Avatar -->
-                            <div class="message-avatar">
-                                <img src="{{ $msg->sender->profile->avatar_url ?? 'https://via.placeholder.com/36' }}"
-                                     alt="{{ $msg->sender->name }}"
-                                     class="w-9 h-9 rounded-full object-cover">
-                            </div>
-
-                            <!-- Content -->
-                            <div class="message-content max-w-xs px-4 py-2 rounded-lg
-                                        {{ $msg->sender_id == auth()->id() ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800' }}">
-                                {{ $msg->content }}
-                                <div class="message-time text-xs mt-1 text-gray-400">
-                                    {{ $msg->created_at->format('H:i') }}
-                                </div>
+                    <div class="message {{ $msg->sender_id == auth()->id() ? 'sent' : 'received' }}">
+                        <div class="message-avatar">
+                            <img src="{{ $msg->sender->profile->avatar_url ?? 'https://via.placeholder.com/32' }}"
+                                 alt="{{ $msg->sender->name }}">
+                        </div>
+                        <div class="message-content">
+                            {{ $msg->content }}
+                            <div class="message-time">
+                                {{ $msg->created_at->format('H:i A') }}
+                                @if($msg->sender_id == auth()->id())
+                                    <span class="message-status">
+                                        <iconify-icon icon="material-symbols:check" style="font-size: 0.75rem; color: var(--chat-accent-green);"></iconify-icon>
+                                        <iconify-icon icon="material-symbols:check" style="font-size: 0.75rem; margin-left: -0.25rem; color: var(--chat-accent-green);"></iconify-icon>
+                                    </span>
+                                @endif
                             </div>
                         </div>
                     </div>
                 @endforeach
+
+                <!-- Display Offers -->
+                @if(isset($activeChat->offers))
+                    @foreach($activeChat->offers as $offer)
+                        @if($offer->status === 'pending')
+                        <div class="offer-message {{ $offer->freelancer_id == auth()->id() ? 'sent' : 'received' }}">
+                            <div class="offer-card">
+                                <div class="offer-header">
+                                    <div class="offer-title">{{ $offer->title }}</div>
+                                    <div class="offer-meta">
+                                        <div>price : {{ $offer->formatted_price }}</div>
+                                        <div>revision : {{ $offer->revisions }}x</div>
+                                        <div>deadline : {{ $offer->formatted_deadline }}</div>
+                                        <div class="offer-time">{{ $offer->created_at->format('H:i A') }}</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- @if($offer->client_id == auth()->id())
+                                <div class="offer-body">
+                                    <div class="offer-actions">
+                                        <a href="{{ route('offers.show', $offer) }}" class="btn-offer btn-details">
+                                            Details
+                                        </a>
+                                    </div>
+                                </div>
+                                @endif -->
+
+                                {{-- Offer Section --}}
+@if(!empty($offer) && isset($offer->client_id) && $offer->client_id == auth()->id())
+    <div class="offer-body">
+        <div class="offer-actions">
+            <a href="{{ route('offers.show', $offer) }}" class="btn-offer btn-details">
+                Details
+            </a>
+        </div>
+    </div>
+@endif
+                            </div>
+                        </div>
+                        @endif
+                    @endforeach
+                @endif
             </div>
 
             <!-- Chat Input -->
-            <div class="chat-input-container p-4 border-t bg-white">
-                <form action="{{ route('chat.message.store', $activeChat) }}" method="POST" class="chat-input-wrapper flex items-center">
+            <div class="chat-input-container">
+                <form action="{{ route('chat.message.store', $activeChat) }}" method="POST">
                     @csrf
-                    <textarea class="chat-input flex-1 resize-none border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                              name="content"
-                              placeholder="Type your message..."
-                              rows="1"></textarea>
-                    <button class="chat-send-btn ml-2 p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
-                        <iconify-icon icon="material-symbols:send"></iconify-icon>
-                    </button>
+                    <div class="chat-input-wrapper">
+                        <textarea class="chat-input"
+                                  name="content"
+                                  placeholder="Ketik pesan Anda..."
+                                  rows="1"
+                                  id="messageInput"></textarea>
+                        <button type="submit" class="chat-send-btn" id="sendBtn">
+                            <iconify-icon icon="material-symbols:send" style="font-size: 1.25rem;"></iconify-icon>
+                        </button>
+                    </div>
                 </form>
             </div>
         @else
-            <!-- Jika belum ada chat aktif -->
-            <div class="flex-1 flex items-center justify-center text-gray-400">
-                Pilih percakapan untuk mulai chat
+            <!-- Empty State -->
+            <div class="chat-empty-state">
+                <iconify-icon icon="material-symbols:chat-bubble-outline"></iconify-icon>
+                <h3>Pilih Percakapan</h3>
+                <p>Pilih percakapan dari daftar untuk mulai chat</p>
             </div>
         @endif
     </div>
 </div>
+
+<!-- Create Offer Modal (only show for freelancers) -->
+@if(auth()->user()->role === 'freelancer' && $activeChat)
+<div id="createOfferModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">Buat Penawaran</h3>
+                <button onclick="closeOfferModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <form id="offerForm" action="{{ route('offers.store') }}" method="POST">
+                @csrf
+                
+                
+                
+               {{-- Pilih Job --}}
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Job/Project</label>
+            <select name="job_id" required 
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <option value="">-- Pilih Job --</option>
+                @forelse($availableJobs as $job)
+                    <option value="{{ $job->id }}">
+                        {{ $job->title }} - Rp {{ number_format($job->budget, 0, ',', '.') }}
+                    </option>
+                @empty
+                    <option value="" disabled>Anda belum punya job</option>
+                @endforelse
+            </select>
+            <p class="text-xs text-gray-500 mt-1">Pilih job yang ingin Anda ajukan penawaran</p>
+        </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Judul Penawaran</label>
+                        <input type="text" name="title" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="Misal: UI Website Toko Pakaian">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Penawaran</label>
+                        <textarea name="description" rows="4" required
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                  placeholder="Jelaskan detail project yang akan dikerjakan..."></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Harga (Rp)</label>
+                            <input type="number" name="final_price" required min="0"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                   placeholder="700000">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Deadline</label>
+                            <input type="date" name="deadline" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                   min="{{ date('Y-m-d', strtotime('+1 day')) }}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button type="button" onclick="closeOfferModal()"
+                            class="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+                        Batal
+                    </button>
+                    <button type="submit"
+                            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        Kirim Penawaran
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
+
 @endsection
 
 @push('scripts')
-{{-- <script type="module">
-    Echo.channel('example')
-        .listen("Example", (e) => {
-            console.log("Pesan baru:", e); --}}
-            {{-- // tampilkan pesan ke UI
-        }); --}}
-    {{-- // console.log('test');
-
-    // window.currentChatId = @json($chat->id);
-
-    // if (window.currentChatId && window.Echo) {
-    // } else {
-    //     console.error("Echo belum siap atau chatId tidak ada");
-    // } --}}
-</script>
-@endpush
-
-
-@push('scripts')
-<script type="module">
-       console.log('test');
-
-    window.currentChatId = @json($chat->id);
-
-    if (window.currentChatId && window.Echo) {
-        Echo.private(`chat.${window.currentChatId}`)
-            .listen('MessageSent', (e) => {
-                console.log("Pesan baru:", e);
-                // tampilkan pesan ke UI
-            });
-    } else {
-        console.error("Echo belum siap atau chatId tidak ada");
-    }
-</script>
 <script>
-    window.currentChatId = "{{ $activeChat ? $activeChat->id : '' }}";
-    window.userId = "{{ auth()->id() }}";
-</script>
+// Modal functions
+function openOfferModal() {
+    document.getElementById('createOfferModal').style.display = 'flex';
+}
 
+function closeOfferModal() {
+    document.getElementById('createOfferModal').style.display = 'none';
+}
 
-<script>
-// Chat functionality
+// Handle offer form submission
 document.addEventListener('DOMContentLoaded', function() {
-    // Cache DOM elements
-    const chatItems = document.querySelectorAll('.chat-item');
-    const chatMessages = document.getElementById('chatMessages');
-    const messageInput = document.getElementById('messageInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const headerName = document.getElementById('headerName');
-    const headerStatus = document.getElementById('headerStatus');
-    const headerAvatar = document.getElementById('headerAvatar');
-    const searchInput = document.getElementById('globalSearch');
-
-    // Function to load chat messages
-    function loadChatMessages(chatId) {
-        const chat = chatData[chatId];
-        if (!chat) return;
-
-        // Update header
-        if (headerName) headerName.textContent = chat.name;
-        if (headerStatus) headerStatus.textContent = chat.status;
-        if (headerAvatar) headerAvatar.src = chat.avatar;
-
-        // Clear messages
-        if (chatMessages) {
-            chatMessages.innerHTML = '';
-
-            // Add messages
-            chat.messages.forEach(message => {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${message.type}`;
-                messageDiv.innerHTML = `
-                    <div class="message-avatar">
-                        <img src="${message.avatar}" alt="Avatar">
-                    </div>
-                    <div class="message-content">
-                        ${message.content}
-                        <div class="message-time">${message.time}</div>
-                    </div>
-                `;
-                chatMessages.appendChild(messageDiv);
-            });
-
-            // Scroll to bottom
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-    }
-
-    function sendMessage() {
-    if (!messageInput || !messageInput.value.trim()) return;
-
-    const content = messageInput.value.trim();
-
-    // POST ke backend
-    axios.post(`/chat/{{ $activeChat->id }}/message`, { content })
-        .then(() => {
-            messageInput.value = '';
-            autoResizeTextarea();
-            // Pesan akan muncul otomatis via Echo listener
-        })
-        .catch(err => console.error(err));
-}
-
-// Event listener tombol kirim
-if (sendBtn) {
-    sendBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        sendMessage();
-    });
-}
-
-// Event listener enter key
-if (messageInput) {
-    messageInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
+    const offerForm = document.getElementById('offerForm');
+    if (offerForm) {
+        offerForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            sendMessage();
-        }
-    });
-}
-
-
-    // Simulate typing response
-    function simulateTypingResponse() {
-        const responses = [
-            "Terima kasih atas pesannya, saya akan segera membalas.",
-            "Baik Bu, saya cek dulu detailnya ya.",
-            "Oke, nanti saya kirimkan proposal lengkapnya.",
-            "Siap Bu, akan saya kerjakan sesuai timeline yang disepakati."
-        ];
-
-        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-        const currentTime = new Date().toLocaleTimeString('en-US', {
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true
-        });
-
-        // Get current active chat avatar
-        const activeChat = document.querySelector('.chat-item.active');
-        const activeAvatar = activeChat ? activeChat.querySelector('.chat-avatar img').src : '';
-
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'message received';
-        messageDiv.innerHTML = `
-            <div class="message-avatar">
-                <img src="${activeAvatar}" alt="Contact">
-            </div>
-            <div class="message-content">
-                ${randomResponse}
-                <div class="message-time">${currentTime}</div>
-            </div>
-        `;
-
-        if (chatMessages) {
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-    }
-
-    // Auto resize textarea
-    function autoResizeTextarea() {
-        if (messageInput) {
-            messageInput.style.height = 'auto';
-            messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
-        }
-    }
-
-    // Search functionality - integrates with global search
-    window.performSearch = function(query) {
-        const chatItems = document.querySelectorAll('.chat-item');
-        chatItems.forEach(item => {
-            const name = item.querySelector('.chat-name').textContent.toLowerCase();
-            const preview = item.querySelector('.chat-preview').textContent.toLowerCase();
-            const searchTerm = query.toLowerCase();
-
-            if (name.includes(searchTerm) || preview.includes(searchTerm) || query === '') {
-                item.style.display = 'flex';
-            } else {
-                item.style.display = 'none';
-            }
-        });
-    };
-
-    // Event listeners
-    // Listener realtime Laravel Echo
-    if (window.currentChatId) {
-    Echo.private(`chat.${window.currentChatId}`)
-        .listen('MessageSent', (e) => {
-            console.log("Pesan baru:", e);
-
-            // Jangan render pesan sendiri, karena sudah ditangani oleh sendMessage()
-            if (e.message.sender_id !== parseInt(window.userId)) {
-                const chatMessages = document.getElementById('chatMessages');
-                if (chatMessages) {
-                    const messageDiv = document.createElement('div');
-                    messageDiv.className = 'message received flex justify-start mb-4';
-                    messageDiv.innerHTML = `
-                        <div class="flex items-end space-x-2">
-                            <div class="message-avatar">
-                                <img src="${e.message.sender.avatar_url ?? 'https://via.placeholder.com/36'}"
-                                     alt="${e.message.sender.name}"
-                                     class="w-9 h-9 rounded-full object-cover">
-                            </div>
-                            <div class="message-content max-w-xs px-4 py-2 rounded-lg bg-gray-200 text-gray-800">
-                                ${e.message.content}
-                                <div class="message-time text-xs mt-1 text-gray-400">
-                                    ${new Date(e.message.created_at).toLocaleTimeString()}
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    chatMessages.appendChild(messageDiv);
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            const formData = new FormData(this);
+            
+            fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    closeOfferModal();
+                    location.reload(); // Refresh to show the offer
+                } else {
+                    alert('Terjadi kesalahan: ' + (data.message || 'Unknown error'));
                 }
-            }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat mengirim penawaran');
+            });
         });
-}
+    }
 
+    // Rest of the chat functionality
+    const chatItems = document.querySelectorAll('.chat-item');
+    const messageInput = document.getElementById('messageInput');
+    
     // Chat item selection
     chatItems.forEach(item => {
         item.addEventListener('click', function() {
-            // Remove active from all items
-            chatItems.forEach(i => i.classList.remove('active'));
-
-            // Add active to clicked item
-            this.classList.add('active');
-
-            // Load chat messages
             const chatId = this.getAttribute('data-chat-id');
-            loadChatMessages(chatId);
+            window.location.href = `{{ route(auth()->user()->role . '.chat') }}?chat_id=${chatId}`;
         });
     });
 
-    // Send button
-    if (sendBtn) {
-        sendBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            sendMessage();
-        });
-    }
-
-    // Enter key to send
+    // Auto resize textarea
     if (messageInput) {
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+        
         messageInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                sendMessage();
+                this.form.submit();
             }
         });
-
-        // Auto resize on input
-        messageInput.addEventListener('input', autoResizeTextarea);
     }
 
-    // Initialize first chat
-    loadChatMessages('1');
-
-    console.log('Chat page initialized successfully');
+    // Scroll to bottom
+    const chatMessages = document.getElementById('chatMessages');
+    if (chatMessages) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
 });
+
+// Set current chat data for Echo
+window.currentChatId = "{{ $activeChat ? $activeChat->id : '' }}";
+window.userId = "{{ auth()->id() }}";
 </script>
 @endpush

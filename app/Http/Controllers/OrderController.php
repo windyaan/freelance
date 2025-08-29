@@ -65,12 +65,12 @@ class OrderController extends Controller
     }
 
     //Admin - Lihat semua order
-    // public function adminIndex()
-    // {
-    //     $orders = Order::with(['offer.job.freelancer', 'offer.job.client'])->get();
+    public function adminIndex()
+     {
+         $orders = Order::with(['offer.job.freelancer', 'offer.job.client'])->get();
 
-    //     return view('dashboard.admin.orders.index', compact('orders'));
-    // }
+        return view('dashboard.admin.orders.index', compact('orders'));
+     }
 
     // Form pembayaran order
 

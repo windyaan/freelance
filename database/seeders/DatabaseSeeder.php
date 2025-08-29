@@ -114,7 +114,7 @@ class DatabaseSeeder extends Seeder
                 }
             }
 
-             /**
+           /**
          * Chat & Message Seeder
          */
         // $freelancers = User::where('role', 'freelancer')->get();
