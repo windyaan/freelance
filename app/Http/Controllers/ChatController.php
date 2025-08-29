@@ -8,6 +8,7 @@ use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Events\MessageSent;
+use App\Models\Job;
 
 
 class ChatController extends Controller
@@ -32,6 +33,9 @@ class ChatController extends Controller
                     ->orderBy('updated_at', 'desc')
                     ->get();
 
+                    // ambil semua job milik freelancer login
+    $availableJobs = Job::where('freelancer_id', $userId)->get();
+
                     // ambil parameter chat_id dari query string jika ada
     //     $chatId = $request->get('chat_id');
     //     // tentukan chat aktif
@@ -47,7 +51,7 @@ class ChatController extends Controller
             ? Chat::with(['messages.sender'])->find($chats->first()->id)
             : null);
 
-      return view('chat.index', compact('chats','activeChat'));
+      return view('chat.index', compact('chats','activeChat','availableJobs'));
     }
 
     /**

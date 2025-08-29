@@ -625,13 +625,34 @@
             <p class="chat-sidebar-subtitle text-sm text-gray-500">Recent conversations</p>
         </div>
 
-        <div class="chat-list flex-1 overflow-y-auto" id="chatList">
+        <!-- <div class="chat-list flex-1 overflow-y-auto" id="chatList">
             @foreach($chats as $chat)
                 @php
                     $otherUser = $chat->client_id == auth()->id()
                         ? $chat->freelancer
                         : $chat->client;
-                @endphp
+                @endphp -->
+
+                <div class="chat-list flex-1 overflow-y-auto" id="chatList">
+    @foreach($chats as $chat)
+        @php
+            // pastikan $chat punya client_id & freelancer
+            $otherUser = null;
+            if (isset($chat->client_id) && $chat->client_id == auth()->id()) {
+                $otherUser = $chat->freelancer ?? null;
+            } else {
+                $otherUser = $chat->client ?? null;
+            }
+        @endphp
+
+
+        @if($otherUser)
+            <div class="chat-item">
+                {{ $otherUser->name ?? 'User' }}
+            </div>
+        @endif
+    @endforeach
+</div>
 
                 <div class="chat-item {{ isset($activeChat) && $activeChat->id === $chat->id ? 'active' : '' }}"
                      data-chat-id="{{ $chat->id }}"
@@ -665,13 +686,33 @@
     </div>
 
     <!-- Chat Main Area -->
-    <div class="chat-main">
+    <!-- <div class="chat-main">
         @if($activeChat)
             @php
                 $otherUser = $activeChat->client_id == auth()->id()
                     ? $activeChat->freelancer
                     : $activeChat->client;
-            @endphp
+            @endphp -->
+
+            <!-- Chat Main Area -->
+<div class="chat-main">
+    @if(!empty($activeChat))
+        @php
+            $otherUser = null;
+            if (isset($activeChat->client_id) && $activeChat->client_id == auth()->id()) {
+                $otherUser = $activeChat->freelancer ?? null;
+            } else {
+                $otherUser = $activeChat->client ?? null;
+            }
+        @endphp
+
+        @if($otherUser)
+            <h2>Chat dengan {{ $otherUser->name ?? 'User' }}</h2>
+        @endif
+    @else
+        <p>Pilih chat untuk memulai percakapan.</p>
+    @endif
+</div>
 
             <!-- Header -->
             <div class="chat-header" id="chatHeader">
@@ -738,7 +779,7 @@
                                     </div>
                                 </div>
                                 
-                                @if($offer->client_id == auth()->id())
+                                <!-- @if($offer->client_id == auth()->id())
                                 <div class="offer-body">
                                     <div class="offer-actions">
                                         <a href="{{ route('offers.show', $offer) }}" class="btn-offer btn-details">
@@ -746,7 +787,18 @@
                                         </a>
                                     </div>
                                 </div>
-                                @endif
+                                @endif -->
+
+                                {{-- Offer Section --}}
+@if(!empty($offer) && isset($offer->client_id) && $offer->client_id == auth()->id())
+    <div class="offer-body">
+        <div class="offer-actions">
+            <a href="{{ route('offers.show', $offer) }}" class="btn-offer btn-details">
+                Details
+            </a>
+        </div>
+    </div>
+@endif
                             </div>
                         </div>
                         @endif
@@ -798,23 +850,24 @@
             <form id="offerForm" action="{{ route('offers.store') }}" method="POST">
                 @csrf
                 
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Job/Project</label>
-                    <select name="job_id" required 
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">-- Pilih Job --</option>
-                        @if(isset($availableJobs) && $availableJobs->count() > 0)
-                            @foreach($availableJobs as $job)
-                                <option value="{{ $job->id }}">
-                                    {{ $job->title }} - Rp {{ number_format($job->budget, 0, ',', '.') }}
-                                </option>
-                            @endforeach
-                        @else
-                            <option value="" disabled>Tidak ada job tersedia dari client ini</option>
-                        @endif
-                    </select>
-                    <p class="text-xs text-gray-500 mt-1">Pilih job yang ingin Anda ajukan penawaran</p>
-                </div>
+                
+                
+               {{-- Pilih Job --}}
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Job/Project</label>
+            <select name="job_id" required 
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <option value="">-- Pilih Job --</option>
+                @forelse($availableJobs as $job)
+                    <option value="{{ $job->id }}">
+                        {{ $job->title }} - Rp {{ number_format($job->budget, 0, ',', '.') }}
+                    </option>
+                @empty
+                    <option value="" disabled>Anda belum punya job</option>
+                @endforelse
+            </select>
+            <p class="text-xs text-gray-500 mt-1">Pilih job yang ingin Anda ajukan penawaran</p>
+        </div>
                 
                 <div class="space-y-4">
                     <div>
