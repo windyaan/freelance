@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\JobController;
+use App\Http\Controllers\MilestoneController;
 use App\Http\Controllers\ChatController; // Import ChatController
 use App\Http\Controllers\OrderController; // Import OrderController
 use App\Http\Controllers\AdminReportController;
@@ -60,6 +61,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/{id}/edit', [ProfileController::class, 'editWithId'])->name('profile.edit.id');
     Route::put('/profile/{id}', [ProfileController::class, 'updateWithId'])->name('profile.update.id');
     Route::patch('/profile/{id}', [ProfileController::class, 'updateWithId'])->name('profile.update.patch.id');
+
+    //tambahan
+    // === Milestone routes (client + freelancer) ===
+    Route::get('/offers/{offer}/milestones', [MilestoneController::class, 'index'])->name('milestones.index');
+    Route::post('/offers/{offer}/milestones', [MilestoneController::class, 'store'])->name('milestones.store');
+    Route::put('/milestones/{milestone}', [MilestoneController::class, 'update'])->name('milestones.update');
+    Route::delete('/milestones/{milestone}', [MilestoneController::class, 'destroy'])->name('milestones.destroy');
 
     // Client routes group
     Route::prefix('client')->name('client.')->middleware('role:client')->group(function () {

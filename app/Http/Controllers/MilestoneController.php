@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Milestone;
@@ -8,47 +9,102 @@ use Illuminate\Support\Facades\Auth;
 
 class MilestoneController extends Controller
 {
-    //membuat milestone baru ke dalam sebuah offer
-    public function store(Request $request, Offer $offer)
+    /**
+     * Tampilkan milestone untuk sebuah offer
+     */
+    public function index($offerId)
     {
-        if ($offer->freelancer_id !== Auth::id()) abort(403);
+        $offer = Offer::with('milestones')->findOrFail($offerId);
+
+        // cek hak akses
+        if (Auth::id() !== $offer->freelancer_id && Auth::id() !== $offer->client_id) {
+            abort(403, 'Unauthorized');
+        }
+
+        return response()->json([
+            'milestones' => $offer->milestones()->orderBy('start_time')->get()
+        ]);
+    }
+
+    /**
+     * Freelancer membuat milestone baru (default Start)
+     */
+    public function store(Request $request, $offerId)
+    {
+        $offer = Offer::findOrFail($offerId);
+
+        if (Auth::id() !== $offer->freelancer_id) {
+            abort(403, 'Unauthorized');
+        }
 
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
         ]);
-        //menyimpan milestone
-        $offer->milestones()->create([
-            'title' => $request->title,
+
+        $milestone = Milestone::create([
+            'offer_id'    => $offer->id,
+            'title'       => $request->title,
             'description' => $request->description,
-            'status' => 'Start',
+            'status'      => 'Start', // default ketika dibuat
+            'start_time'  => now(),
         ]);
 
-        return back()->with('success', 'Milestone berhasil ditambahkan.');
+        return response()->json($milestone, 201);
     }
 
+    /**
+     * Update milestone (ubah status)
+     */
     public function update(Request $request, Milestone $milestone)
     {
-        if ($milestone->offer->freelancer_id !== Auth::id()) abort(403);
+        $offer = $milestone->offer;
+
+        if (Auth::id() !== $offer->freelancer_id && Auth::id() !== $offer->client_id) {
+            abort(403, 'Unauthorized');
+        }
 
         $request->validate([
-            'status' => 'in:Start,Progress,Done,revisi_request,approved',
+            'status' => 'required|in:Start,Progress,Done,revisi_request,approved',
         ]);
 
-        $milestone->update([
-            'status' => $request->status,
-            'completed_at' => $request->status === 'Done' ? now() : null,
-        ]);
+        $status = $request->status;
 
-        return back()->with('success', 'Status milestone diperbarui.');
+        // Hanya freelancer boleh Progress/Done
+        if (in_array($status, ['Progress','Done']) && Auth::id() !== $offer->freelancer_id) {
+            abort(403, 'Client tidak boleh ubah ke Progress/Done');
+        }
+
+        // Hanya client boleh revisi/approve
+        if (in_array($status, ['revisi_request','approved']) && Auth::id() !== $offer->client_id) {
+            abort(403, 'Freelancer tidak boleh ubah ke Revisi/Approve');
+        }
+
+        $data = ['status' => $status];
+
+        // Kalau Done → set completed_at
+        if ($status === 'Done') {
+            $data['completed_at'] = now();
+        }
+
+        $milestone->update($data);
+
+        return response()->json($milestone);
     }
 
-    //menampilkan detail dari satu milestone
-    public function show($id)
+    /**
+     * Hapus milestone (opsional, hanya freelancer)
+     */
+    public function destroy(Milestone $milestone)
     {
-        $milestone = Milestone::with('offer.job')->findOrFail($id);
-        if ($milestone->offer->freelancer_id !== Auth::id()) abort(403);
+        $offer = $milestone->offer;
 
-        return view('milestones.show', compact('milestone'));
+        if (Auth::id() !== $offer->freelancer_id) {
+            abort(403, 'Unauthorized');
+        }
+
+        $milestone->delete();
+
+        return response()->json(['message' => 'Milestone deleted']);
     }
 }
