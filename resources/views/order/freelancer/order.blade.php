@@ -404,7 +404,53 @@
 </style>
 @endpush
 
-@section('content')
+{{-- @section('content')
+<!-- Embed sample orders data for demo purposes -->
+<script id="order-data" type="application/json">
+[
+    {
+        "id": 1,
+        "title": "Buku cerita anak Aku Sayang Nenek",
+        "freelancer": "Namira Enggar",
+        "category": "Illustrator",
+        "status": "paid",
+        "price": 150000,
+        "date": "2025-09-18",
+        "deadline": "2025-09-25"
+    },
+    {
+        "id": 2,
+        "title": "Pembuatan design Kaos Barangsai",
+        "freelancer": "Namira Enggar",
+        "category": "Graphic Design",
+        "status": "dp",
+        "price": 250000,
+        "date": "2025-09-21",
+        "deadline": "2025-09-28"
+    },
+    {
+        "id": 3,
+        "title": "Buku mewarnai tema bermain di Pantai",
+        "freelancer": "Nadia Ima",
+        "category": "Illustrator",
+        "status": "failed",
+        "price": 200000,
+        "date": "2025-09-24",
+        "deadline": "2025-10-01"
+    },
+    {
+        "id": 4,
+        "title": "Logo Design untuk Startup",
+        "freelancer": "Ahmad Rizki",
+        "category": "Graphic Design",
+        "status": "paid",
+        "price": 300000,
+        "date": "2025-09-22",
+        "deadline": "2025-09-30"
+    }
+]
+</script>
+
 <!-- Orders Section -->
 <div class="orders-section">
     <div class="section-header">
@@ -450,62 +496,172 @@
                     @endif
                 </div>
 
-                <div class="order-footer">
-                    <div class="order-price">
-                        {{ 'Rp' . number_format($orderItem->amount, 0, ',', '.') }}
-                        @if($orderItem->amount_paid > 0 && $orderItem->amount_paid < $orderItem->amount)
-                            <small style="display: block; font-size: 0.8rem; color: #64748b;">
-                                Paid: Rp{{ number_format($orderItem->amount_paid, 0, ',', '.') }}
-                            </small>
-                        @endif
+            <div class="order-footer">
+                <div class="order-price">Rp150.000</div>
+                <div class="order-actions">
+                    <button class="action-btn btn-details" onclick="viewOrderDetails(1)">Details</button>
+                    <button class="action-btn btn-contact" onclick="contactFreelancer('Namira Enggar')">Pay</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="order-card" data-status="dp" data-order-id="2">
+            <div class="order-header">
+                <div>
+                    <div class="order-date">Sunday, 21 September 2025</div>
+                    <div class="order-day">Sep 21, 2025</div>
+                </div>
+                <div class="order-status status-dp">DP</div>
+            </div>
+
+            <div class="order-content">
+                <div class="order-category">graphic design</div>
+                <div class="order-freelancer">Freelancer: Namira Enggar</div>
+                <div class="order-title">Pembuatan design Kaos Barangsai</div>
+                <div class="order-deadline">
+                    <iconify-icon icon="material-symbols:schedule"></iconify-icon>
+                    Deadline: Sep 28, 2025
+                </div>
+            </div>
+
+            <div class="order-footer">
+                <div class="order-price">Rp250.000</div>
+                <div class="order-actions">
+                    <button class="action-btn btn-details" onclick="viewOrderDetails(2)">Details</button>
+                    <button class="action-btn btn-pay" onclick="makePayment(2)">Pay Remaining</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="order-card" data-status="failed" data-order-id="3">
+            <div class="order-header">
+                <div>
+                    <div class="order-date">Wednesday, 24 September 2025</div>
+                    <div class="order-day">Sep 24, 2025</div>
+                </div>
+                <div class="order-status status-failed">Failed</div>
+            </div>
+
+            <div class="order-content">
+                <div class="order-category">illustrator</div>
+                <div class="order-freelancer">Freelancer: Nadia Ima</div>
+                <div class="order-title">Buku mewarnai tema bermain di Pantai</div>
+                <div class="order-deadline">
+                    <iconify-icon icon="material-symbols:schedule"></iconify-icon>
+                    Deadline: Oct 1, 2025
+                </div>
+            </div>
+
+            <div class="order-footer">
+                <div class="order-price">Rp200.000</div>
+                <div class="order-actions">
+                    <button class="action-btn btn-details" onclick="viewOrderDetails(3)">Details</button>
+                    <button class="action-btn btn-contact" onclick="contactFreelancer('Nadia Ima')">Pay</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="order-card" data-status="paid" data-order-id="4">
+            <div class="order-header">
+                <div>
+                    <div class="order-date">Friday, 22 September 2025</div>
+                    <div class="order-day">Sep 22, 2025</div>
+                </div>
+                <div class="order-status status-paid">Paid</div>
+            </div>
+
+            <div class="order-content">
+                <div class="order-category">graphic design</div>
+                <div class="order-freelancer">Freelancer: Ahmad Rizki</div>
+                <div class="order-title">Logo Design untuk Startup</div>
+                <div class="order-deadline">
+                    <iconify-icon icon="material-symbols:schedule"></iconify-icon>
+                    Deadline: Sep 30, 2025
+                </div>
+            </div>
+
+            <div class="order-footer">
+                <div class="order-price">Rp300.000</div>
+                <div class="order-actions">
+                    <button class="action-btn btn-details" onclick="viewOrderDetails(4)">Details</button>
+                    <button class="action-btn btn-contact" onclick="contactFreelancer('Ahmad Rizki')">Pay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State (hidden by default, shown when no orders match filter) -->
+    <div class="empty-state" id="emptyState" style="display: none;">
+        <iconify-icon icon="material-symbols:inbox"></iconify-icon>
+        <h3>No order found</h3>
+        <p>You don't have any order matching the current filter.</p>
+        <a href="{{ route('freelancer.dashboard') }}" class="btn-primary">
+            <iconify-icon icon="material-symbols:add"></iconify-icon>
+            Browse Talents
+        </a>
+    </div>
+</div>
+@endsection --}}
+
+<div class="orders-section">
+    <div class="section-header">
+        <h1 class="section-title">
+            <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
+            My Orders
+        </h1>
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="paid">Paid</button>
+            <button class="filter-btn" data-filter="dp">DP</button>
+            <button class="filter-btn" data-filter="failed">Failed</button>
+        </div>
+    </div>
+
+    <div class="orders-grid" id="orderGrid">
+        @forelse($orders as $order)
+            <div class="order-card" data-status="{{ strtolower($order->status) }}" data-order-id="{{ $order->id }}">
+                <div class="order-header">
+                    <div>
+                        <div class="order-date">{{ $order->created_at->format('l, d F Y') }}</div>
+                        <div class="order-day">{{ $order->created_at->format('M d, Y') }}</div>
                     </div>
+                    <div class="order-status status-{{ strtolower($order->status) }}">
+                        {{ ucfirst($order->status) }}
+                    </div>
+                </div>
+
+                <div class="order-content">
+                    <div class="order-category">{{ strtolower($order->offer->job->category->name ?? '-') }}</div>
+                    <div class="order-freelancer">Client: {{ $order->offer->client->name }}</div>
+                    <div class="order-title">{{ $order->offer->job->title }}</div>
+                    <div class="order-deadline">
+                        <iconify-icon icon="material-symbols:schedule"></iconify-icon>
+                        Deadline: {{ \Carbon\Carbon::parse($order->offer->deadline)->format('M d, Y') }}
+                    </div>
+                </div>
+
+                <div class="order-footer">
+                    <div class="order-price">Rp{{ number_format($order->amount, 0, ',', '.') }}</div>
                     <div class="order-actions">
-                        <a href="{{ route('order.show', $orderItem->id) }}" class="action-btn btn-details">Details</a>
-                        
-                        @if($orderItem->status === 'unpaid' || $orderItem->status === 'dp')
-                            <a href="{{ route('order.showPayment', $orderItem->id) }}" class="action-btn btn-pay">
-                                {{ $orderItem->status === 'dp' ? 'Pay Remaining' : 'Pay Now' }}
-                            </a>
-                        @endif
-                        
-                        @if(Auth::user()->role === 'client' && isset($orderItem->offer->job->freelancer))
-                            <button class="action-btn btn-contact" onclick="contactFreelancer('{{ $orderItem->offer->job->freelancer->name }}')">
-                                Contact
-                            </button>
-                        @elseif(Auth::user()->role === 'freelancer' && isset($orderItem->offer->job->client))
-                            <button class="action-btn btn-contact" onclick="contactClient('{{ $orderItem->offer->job->client->name }}')">
-                                Contact
-                            </button>
-                        @endif
+                        <a href="{{ route('freelancer.orders.show', $order->id) }}" class="action-btn btn-details">Details</a>
                     </div>
                 </div>
             </div>
         @empty
-            <!-- Empty State -->
             <div class="empty-state" id="emptyState">
                 <iconify-icon icon="material-symbols:inbox"></iconify-icon>
-                <h3>No orders found</h3>
+                <h3>No order found</h3>
                 <p>You don't have any orders yet.</p>
                 <a href="{{ route('freelancer.dashboard') }}" class="btn-primary">
                     <iconify-icon icon="material-symbols:add"></iconify-icon>
-                    Browse Projects
+                    Browse Jobs
                 </a>
             </div>
         @endforelse
     </div>
-
-    <!-- Empty State for filtered results -->
-    <div class="empty-state" id="filteredEmptyState" style="display: none;">
-        <iconify-icon icon="material-symbols:search-off"></iconify-icon>
-        <h3>No orders found</h3>
-        <p>No orders match the current filter or search criteria.</p>
-        <button onclick="clearFilters()" class="btn-primary">
-            <iconify-icon icon="material-symbols:refresh"></iconify-icon>
-            Clear Filters
-        </button>
-    </div>
 </div>
 @endsection
+
 
 @push('scripts')
 <script>

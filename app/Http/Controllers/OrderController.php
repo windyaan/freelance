@@ -11,27 +11,30 @@ class OrderController extends Controller
     // mengambil semua order milik client
     public function clientIndex()
     {
-        $user = Auth::user();
+        $clientId = Auth::id();
 
-        // ambil semua order berdasarkan client lewat relasi offer -> job -> user
-        $order = Order::whereHas('offer.job', function ($q) use ($user) {
-            $q->where('client_id', $user->id);
-        })->with(['offer.job.freelancer'])->get();
+    $orders = Order::whereHas('offer', function ($q) use ($clientId) {
+        $q->where('client_id', $clientId);
+    })
+    ->with(['offer.job.freelancer']) // load freelancer pemilik job
+    ->get();
 
-        return view('order.client.order', compact('order'));
+        return view('order.client.order', compact('orders'));
     }
 
     // mengambil semua order milik freelance dari client
     public function freelancerIndex()
     {
-        $freelancerId = Auth::user();
+        $freelancerId = Auth::id();
 
-        $order = Order::whereHas('offer.job', function ($query) use ($freelancerId) {
-            $query->where('freelancer_id', $freelancerId);
-        })->with(['offer.job', 'client']) // eager load biar ga N+1
-          ->get();
+         $orders = Order::whereHas('offer', function ($q) use ($freelancerId) {
+        $q->where('freelancer_id', $freelancerId);
+    })
+    ->with(['offer.job', 'offer.client', 'offer.freelancer']) // load job dan client pemesan
+    ->get();
 
-        return view('order.freelancer.order', compact('order'));
+
+        return view('dashboard.freelancer.index', compact('orders'));
     }
 
     // Method umum index (untuk fallback atau direct access)
@@ -52,25 +55,15 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         $user = Auth::user();
-        
-        // Load relasi yang diperlukan
-        $order->load(['offer.job.freelancer', 'offer.client']);
 
-        // Cek authorization
-        $isFreelancer = $user->role === 'freelancer' && $order->offer->freelancer_id === $user->id;
-        $isClient = $user->role === 'client' && $order->offer->client_id === $user->id;
-        
-        if (!$isFreelancer && !$isClient) {
-            abort(403, 'Unauthorized');
-        }
+         // Freelancer pemilik offer & job
+    if ($user->role === 'freelancer' && $order->offer->freelancer_id === $user->id) {
+        return view('order.freelancer.show', compact('order'));
+    }
 
-        // PERBAIKAN: Redirect langsung ke milestones karena itu tujuan Anda
-        return redirect()->route('milestones.showByOrder', $order->id);
-        
-        // ALTERNATIF: Jika tetap ingin tampilkan detail order, uncomment dan buat view:
-        /*
-        if ($isFreelancer) {
-            return view('orders.freelancer.show', compact('order'));
+    // Client yang menerima/acc offer
+    if ($user->role === 'client' && $order->offer->client_id === $user->id) {
+        return view('order.client.show', compact('order'));
         }
         
         if ($isClient) {

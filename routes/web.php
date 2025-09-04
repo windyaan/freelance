@@ -40,8 +40,13 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [ChatController::class, 'store'])->name('store');
         Route::post('/{chat}/messages', [ChatController::class, 'storeMessage'])->name('message.store');
         Route::patch('/messages/{message}/read', [ChatController::class, 'markAsRead'])->name('message.read');
-        Route::post('/{chat}/send', [ChatController::class, 'sendMessage'])->name('send');
-        Route::get('/start/{job}', [JobController::class, 'startChat'])->name('start');
+
+        //tambahan
+        Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+        Route::get('/chat/{chat}', [ChatController::class, 'show'])->name('chat.show');
+         // Tambahkan route POST untuk mengirim pesan
+        Route::post('/chat/{chat}/send', [ChatController::class, 'storeMessage'])->name('chat.store');
+        Route::get('/chat/start/{job}', [JobController::class, 'startChat'])->name('chat.start');
     });
 
     // GLOBAL OFFER ROUTES (accessible by both client and freelancer)
@@ -53,8 +58,9 @@ Route::middleware('auth')->group(function () {
         Route::put('/{offer}', [OfferController::class, 'update'])->name('update');
 
         // Offer actions
-        Route::patch('/{offer}/accept', [OfferController::class, 'accept'])->name('accept');
-        Route::patch('/{offer}/reject', [OfferController::class, 'reject'])->name('reject');
+        Route::patch('/{offer}/accept', [UserController::class, 'acceptOffer'])->name('accept');
+        Route::patch('/{offer}/accept', [UserController::class, 'acceptOffer'])->name('accept');
+        Route::patch('/{offer}/reject', [UserController::class, 'declineOffer'])->name('reject');
 
         // Payment routes
         Route::get('/{offer}/payment', [OfferController::class, 'payment'])->name('payment');
@@ -121,13 +127,17 @@ Route::middleware('auth')->group(function () {
     // Freelancer routes group
     Route::prefix('freelancer')->name('freelancer.')->middleware('role:freelancer')->group(function () {
         // Freelancer dashboard
-        Route::get('/dashboard', function(){return view('dashboard.freelancer.index');})->name('dashboard');
+        // Route::get('/dashboard', function(){return view('dashboard.freelancer.index');})->name('dashboard');
+
+        // Freelancer dashboard → arahkan ke controller
+    Route::get('/dashboard', [OrderController::class, 'freelancerIndex'])
+        ->name('dashboard');
 
         // Freelancer chat routes
         Route::get('/chat', [ChatController::class, 'index'])->name('chat');
         Route::get('/chat/{chat}', [ChatController::class, 'show'])->name('chat.show');
         Route::post('/chat', [ChatController::class, 'store'])->name('chat.store');
-        Route::post('/chat/{chat}/messages', [ChatController::class, 'storeMessage'])->name('chat.message.store');
+        Route::post('/chat/{chat}/messages', [ChatController::class, 'sendMessage'])->name('chat.message.send');
         Route::patch('/messages/{message}/read', [ChatController::class, 'markAsRead'])->name('message.read');
 
         // Freelancer order routes

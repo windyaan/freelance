@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Events\Example;
 use App\Models\Chat;
+use App\Models\Notification;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Events\MessageSent;
+use App\Events\NotificationSent;
 use App\Models\Job;
 
 
@@ -158,6 +160,22 @@ public function sendMessage(Request $request, Chat $chat)
 
     // Broadcast ke channel chat.{id}
     broadcast(new MessageSent($message))->toOthers();
+
+    // Tentukan penerima (lawan chat)
+    $receiverId = $chat->client_id == Auth::id()
+        ? $chat->freelancer_id
+        : $chat->client_id;
+
+   // Simpan notifikasi di DB
+    $notification = Notification::create([
+        'user_id' => $receiverId,
+        'type'    => 'message',
+        'content' => Auth::user()->name . ' mengirim pesan baru',
+        'link_url'=> route('chat.show', $chat->id),
+    ]);
+
+    //broadcast ke notification
+    broadcast(new NotificationSent($notification));
 
     // ✅ return JSON supaya bisa ditangani JS di frontend
     return response()->json([

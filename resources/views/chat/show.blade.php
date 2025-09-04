@@ -71,15 +71,16 @@
         </div>
 
         <!-- Hidden data for JavaScript -->
-        <div id="chat-data" 
-             data-chat-id="{{ $chat->id ?? '' }}" 
-             data-user-id="{{ auth()->id() }}" 
+        <div id="chat-data"
+             data-chat-id="{{ $chat->id ?? '' }}"
+             data-user-id="{{ auth()->id() }}"
              style="display: none;"></div>
     </div>
 </div>
 
 @push('scripts')
-<script>
+<script src="{{ asset('js/chat.js') }}"></script>
+{{-- <script>
 document.addEventListener('DOMContentLoaded', function() {
     var messagesContainer = document.getElementById('messages-container');
     var messageForm = document.getElementById('message-form');
@@ -111,14 +112,14 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add message bubble immediately
             var messageDiv = document.createElement('div');
             messageDiv.className = 'flex justify-end';
-            messageDiv.innerHTML = 
+            messageDiv.innerHTML =
                 '<div class="max-w-xs lg:max-w-md px-4 py-2 rounded-lg bg-blue-600 text-white">' +
                     '<p class="text-sm">' + escapeHtml(message) + '</p>' +
-                    '<p class="text-xs mt-1 text-blue-200">' + 
-                        new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'}) + 
+                    '<p class="text-xs mt-1 text-blue-200">' +
+                        new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'}) +
                     '</p>' +
                 '</div>';
-            
+
             if (messagesContainer) {
                 messagesContainer.appendChild(messageDiv);
                 scrollToBottom();
@@ -145,28 +146,28 @@ document.addEventListener('DOMContentLoaded', function() {
     if (chatData) {
         var chatId = chatData.getAttribute('data-chat-id');
         var currentUserId = parseInt(chatData.getAttribute('data-user-id'));
-        
+
         if (chatId && typeof Echo !== 'undefined') {
             Echo.private('chat.' + chatId)
                 .listen('MessageSent', function(e) {
                     console.log('New message received:', e);
-                    
+
                     // Don't show message if it's from current user
                     if (e.message && e.message.sender_id === currentUserId) {
                         return;
                     }
-                    
+
                     // Add received message
                     var messageDiv = document.createElement('div');
                     messageDiv.className = 'flex justify-start';
-                    messageDiv.innerHTML = 
+                    messageDiv.innerHTML =
                         '<div class="max-w-xs lg:max-w-md px-4 py-2 rounded-lg bg-white text-gray-800">' +
                             '<p class="text-sm">' + escapeHtml(e.message.content || '') + '</p>' +
                             '<p class="text-xs mt-1 text-gray-500">' +
                                 new Date(e.message.created_at).toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'}) +
                             '</p>' +
                         '</div>';
-                    
+
                     if (messagesContainer) {
                         messagesContainer.appendChild(messageDiv);
                         scrollToBottom();
@@ -194,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-</script>
+</script> --}}
 @endpush
 
 @endsection

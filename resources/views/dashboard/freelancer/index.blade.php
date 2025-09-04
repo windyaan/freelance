@@ -6,7 +6,7 @@
 
 @section('navbar-center')
     @component('components.search')
-      
+
     @endcomponent
 @endsection
 
@@ -34,7 +34,7 @@
     </a>
 @endsection
 
-@section('content')
+{{-- @section('content')
 <!-- Embed sample orders data for demo purposes -->
 <script id="client-order-data" type="application/json">
 [
@@ -193,7 +193,131 @@
         <p>Loading orders...</p>
     </div>
 </div>
+
+<!-- Order Detail Modal -->
+<div class="modal-overlay" id="orderModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle">Order Details</h3>
+            <button class="modal-close" onclick="closeOrderModal()">
+                <iconify-icon icon="material-symbols:close"></iconify-icon>
+            </button>
+        </div>
+        <div class="modal-body" id="modalBody">
+            <!-- Content will be populated by JavaScript -->
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeOrderModal()">Close</button>
+            <button class="btn btn-primary" onclick="applyToOrder()">
+                <iconify-icon icon="material-symbols:send"></iconify-icon>
+                Apply Now
+            </button>
+        </div>
+    </div>
+</div>
+@endsection --}}
+
+@section('title', 'Freelancer Orders')
+@section('page-title', 'Orders from Clients')
+
+@section('content')
+<div class="client-orders-section">
+    <div class="section-header">
+        <div class="header-left">
+            <h2 class="section-title">
+                <iconify-icon icon="material-symbols:work-outline" class="title-icon"></iconify-icon>
+                Orders from Clients
+            </h2>
+            <p class="section-subtitle">Projects you’ve been hired for</p>
+        </div>
+        <div class="header-right">
+            <span class="orders-count">{{ $orders->count() }} Orders</span>
+            <div class="view-toggle">
+                <button class="toggle-btn active" data-view="cards">
+                    <iconify-icon icon="material-symbols:grid-view"></iconify-icon>
+                </button>
+                <button class="toggle-btn" data-view="list">
+                    <iconify-icon icon="material-symbols:list"></iconify-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="filter-section">
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">
+                <iconify-icon icon="material-symbols:select-all"></iconify-icon> All
+            </button>
+            <button class="filter-btn" data-filter="new">
+                <iconify-icon icon="material-symbols:new-releases"></iconify-icon> New
+            </button>
+            <button class="filter-btn" data-filter="urgent">
+                <iconify-icon icon="material-symbols:priority-high"></iconify-icon> Urgent
+            </button>
+        </div>
+        <div class="sort-dropdown">
+            <select class="sort-select">
+                <option value="date">Sort by Date</option>
+                <option value="budget">Sort by Budget</option>
+                <option value="deadline">Sort by Deadline</option>
+                <option value="priority">Sort by Priority</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Orders Grid -->
+    <div class="orders-container">
+        @forelse($orders as $order)
+            <div class="order-card">
+                <div class="order-header">
+                    {{-- Avatar pakai UI Avatars --}}
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode($order->offer->client->name ?? 'Unknown') }}&background=38C1B9&color=fff&size=50"
+                         alt="Client Avatar" class="client-avatar">
+                    <div class="order-info">
+                        <h3 class="order-title">{{ $order->offer->title ?? 'Untitled Job' }}</h3>
+                        <p class="client-name">{{ $order->offer->client->name ?? 'Unknown Client' }}</p>
+                    </div>
+                </div>
+
+                <div class="order-meta">
+                <span class="category">
+        {{ $order->offer->job->category->name ?? 'Uncategorized' }}
+            </span>
+         <span class="status {{ $order->status }}">
+        {{ ucfirst($order->status) }}
+    </span>
+</div>
+
+
+                <p class="order-description">
+                    {{ Str::limit($order->offer->description ?? 'No description available', 120) }}
+                </p>
+
+                <div class="order-footer">
+                    <span class="budget">Rp {{ number_format($order->offer->budget ?? $order->amount ?? 0, 0, ',', '.') }}</span>
+                    <span class="deadline">
+                        Deadline:
+                        {{ $order->offer->job->deadline ? \Carbon\Carbon::parse($order->offer->job->deadline)->format('d M Y') : '-' }}
+                    </span>
+                </div>
+
+                <a href="{{ route('freelancer.order.show', $order->id) }}" class="btn btn-primary mt-2">
+                    <iconify-icon icon="material-symbols:visibility"></iconify-icon> View Details
+                </a>
+            </div>
+        @empty
+            <div class="empty-state">
+                <iconify-icon icon="material-symbols:search-off"></iconify-icon>
+                <h3>No orders found</h3>
+                <p>You dont have any client orders yet.</p>
+            </div>
+        @endforelse
+    </div>
+</div>
 @endsection
+
+
 
 @push('styles')
 <style>
@@ -842,19 +966,19 @@ var filterButtons, sortSelect, viewToggleButtons;
 // Initialize function
 function initFreelancerDashboard() {
     console.log('Initializing freelancer dashboard...');
-    
+
     // Cache DOM elements
     cacheElements();
-    
+
     // Load order data
     loadOrderData();
-    
+
     // Setup event listeners
     setupEventListeners();
-    
+
     // Initial render
     renderOrders();
-    
+
     console.log('Freelancer dashboard initialized successfully');
 }
 
@@ -945,6 +1069,10 @@ function setupEventListeners() {
 
     // Keyboard shortcuts
     document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && orderModal && orderModal.classList.contains('show')) {
+            closeOrderModal();
+        }
+
         // Number keys for quick filtering (1-3)
         if (e.key >= '1' && e.key <= '3' && !e.target.matches('input, select, textarea')) {
             e.preventDefault();
@@ -976,7 +1104,7 @@ function setActiveView(view) {
             viewToggleButtons[i].classList.add('active');
         }
     }
-    
+
     // Update container class
     if (ordersContainer) {
         ordersContainer.className = 'orders-container' + (view === 'list' ? ' list-view' : '');
@@ -998,11 +1126,11 @@ function clearSearch() {
 
 function filterOrders() {
     var filteredOrders = [];
-    
+
     for (var i = 0; i < clientOrderData.length; i++) {
         var order = clientOrderData[i];
         var shouldInclude = true;
-        
+
         // Filter by search query
         if (currentSearchQuery) {
             var searchableText = [
@@ -1011,48 +1139,48 @@ function filterOrders() {
                 order.category,
                 order.description
             ].concat(order.requirements).join(' ').toLowerCase();
-            
+
             if (searchableText.indexOf(currentSearchQuery) === -1) {
                 shouldInclude = false;
             }
         }
-        
+
         // Filter by status
         if (currentFilter !== 'all' && order.status !== currentFilter) {
             shouldInclude = false;
         }
-        
+
         if (shouldInclude) {
             filteredOrders.push(order);
         }
     }
-    
+
     return filteredOrders;
 }
 
 function sortOrders(orders) {
     var sortedOrders = orders.slice(); // Create copy
-    
+
     sortedOrders.sort(function(a, b) {
         switch (currentSort) {
             case 'budget':
                 var budgetA = parseInt(a.budget.split('-')[1]) || 0;
                 var budgetB = parseInt(b.budget.split('-')[1]) || 0;
                 return budgetB - budgetA;
-                
+
             case 'deadline':
                 return new Date(a.deadline) - new Date(b.deadline);
-                
+
             case 'priority':
                 var priorityOrder = { high: 3, medium: 2, low: 1 };
                 return (priorityOrder[b.priority] || 0) - (priorityOrder[a.priority] || 0);
-                
+
             case 'date':
             default:
                 return new Date(b.date) - new Date(a.date);
         }
     });
-    
+
     return sortedOrders;
 }
 
@@ -1087,7 +1215,7 @@ function getTimeUntilDeadline(deadlineString) {
     var now = new Date();
     var timeDiff = deadline - now;
     var daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-    
+
     if (daysDiff < 0) return 'Overdue';
     if (daysDiff === 0) return 'Today';
     if (daysDiff === 1) return 'Tomorrow';
@@ -1141,13 +1269,13 @@ function navigateToMilestone(orderId) {
 function createOrderCard(order) {
     var deadlineText = getTimeUntilDeadline(order.deadline);
     var isUrgent = isDeadlineUrgent(order.deadline);
-    
+
     var requirementTags = '';
     for (var i = 0; i < order.requirements.length; i++) {
         requirementTags += '<span class="requirement-tag">' + order.requirements[i] + '</span>';
     }
-    
-    return '<div class="order-card" data-order-id="' + order.id + '" data-status="' + order.status + '">' +
+
+    return '<div class="order-card" data-order-id="' + order.id + '" data-status="' + order.status + '" onclick="showOrderDetails(' + order.id + ')">' +
         '<div class="order-header">' +
             '<div class="client-info">' +
                 '<img src="' + order.client_avatar + '" alt="' + order.client + '" class="client-avatar">' +
@@ -1188,33 +1316,33 @@ function createOrderCard(order) {
 
 function renderOrders() {
     if (!ordersContainer) return;
-    
+
     // Show loading state
     showLoadingState();
-    
+
     setTimeout(function() {
         var filteredOrders = filterOrders();
         var sortedOrders = sortOrders(filteredOrders);
-        
+
         // Update orders count
         updateOrdersCount(sortedOrders.length);
-        
+
         // Show search results info
         updateSearchResultsInfo(sortedOrders.length);
-        
+
         // Render orders or empty state
         if (sortedOrders.length === 0) {
             showEmptyState();
         } else {
             hideEmptyState();
             hideLoadingState();
-            
+
             var ordersHTML = '';
             for (var i = 0; i < sortedOrders.length; i++) {
                 ordersHTML += createOrderCard(sortedOrders[i]);
             }
             ordersContainer.innerHTML = ordersHTML;
-            
+
             // Update cached cards
             allOrderCards = Array.from(document.querySelectorAll('.order-card'));
         }
@@ -1271,6 +1399,113 @@ function hideEmptyState() {
     if (emptyState) {
         emptyState.classList.remove('show');
     }
+}
+
+// Updated showOrderDetails function to show modal with order details
+function showOrderDetails(orderId) {
+    var order = clientOrderData.find(function(o) { return o.id === orderId; });
+    if (!order) return;
+
+    // Show loading indication
+    var button = null;
+    if (window.event && window.event.target) {
+        button = window.event.target.closest('.btn-details');
+    }
+
+    if (button) {
+        var originalContent = button.innerHTML;
+        button.innerHTML = '<div style="display: flex; align-items: center; gap: 0.5rem;">' +
+            '<div style="width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid white; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>' +
+            'Loading...' +
+            '</div>';
+        button.disabled = true;
+
+        // Restore button after loading modal content
+        setTimeout(function() {
+            button.innerHTML = originalContent;
+            button.disabled = false;
+        }, 800);
+    }
+
+    // Build modal content
+    var requirementTags = '';
+    for (var i = 0; i < order.requirements.length; i++) {
+        requirementTags += '<span class="requirement-tag" style="margin-right: 0.5rem; margin-bottom: 0.5rem;">' + order.requirements[i] + '</span>';
+    }
+
+    var modalContent =
+        '<div class="modal-order-header" style="margin-bottom: 1.5rem;">' +
+            '<div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">' +
+                '<img src="' + order.client_avatar + '" alt="' + order.client + '" style="width: 60px; height: 60px; border-radius: 50%; border: 3px solid var(--primary-color);">' +
+                '<div>' +
+                    '<h4 style="font-size: 1.2rem; margin: 0 0 0.25rem 0; color: var(--text-primary);">' + order.client + '</h4>' +
+                    '<p style="margin: 0; color: var(--text-secondary);">Posted on ' + formatDate(order.date) + '</p>' +
+                    '<span class="order-status status-' + order.status + '" style="display: inline-block; margin-top: 0.5rem;">' + order.status + '</span>' +
+                '</div>' +
+            '</div>' +
+            '<div class="order-category" style="margin-bottom: 1rem;">' + order.category + '</div>' +
+        '</div>' +
+
+        '<div class="modal-order-content">' +
+            '<h3 style="font-size: 1.3rem; color: var(--text-primary); margin-bottom: 1rem;">' + order.title + '</h3>' +
+            '<div style="margin-bottom: 1.5rem;">' +
+                '<h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Project Description</h4>' +
+                '<p style="line-height: 1.6; color: var(--text-secondary);">' + order.description + '</p>' +
+            '</div>' +
+
+            '<div style="margin-bottom: 1.5rem;">' +
+                '<h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Required Skills</h4>' +
+                '<div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">' + requirementTags + '</div>' +
+            '</div>' +
+
+            '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">' +
+                '<div>' +
+                    '<h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Budget Range</h4>' +
+                    '<p style="font-size: 1.2rem; font-weight: 700; color: var(--primary-color); margin: 0;">' + formatBudgetRange(order.budget) + '</p>' +
+                '</div>' +
+                '<div>' +
+                    '<h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Deadline</h4>' +
+                    '<p style="font-size: 1rem; color: ' + (isDeadlineUrgent(order.deadline) ? '#dc2626' : 'var(--text-secondary)') + '; margin: 0; font-weight: 600;">' +
+                        formatDate(order.deadline) + ' (' + getTimeUntilDeadline(order.deadline) + ')' +
+                    '</p>' +
+                '</div>' +
+            '</div>' +
+
+            '<div style="background: var(--bg-muted); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">' +
+                '<h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">Project Priority</h4>' +
+                '<p style="margin: 0; text-transform: capitalize; font-weight: 600; color: ' + (order.priority === 'high' ? '#dc2626' : order.priority === 'medium' ? '#f59e0b' : '#10b981') + ';">' + order.priority + '</p>' +
+            '</div>' +
+        '</div>';
+
+    // Set modal content
+    if (modalTitle) {
+        modalTitle.textContent = 'Order Details';
+    }
+
+    if (modalBody) {
+        modalBody.innerHTML = modalContent;
+    }
+
+    // Show modal with animation
+    setTimeout(function() {
+        if (orderModal) {
+            orderModal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+    }, 300);
+}
+
+function closeOrderModal() {
+    if (orderModal) {
+        orderModal.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+}
+
+function applyToOrder() {
+    // This function can be implemented to handle order applications
+    alert('Apply to Order functionality will be implemented here');
+    closeOrderModal();
 }
 
 // Global functions for compatibility

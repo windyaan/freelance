@@ -22,6 +22,12 @@ Broadcast::channel('chat.{chatId}', function ($user, $chatId) {
             })->exists();
 });
 
+// Channel notifikasi per user
+Broadcast::channel('user.{userId}', function ($user, $userId) {
+    // pastikan hanya user yg bersangkutan bisa listen channel ini
+    return (int) $user->id === (int) $userId;
+});
+
 // Broadcast::channel('chat', function () {
 // return true;
 // });
