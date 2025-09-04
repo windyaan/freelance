@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Message;
 use App\Models\Milestone;
 use App\Models\Offer;
+use App\Models\Notification;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +34,14 @@ class UserController extends Controller
 
         // update status offer jadi accepted
         $offer->update(['status' => 'accepted']);
+
+        // buat notifikasi untuk freelancer
+        Notification::create([
+        'user_id' => $offer->freelancer_id, // penerima notifikasi
+        'type'    => 'offer',
+        'content' => 'Offer kamu untuk job "' . $offer->job->title . '" telah diterima',
+        'link_url'=> route('orders.show', $offer->id), // atau langsung ke order
+        ]);
 
         // buat order baru dari offer dengn status pending
         $order = Order::create([

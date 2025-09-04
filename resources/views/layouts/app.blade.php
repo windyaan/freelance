@@ -59,20 +59,27 @@
         @yield('content')
     </main>
 
+    <!-- Inject Auth userId ke window -->
+    <script>
+        window.Laravel = {
+            userId: @json(Auth::id())
+        };
+    </script>
+
     @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Search functionality
             const searchInput = document.getElementById('globalSearch');
             const searchBtn = document.getElementById('searchBtn');
-            
+
             if (searchInput && searchBtn) {
                 let searchTimeout;
-                
+
                 // Set up search with debounce
                 const performSearch = (query) => {
                     console.log('App layout performing search:', query);
-                    
+
                     // Try page-specific search functions
                     if (typeof window.performSearch === 'function') {
                         window.performSearch(query);
@@ -89,7 +96,7 @@
                         performSearch(query);
                     }, 300);
                 });
-                
+
                 // Search button click
                 searchBtn.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -97,7 +104,7 @@
                     clearTimeout(searchTimeout);
                     performSearch(query);
                 });
-                
+
                 // Enter key search
                 searchInput.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {

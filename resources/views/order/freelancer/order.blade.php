@@ -393,7 +393,7 @@
 </style>
 @endpush
 
-@section('content')
+{{-- @section('content')
 <!-- Embed sample orders data for demo purposes -->
 <script id="order-data" type="application/json">
 [
@@ -581,7 +581,67 @@
         </a>
     </div>
 </div>
+@endsection --}}
+
+<div class="orders-section">
+    <div class="section-header">
+        <h1 class="section-title">
+            <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
+            My Orders
+        </h1>
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="paid">Paid</button>
+            <button class="filter-btn" data-filter="dp">DP</button>
+            <button class="filter-btn" data-filter="failed">Failed</button>
+        </div>
+    </div>
+
+    <div class="orders-grid" id="orderGrid">
+        @forelse($orders as $order)
+            <div class="order-card" data-status="{{ strtolower($order->status) }}" data-order-id="{{ $order->id }}">
+                <div class="order-header">
+                    <div>
+                        <div class="order-date">{{ $order->created_at->format('l, d F Y') }}</div>
+                        <div class="order-day">{{ $order->created_at->format('M d, Y') }}</div>
+                    </div>
+                    <div class="order-status status-{{ strtolower($order->status) }}">
+                        {{ ucfirst($order->status) }}
+                    </div>
+                </div>
+
+                <div class="order-content">
+                    <div class="order-category">{{ strtolower($order->offer->job->category->name ?? '-') }}</div>
+                    <div class="order-freelancer">Client: {{ $order->offer->client->name }}</div>
+                    <div class="order-title">{{ $order->offer->job->title }}</div>
+                    <div class="order-deadline">
+                        <iconify-icon icon="material-symbols:schedule"></iconify-icon>
+                        Deadline: {{ \Carbon\Carbon::parse($order->offer->deadline)->format('M d, Y') }}
+                    </div>
+                </div>
+
+                <div class="order-footer">
+                    <div class="order-price">Rp{{ number_format($order->amount, 0, ',', '.') }}</div>
+                    <div class="order-actions">
+                        <a href="{{ route('freelancer.orders.show', $order->id) }}" class="action-btn btn-details">Details</a>
+                    </div>
+                </div>
+            </div>
+        @empty
+            <div class="empty-state" id="emptyState">
+                <iconify-icon icon="material-symbols:inbox"></iconify-icon>
+                <h3>No order found</h3>
+                <p>You don't have any orders yet.</p>
+                <a href="{{ route('freelancer.dashboard') }}" class="btn-primary">
+                    <iconify-icon icon="material-symbols:add"></iconify-icon>
+                    Browse Jobs
+                </a>
+            </div>
+        @endforelse
+    </div>
+</div>
 @endsection
+
 
 @push('scripts')
 <script>
