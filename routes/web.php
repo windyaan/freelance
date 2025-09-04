@@ -10,11 +10,11 @@ use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\MilestoneController;
-use App\Http\Controllers\ChatController; // Import ChatController
-use App\Http\Controllers\OrderController; // Import OrderController
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminReportController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\OfferController; // Import OfferController
+use App\Http\Controllers\OfferController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -40,13 +40,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [ChatController::class, 'store'])->name('store');
         Route::post('/{chat}/messages', [ChatController::class, 'storeMessage'])->name('message.store');
         Route::patch('/messages/{message}/read', [ChatController::class, 'markAsRead'])->name('message.read');
-
-        //tambahan
-        Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
-        Route::get('/chat/{chat}', [ChatController::class, 'show'])->name('chat.show');
-         // Tambahkan route POST untuk mengirim pesan
-        Route::post('/chat/{chat}/send', [ChatController::class, 'sendMessage'])->name('chat.send');
-        Route::get('/chat/start/{job}', [JobController::class, 'startChat'])->name('chat.start');
+        Route::post('/{chat}/send', [ChatController::class, 'sendMessage'])->name('send');
+        Route::get('/start/{job}', [JobController::class, 'startChat'])->name('start');
     });
 
     // GLOBAL OFFER ROUTES (accessible by both client and freelancer)
@@ -66,6 +61,28 @@ Route::middleware('auth')->group(function () {
         Route::post('/{offer}/pay', [OfferController::class, 'pay'])->name('pay');
     });
 
+    // GLOBAL MILESTONE ROUTES (accessible by both client and freelancer)
+    Route::prefix('milestones')->name('milestones.')->group(function () {
+        // Route untuk milestone berdasarkan offer ID
+        Route::get('/offer/{offerId}', [MilestoneController::class, 'index'])->name('index');
+        Route::post('/offer/{offerId}', [MilestoneController::class, 'store'])->name('store');
+        
+        // Route untuk milestone berdasarkan order ID (untuk client dari order page)
+        Route::get('/order/{orderId}', [MilestoneController::class, 'showByOrder'])->name('showByOrder');
+        
+        // Individual milestone actions
+        Route::put('/{milestone}', [MilestoneController::class, 'update'])->name('update');
+        Route::delete('/{milestone}', [MilestoneController::class, 'destroy'])->name('destroy');
+    });
+
+    // GLOBAL ORDER ROUTES (accessible by both client and freelancer)
+    Route::prefix('order')->name('order.')->group(function () {
+        Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+        Route::post('/', [OrderController::class, 'store'])->name('store');
+        Route::get('/create/{job}', [OrderController::class, 'create'])->name('create');
+        Route::get('/{order}/payment', [OrderController::class, 'showPayment'])->name('showPayment');
+    });
+
     // Profile routes - TANPA PARAMETER (untuk user yang sedang login)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -76,13 +93,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/{id}/edit', [ProfileController::class, 'editWithId'])->name('profile.edit.id');
     Route::put('/profile/{id}', [ProfileController::class, 'updateWithId'])->name('profile.update.id');
     Route::patch('/profile/{id}', [ProfileController::class, 'updateWithId'])->name('profile.update.patch.id');
-
-    //tambahan
-    // === Milestone routes (client + freelancer) ===
-    Route::get('/offers/{offer}/milestones', [MilestoneController::class, 'index'])->name('milestones.index');
-    Route::post('/offers/{offer}/milestones', [MilestoneController::class, 'store'])->name('milestones.store');
-    Route::put('/milestones/{milestone}', [MilestoneController::class, 'update'])->name('milestones.update');
-    Route::delete('/milestones/{milestone}', [MilestoneController::class, 'destroy'])->name('milestones.destroy');
 
     // Client routes group
     Route::prefix('client')->name('client.')->middleware('role:client')->group(function () {
@@ -103,7 +113,7 @@ Route::middleware('auth')->group(function () {
         Route::patch('/order/{order}/cancel', [OrderController::class, 'cancel'])->name('order.cancel');
         Route::get('/order/{order}/invoice', [OrderController::class, 'downloadInvoice'])->name('order.invoice');
 
-        //route untuk client kirim laporan
+        // Route untuk client kirim laporan
         Route::get('/reports/create', [ReportController::class, 'create'])->name('reports.create');
         Route::post('/reports', [ReportController::class, 'store'])->name('reports.store');
     });
@@ -138,10 +148,6 @@ Route::middleware('auth')->group(function () {
         Route::delete('/services/{job}', [JobController::class, 'destroy'])->name('services.destroy');
     });
 
-    // General order creation routes (accessible by both roles)
-    Route::post('/order', [OrderController::class, 'store'])->name('order.store');
-    Route::get('/order/create/{job}', [OrderController::class, 'create'])->name('order.create');
-
     // Legacy routes untuk backward compatibility
     Route::get('/client-dashboard', [JobController::class, 'dashboardIndex'])->name('client.dashboard.legacy')->middleware('role:client');
     Route::get('/freelancer-dashboard', function(){return view('dashboard.freelancer.index');})->name('freelancer.dashboard.legacy')->middleware('role:freelancer');
@@ -159,7 +165,7 @@ Route::middleware('auth')->group(function () {
     // Search route for admin dashboard
     Route::get('/search', [AdminController::class, 'search'])->name('search');
 
-    //route admin kelola laporan
+    // Route admin kelola laporan
     Route::get('/admin/reports', [AdminReportController::class, 'index'])->name('admin.reports.index');
     Route::get('/admin/reports/{id}', [AdminReportController::class, 'show'])->name('admin.reports.show');
     Route::post('/admin/reports/{id}/ban', [AdminReportController::class, 'banFreelancer'])->name('admin.reports.ban');

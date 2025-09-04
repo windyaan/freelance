@@ -21,7 +21,7 @@
         <div class="nav-icon">
             <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
         </div>
-        <span class="nav-text">Order</span>
+        <span class="nav-text">Orders</span>
     </a>
 @endsection
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Milestone;
 use App\Models\Offer;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,9 +22,14 @@ class MilestoneController extends Controller
             abort(403, 'Unauthorized');
         }
 
-        return response()->json([
-            'milestones' => $offer->milestones()->orderBy('start_time')->get()
-        ]);
+        // return response()->json([
+        //     'milestones' => $offer->milestones()->orderBy('start_time')->get()
+        // ]);
+
+         return redirect()
+    ->route('milestones.index', $offerId)
+    ->with('success', 'Milestone berhasil dibuat.');
+    
     }
 
     /**
@@ -50,7 +56,9 @@ class MilestoneController extends Controller
             'start_time'  => now(),
         ]);
 
-        return response()->json($milestone, 201);
+       return redirect()
+    ->route('milestones.index', $offerId)
+    ->with('success', 'Milestone berhasil dibuat.');
     }
 
     /**
@@ -107,4 +115,23 @@ class MilestoneController extends Controller
 
         return response()->json(['message' => 'Milestone deleted']);
     }
+
+    public function showByOrder($orderId)
+{
+    $order = Order::with('offer.milestones', 'offer.client', 'offer.freelancer')
+        ->findOrFail($orderId);
+
+    $offer = $order->offer;
+
+    // cek hak akses (hanya freelancer & client terkait)
+    if (Auth::id() !== $offer->freelancer_id && Auth::id() !== $offer->client_id) {
+        abort(403, 'Unauthorized');
+    }
+
+    return view('milestones.index', [
+        'order' => $order,
+        'offer' => $offer,
+        'milestones' => $offer->milestones()->orderBy('start_time')->get(),
+    ]);
+}
 }
