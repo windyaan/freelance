@@ -302,7 +302,7 @@
                     </span>
                 </div>
 
-                <a href="{{ route('freelancer.order.show', $order->id) }}" class="btn btn-primary mt-2">
+                <a href="{{ route('milestones.index', $order->offer_id) }}" class="btn btn-primary mt-2">
                     <iconify-icon icon="material-symbols:visibility"></iconify-icon> View Details
                 </a>
             </div>

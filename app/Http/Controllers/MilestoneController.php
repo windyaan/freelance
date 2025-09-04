@@ -14,22 +14,20 @@ class MilestoneController extends Controller
      * Tampilkan milestone untuk sebuah offer
      */
     public function index($offerId)
-    {
-        $offer = Offer::with('milestones')->findOrFail($offerId);
+{
+    $offer = Offer::with(['milestones', 'client', 'freelancer'])->findOrFail($offerId);
 
-        // cek hak akses
-        if (Auth::id() !== $offer->freelancer_id && Auth::id() !== $offer->client_id) {
-            abort(403, 'Unauthorized');
-        }
+    // cek hak akses
+    if (Auth::id() !== $offer->freelancer_id && Auth::id() !== $offer->client_id) {
+        abort(403, 'Unauthorized');
+    }
 
-        // return response()->json([
-        //     'milestones' => $offer->milestones()->orderBy('start_time')->get()
-        // ]);
+    // Ambil order untuk tampilan
+    $order = Order::where('offer_id', $offerId)->first();
+    $milestones = $offer->milestones()->orderBy('start_time')->get();
 
-         return redirect()
-    ->route('milestones.index', $offerId)
-    ->with('success', 'Milestone berhasil dibuat.');
-    
+      return view('milestones.index', compact('offer', 'milestones'));
+
     }
 
     /**

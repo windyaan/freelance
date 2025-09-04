@@ -61,15 +61,12 @@ class OrderController extends Controller
         return view('order.freelancer.show', compact('order'));
     }
 
-    // Client yang menerima/acc offer
+   // Client yang menerima/acc offer
     if ($user->role === 'client' && $order->offer->client_id === $user->id) {
         return view('order.client.show', compact('order'));
         }
-        
-        if ($isClient) {
-            return view('orders.client.show', compact('order'));
-        }
-        */
+
+        abort(403);
     }
 
     //Admin - Lihat semua order

@@ -69,9 +69,9 @@
 
             <!-- Project Header -->
             <div class="project-header">
-                <div class="project-date">{{ $order->created_at->format('l, d F Y') }}</div>
+                <div class="project-date">{{ $offer->created_at->format('l, d F Y') }}</div>
                 <div class="project-info">
-                    <h1 class="project-title">Project Title : {{ $offer->job->title }}</h1>
+                    <h1 class="project-title">Project Title : {{ $offer->title }}</h1>
                     <div class="project-meta">
                         <div class="meta-item">
                             <span class="meta-label">
@@ -85,13 +85,13 @@
                                 @if(auth()->user()->role === 'client')
                                     {{ $offer->freelancer->name ?? 'N/A' }}
                                 @else
-                                    {{ $offer->client->name }}
+                                    {{ $offer->client->name ?? 'N/A' }}
                                 @endif
                             </span>
                         </div>
                         <div class="meta-item">
-                            <span class="meta-label">Order ID :</span>
-                            <span class="meta-value">#{{ $order->id }}</span>
+                            <span class="meta-label">Offer ID :</span>
+                            <span class="meta-value">#{{ $offer->id }}</span>
                         </div>
                         <div class="meta-item">
                             <span class="meta-label">Revision :</span>
@@ -105,13 +105,13 @@
             <div class="project-description-section">
                 <h3 class="section-title">Description :</h3>
                 <div class="description-content">
-                    <p>{{ $offer->job->description }}</p>
+                    <p>{{ $offer->description }}</p>
                 </div>
-                @if($offer->job->output)
+                @if($offer->output)
                 <div class="output-section">
                     <h4>Output:</h4>
                     <ul>
-                        @foreach(explode(',', $offer->job->output) as $output)
+                        @foreach(explode(',', $offer->output) as $output)
                             <li>{{ trim($output) }}</li>
                         @endforeach
                     </ul>
@@ -126,9 +126,9 @@
                     <span class="price-value">Rp{{ number_format($offer->price, 0, ',', '.') }}</span>
                 </div>
                 <div class="price-item paid">
-                    <span class="price-label">Paid :</span>
-                    <span class="price-value">Rp{{ number_format($order->paid_amount ?? 0, 0, ',', '.') }}</span>
-                    <span class="paid-badge">💰</span>
+                    <span class="price-label">Status :</span>
+                    <span class="price-value">{{ ucfirst($offer->status ?? 'Pending') }}</span>
+                    <span class="paid-badge">💼</span>
                 </div>
             </div>
 
@@ -146,18 +146,24 @@
             </div>
             @endif
 
-            {{-- Payment Section - Only for Clients if order is not fully paid --}}
-            @if(auth()->user()->role === 'client' && ($order->paid_amount < $offer->price))
+            {{-- Action Section - Different actions based on offer status --}}
+            @if(auth()->user()->role === 'client' && $offer->status === 'pending')
             <div class="payment-section">
-                <h3 class="section-title">Payment</h3>
+                <h3 class="section-title">Action Required</h3>
                 <div class="payment-info">
-                    <p>Remaining amount: <strong>Rp{{ number_format($offer->price - ($order->paid_amount ?? 0), 0, ',', '.') }}</strong></p>
-                    <form action="{{ route('client.order.pay', $order->id) }}" method="POST" class="payment-form">
-                        @csrf
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Complete Payment</button>
-                        </div>
-                    </form>
+                    <p>This offer is pending your acceptance.</p>
+                    <div class="form-actions">
+                        <form action="{{ route('offers.accept', $offer->id) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="btn btn-primary">Accept Offer</button>
+                        </form>
+                        <form action="{{ route('offers.reject', $offer->id) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="btn btn-danger">Reject Offer</button>
+                        </form>
+                    </div>
                 </div>
             </div>
             @endif
@@ -508,6 +514,16 @@
     transform: translateY(-1px);
 }
 
+.btn-danger {
+    background: #dc2626;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+}
+
 /* Milestone Section */
 .milestone-section {
     background: white;
@@ -840,7 +856,7 @@ function showNotification(message, type = 'info') {
 // Form submission handling with Laravel CSRF
 document.addEventListener('DOMContentLoaded', function() {
     const progressForm = document.querySelector('.progress-form');
-    const paymentForm = document.querySelector('.payment-form');
+    const actionForms = document.querySelectorAll('.payment-section form');
     
     if (progressForm) {
         progressForm.addEventListener('submit', function(e) {
@@ -852,13 +868,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    if (paymentForm) {
-        paymentForm.addEventListener('submit', function(e) {
-            if (!confirm('Are you sure you want to complete this payment?')) {
+    actionForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const button = this.querySelector('button');
+            const action = button.textContent.trim();
+            
+            if (!confirm(`Are you sure you want to ${action.toLowerCase()}?`)) {
                 e.preventDefault();
             }
         });
-    }
+    });
 });
 </script>
 @endpush

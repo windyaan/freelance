@@ -409,21 +409,38 @@
     </div>
 
     <div class="orders-grid" id="orderGrid">
-        @forelse($order as $orderItem)
+        @forelse($orders as $orderItem)
             <div class="order-card" data-status="{{ $orderItem->status }}" data-order-id="{{ $orderItem->id }}">
                 <div class="order-header">
                     <div>
-                        <div class="order-date">{{ \Carbon\Carbon::parse($orderItem->created_at)->format('l, d F Y') }}</div>
-                        <div class="order-day">{{ \Carbon\Carbon::parse($orderItem->created_at)->format('M d, Y') }}</div>
+                        <div class="order-date">{{ $orderItem->created_at->format('l, d F Y') }}</div>
+                        <div class="order-day">{{ $orderItem->created_at->format('M d, Y') }}</div>
                     </div>
                     <div class="order-status status-{{ $orderItem->status }}">{{ ucfirst($orderItem->status) }}</div>
                 </div>
 
                 <div class="order-content">
-                    <div class="order-category">{{ $orderItem->offer->job->category ?? 'General' }}</div>
-                    <div class="order-freelancer">Freelancer: {{ $orderItem->offer->job->freelancer->name ?? 'N/A' }}</div>
-                    <div class="order-title">{{ $orderItem->offer->job->title ?? 'No Title' }}</div>
-                    @if(isset($orderItem->offer->deadline))
+                    <div class="order-category">
+                        @if(is_object($orderItem->offer->job->category))
+                            {{ $orderItem->offer->job->category->Name ?? 'General' }}
+                        @elseif(is_string($orderItem->offer->job->category))
+                            {{ $orderItem->offer->job->category }}
+                        @else
+                            General
+                        @endif
+                    </div>
+                    <div class="order-freelancer">
+                        Freelancer: {{ $orderItem->offer->job->freelancer->name ?? 'N/A' }}
+                    </div>
+                    <div class="order-title">
+                        {{ $orderItem->offer->title ?? 'No Title' }}
+                    </div>
+
+                   <p class="order-description">
+        {{ Str::limit($orderItem->offer->description ?? 'No description available', 120) }}
+    </p>
+
+                    @if($orderItem->offer->deadline)
                         <div class="order-deadline">
                             <iconify-icon icon="material-symbols:schedule"></iconify-icon>
                             Deadline: {{ \Carbon\Carbon::parse($orderItem->offer->deadline)->format('M d, Y') }}
@@ -433,7 +450,7 @@
 
                 <div class="order-footer">
                     <div class="order-price">
-                        {{ 'Rp' . number_format($orderItem->amount, 0, ',', '.') }}
+                        Rp{{ number_format($orderItem->amount, 0, ',', '.') }}
                         @if($orderItem->amount_paid > 0 && $orderItem->amount_paid < $orderItem->amount)
                             <small style="display: block; font-size: 0.8rem; color: #64748b;">
                                 Paid: Rp{{ number_format($orderItem->amount_paid, 0, ',', '.') }}
@@ -441,20 +458,27 @@
                         @endif
                     </div>
                     <div class="order-actions">
-                       <a href="{{ route('milestones.showByOrder', $orderItem->id) }}" class="action-btn btn-details">Details</a>
+                       <a href="{{ route('milestones.showByOrder', $orderItem->id) }}" class="action-btn btn-details">
+                           Details
+                       </a>
                         
-                        @if($orderItem->status === 'failed' || $orderItem->status === 'dp' || $orderItem->remaining_amount > 0)
+                        @php
+                            $remainingAmount = $orderItem->amount - $orderItem->amount_paid;
+                        @endphp
+
+                        @if(in_array($orderItem->status, ['failed', 'dp']) || $remainingAmount > 0)
                             <a href="{{ route('order.showPayment', $orderItem->id) }}" class="action-btn btn-pay">
-                                @if($orderItem->status === 'dp')
-                                    Pay Remaining (Rp{{ number_format($orderItem->remaining_amount, 0, ',', '.') }})
+                                @if($orderItem->status === 'dp' && $remainingAmount > 0)
+                                    Pay Remaining (Rp{{ number_format($remainingAmount, 0, ',', '.') }})
                                 @else
                                     Pay Now
                                 @endif
                             </a>
                         @endif
                         
-                        @if(isset($orderItem->offer->job->freelancer))
-                            <button class="action-btn btn-contact" onclick="contactFreelancer('{{ $orderItem->offer->job->freelancer->name }}')">
+                        @if($orderItem->offer->job->freelancer ?? null)
+                            <button class="action-btn btn-contact" 
+                                    onclick="contactFreelancer('{{ $orderItem->offer->job->freelancer->name }}')">
                                 Contact
                             </button>
                         @endif
@@ -486,6 +510,70 @@
         </button>
     </div>
 </div>
+
+<script>
+// Filter functionality - Pure JavaScript, no JSON
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const orderCards = document.querySelectorAll('.order-card');
+    const orderGrid = document.getElementById('orderGrid');
+    const emptyState = document.getElementById('emptyState');
+    const filteredEmptyState = document.getElementById('filteredEmptyState');
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            const filter = this.getAttribute('data-filter');
+            filterOrders(filter);
+        });
+    });
+
+    function filterOrders(filter) {
+        let visibleCount = 0;
+        
+        orderCards.forEach(card => {
+            const status = card.getAttribute('data-status');
+            
+            if (filter === 'all' || status === filter) {
+                card.style.display = 'block';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        // Show/hide empty states
+        if (visibleCount === 0 && orderCards.length > 0) {
+            filteredEmptyState.style.display = 'block';
+            emptyState.style.display = 'none';
+        } else {
+            filteredEmptyState.style.display = 'none';
+            if (orderCards.length === 0) {
+                emptyState.style.display = 'block';
+            } else {
+                emptyState.style.display = 'none';
+            }
+        }
+    }
+});
+
+// Clear filters function
+function clearFilters() {
+    document.querySelector('.filter-btn[data-filter="all"]').click();
+}
+
+// Contact freelancer function
+function contactFreelancer(freelancerName) {
+    // Implement your contact logic here
+    alert('Contacting ' + freelancerName + '...');
+    // You can replace this with a modal, redirect to chat, etc.
+}
+</script>
 @endsection
 
 @push('scripts')
