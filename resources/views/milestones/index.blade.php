@@ -9,16 +9,16 @@
 {{-- Dynamic navigation based on user role --}}
 @section('navigation')
     {{-- Dashboard navigation --}}
-    <a href="{{ auth()->user()->role === 'client' ? route('client.dashboard') : route('freelancer.dashboard') }}" 
+    <a href="{{ auth()->user()->role === 'client' ? route('client.dashboard') : route('freelancer.dashboard') }}"
        class="nav-item {{ request()->routeIs(auth()->user()->role . '.dashboard') ? 'active' : '' }}">
         <div class="nav-icon">
             <iconify-icon icon="material-symbols:dashboard"></iconify-icon>
         </div>
         <span class="nav-text">Dashboard</span>
     </a>
-    
+
     {{-- Chat navigation --}}
-    <a href="{{ auth()->user()->role === 'client' ? route('client.chat') : route('freelancer.chat') }}" 
+    <a href="{{ auth()->user()->role === 'client' ? route('client.chat') : route('freelancer.chat') }}"
        class="nav-item {{ request()->routeIs(auth()->user()->role . '.chat*') ? 'active' : '' }}">
         <div class="nav-icon">
             <iconify-icon icon="material-symbols:chat"></iconify-icon>
@@ -26,11 +26,11 @@
         <span class="nav-text">Chat</span>
         <span class="nav-badge">3</span>
     </a>
-    
+
     {{-- Role-specific navigation --}}
     @if(auth()->user()->role === 'client')
         {{-- Client specific navigation - Orders --}}
-        <a href="{{ route('client.order') }}" 
+        <a href="{{ route('client.order') }}"
            class="nav-item {{ request()->routeIs('client.order*') ? 'active' : '' }}">
             <div class="nav-icon">
                 <iconify-icon icon="material-symbols:receipt-long"></iconify-icon>
@@ -39,7 +39,7 @@
         </a>
     @else
         {{-- Freelancer specific navigation - Services --}}
-        <a href="{{ route('freelancer.services') }}" 
+        <a href="{{ route('freelancer.services') }}"
            class="nav-item {{ request()->routeIs('freelancer.services*') ? 'active' : '' }}">
             <div class="nav-icon">
                 <iconify-icon icon="material-symbols:work"></iconify-icon>
@@ -55,7 +55,7 @@
 
     <!-- Back Button - Dynamic based on user role -->
     <div class="back-navigation">
-        <a href="{{ auth()->user()->role === 'client' ? route('client.dashboard') : route('freelancer.dashboard') }}" 
+        <a href="{{ auth()->user()->role === 'client' ? route('client.dashboard') : route('freelancer.dashboard') }}"
            class="back-btn">
             <iconify-icon icon="material-symbols:arrow-back"></iconify-icon> Back
         </a>
@@ -123,7 +123,7 @@
             <div class="project-pricing">
                 <div class="price-item">
                     <span class="price-label">Price :</span>
-                    <span class="price-value">Rp{{ number_format($offer->price, 0, ',', '.') }}</span>
+                    <span class="price-value">Rp{{ number_format($offer->final_price, 0, ',', '.') }}</span>
                 </div>
                 <div class="price-item paid">
                     <span class="price-label">Status :</span>
@@ -138,6 +138,7 @@
                 <h3 class="section-title">Detail Progress</h3>
                 <form action="{{ route('milestones.store', $offer->id) }}" method="POST" class="progress-form">
                     @csrf
+                    <input type="text" name="title" placeholder="Judul milestone" required class="input-field">
                     <textarea name="description" class="progress-textarea" placeholder="Tulis progres terbaru..." rows="8" required></textarea>
                     <div class="form-actions">
                         <button type="submit" class="btn btn-secondary">Submit Progress</button>
@@ -176,17 +177,17 @@
             <!-- TIMELINE DINAMIS -->
             <div class="timeline">
                 @forelse($milestones as $milestone)
-                    <div class="timeline-item {{ 
-                        $milestone->status === 'Done' ? 'completed' : 
-                        ($milestone->status === 'Progress' ? 'current' : 
-                        ($milestone->status === 'Start' ? 'start' : 
-                        ($milestone->status === 'Revision' ? 'revision' : 
-                        ($milestone->status === 'Approved' ? 'approved' : '')))) 
+                    <div class="timeline-item {{
+                        $milestone->status === 'Done' ? 'completed' :
+                        ($milestone->status === 'Progress' ? 'current' :
+                        ($milestone->status === 'Start' ? 'start' :
+                        ($milestone->status === 'Revision' ? 'revision' :
+                        ($milestone->status === 'Approved' ? 'approved' : ''))))
                     }}">
                         <div class="timeline-marker"></div>
                         <div class="timeline-content">
                             <div class="timeline-date">
-                                {{ $milestone->start_time ? $milestone->start_time->format('d F Y') : 'Tanggal belum ditentukan' }}
+                                {{-- {{ $milestone->start_time ? $milestone->start_time->format('d F Y') : 'Tanggal belum ditentukan' }} --}}
                             </div>
                             <div class="timeline-description">{{ $milestone->title }}</div>
                             @if($milestone->description)
@@ -718,10 +719,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function initializeProjectDetails() {
     console.log('Project Details page initialized');
-    
+
     // Setup form validation
     setupFormValidation();
-    
+
     // Setup auto-save functionality (only for freelancers)
     if (document.querySelector('.progress-textarea')) {
         setupAutoSave();
@@ -740,15 +741,15 @@ function setupFormValidation() {
 function validateProgressInput(value) {
     const minLength = 10;
     const isValid = value.trim().length >= minLength;
-    
+
     // Update button states based on validation
     const submitBtn = document.querySelector('.btn-secondary');
-    
+
     if (submitBtn) {
         submitBtn.disabled = !isValid;
         submitBtn.style.opacity = isValid ? '1' : '0.6';
     }
-    
+
     return isValid;
 }
 
@@ -756,7 +757,7 @@ function setupAutoSave() {
     const textarea = document.querySelector('.progress-textarea');
     if (textarea) {
         let autoSaveTimeout;
-        
+
         textarea.addEventListener('input', function() {
             clearTimeout(autoSaveTimeout);
             autoSaveTimeout = setTimeout(() => {
@@ -769,7 +770,7 @@ function setupAutoSave() {
 function autoSaveProgress(content) {
     // This would typically send an AJAX request to save the draft
     console.log('Auto-saving progress...', content.substring(0, 50) + '...');
-    
+
     // Show auto-save indicator
     showAutoSaveIndicator();
 }
@@ -792,12 +793,12 @@ function showAutoSaveIndicator() {
         opacity: 0;
         transition: opacity 0.3s ease;
     `;
-    
+
     document.body.appendChild(indicator);
-    
+
     // Animate in
     setTimeout(() => indicator.style.opacity = '1', 100);
-    
+
     // Remove after 2 seconds
     setTimeout(() => {
         indicator.style.opacity = '0';
@@ -808,14 +809,14 @@ function showAutoSaveIndicator() {
 function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.textContent = message;
-    
+
     const colors = {
         success: '#16a34a',
         error: '#dc2626',
         info: '#0ea5e9',
         warning: '#f59e0b'
     };
-    
+
     notification.style.cssText = `
         position: fixed;
         top: 20px;
@@ -832,15 +833,15 @@ function showNotification(message, type = 'info') {
         max-width: 300px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     `;
-    
+
     document.body.appendChild(notification);
-    
+
     // Animate in
     setTimeout(() => {
         notification.style.opacity = '1';
         notification.style.transform = 'translateY(0)';
     }, 100);
-    
+
     // Remove after 4 seconds
     setTimeout(() => {
         notification.style.opacity = '0';
@@ -857,7 +858,7 @@ function showNotification(message, type = 'info') {
 document.addEventListener('DOMContentLoaded', function() {
     const progressForm = document.querySelector('.progress-form');
     const actionForms = document.querySelectorAll('.payment-section form');
-    
+
     if (progressForm) {
         progressForm.addEventListener('submit', function(e) {
             const textarea = this.querySelector('.progress-textarea');
@@ -867,12 +868,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     actionForms.forEach(form => {
         form.addEventListener('submit', function(e) {
             const button = this.querySelector('button');
             const action = button.textContent.trim();
-            
+
             if (!confirm(`Are you sure you want to ${action.toLowerCase()}?`)) {
                 e.preventDefault();
             }

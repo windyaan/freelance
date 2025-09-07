@@ -55,6 +55,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/{chat}/messages', [ChatController::class, 'storeMessage'])->name('message.store');
         Route::patch('/messages/{message}/read', [ChatController::class, 'markAsRead'])->name('message.read');
 
+    //     Route::get('/chat/freelancer/{freelancer}', [ChatController::class, 'openWithFreelancer'])
+    // ->name('chat.with.freelancer');
+
         //tambahan
         Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
         Route::get('/chat/{chat}', [ChatController::class, 'show'])->name('chat.show');
