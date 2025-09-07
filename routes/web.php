@@ -33,6 +33,20 @@ Route::get('/dashboard', function () {
 // Protected routes
 Route::middleware('auth')->group(function () {
 
+     // Client chat routes
+        Route::get('/chat', [ChatController::class, 'index'])->name('chat');
+        Route::get('/chat/{chat}', [ChatController::class, 'show'])->name('chat.show');
+        Route::post('/chat', [ChatController::class, 'store'])->name('chat.store');
+        Route::post('/chat/{chat}/messages', [ChatController::class, 'storeMessage'])->name('chat.message.store');
+        Route::patch('/messages/{message}/read', [ChatController::class, 'markAsRead'])->name('message.read');
+
+     // Freelancer chat routes
+        Route::get('/chat', [ChatController::class, 'index'])->name('chat');
+        Route::get('/chat/{chat}', [ChatController::class, 'show'])->name('chat.show');
+        Route::post('/chat', [ChatController::class, 'store'])->name('chat.store');
+        Route::post('/chat/{chat}/messages', [ChatController::class, 'sendMessage'])->name('chat.message.send');
+        Route::patch('/messages/{message}/read', [ChatController::class, 'markAsRead'])->name('message.read');
+
     // GLOBAL CHAT ROUTES (accessible by both client and freelancer)
     Route::prefix('chat')->name('chat.')->group(function () {
         Route::get('/', [ChatController::class, 'index'])->name('index');
@@ -72,10 +86,10 @@ Route::middleware('auth')->group(function () {
         // Route untuk milestone berdasarkan offer ID
         Route::get('/offer/{offerId}', [MilestoneController::class, 'index'])->name('index');
         Route::post('/offer/{offerId}', [MilestoneController::class, 'store'])->name('store');
-        
+
         // Route untuk milestone berdasarkan order ID (untuk client dari order page)
         Route::get('/order/{orderId}', [MilestoneController::class, 'showByOrder'])->name('showByOrder');
-        
+
         // Individual milestone actions
         Route::put('/{milestone}', [MilestoneController::class, 'update'])->name('update');
         Route::delete('/{milestone}', [MilestoneController::class, 'destroy'])->name('destroy');

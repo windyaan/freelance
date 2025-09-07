@@ -85,7 +85,17 @@ public function profiles()
     return $this->hasMany(Report::class, 'freelancer_id');
     }
 
-
+    protected static function booted()
+    {
+        static::created(function ($user) {
+            $user->profile()->create([
+                'bio' => '',
+                'skills' => '',
+                'avatar_url' => null,
+                'achievement' => '',
+            ]);
+        });
+    }
     // // Role check helper
     // public function isAdmin()
     // {

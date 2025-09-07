@@ -3,7 +3,7 @@ import { format } from "date-fns";
 function chatBox(config) {
     return {
         authUserId: config.authUserId,
-        conversationId: config.conversationId,
+        chatId: config.chatId,
         messages: config.initialMessages,
         newContent: "",
         otherUser: config.otherUser,
@@ -19,7 +19,7 @@ function chatBox(config) {
             this.markMessagesAsRead();
 
             // Mendengarkan event 'MessageSent' dari backend
-            Echo.private(`chat.${this.conversationId}`)
+            Echo.private(`chat.${this.chatId}`)
                 .listen("MessageSent", (e) => { // ✅ Sudah benar, sesuai broadcastAs() di backend
                     // Cek jika pesan berasal dari user lain, bukan dari diri sendiri
                     // Mengakses properti langsung dari event (e.id, e.sender_id)
@@ -50,7 +50,7 @@ function chatBox(config) {
         // Fungsi BARU untuk memanggil API markAsRead
         markMessagesAsRead() {
             // Menggunakan fetch untuk POST ke endpoint markAsRead
-            fetch(`/chat/${this.conversationId}/read`, { // ✅ Periksa rute di web.php
+            fetch(`/chat/${this.chatId}/read`, { // ✅ Periksa rute di web.php
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -79,7 +79,7 @@ function chatBox(config) {
             this.scrollToBottom();
 
             // Kirim pesan ke backend via fetch (AJAX)
-            fetch(`/chat/${this.conversationId}/send`, { // ✅ Pastikan ini sesuai dengan rute di web.php
+            fetch(`/chat/${this.chatId}/send`, { // ✅ Pastikan ini sesuai dengan rute di web.php
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
