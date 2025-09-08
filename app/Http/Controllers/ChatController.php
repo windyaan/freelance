@@ -90,6 +90,18 @@ class ChatController extends Controller
     }
 
 
+//     public function openWithFreelancer($freelancerId, Request $request)
+// {
+//     $chat = Chat::firstOrCreate([
+//         'client_id'     => Auth::id(),
+//         'freelancer_id' => $freelancerId,
+//     ], [
+//         'job_id' => $request->job_id, // kalau perlu job
+//     ]);
+
+//     return redirect()->route('chat.show', $chat->id);
+// }
+
 
     /**
      * Buat chat baru (atau ambil jika sudah ada)
@@ -108,7 +120,7 @@ class ChatController extends Controller
             'freelancer_id' => $request->freelancer_id,
         ], [
             'offer_id' => $request->offer_id,
-            'job_id'   => 'required|exists:jobs,id',
+            'job_id'   => $request->job_id,
         ]);
 
         return redirect()->route('chat.show', $chat);

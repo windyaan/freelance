@@ -728,7 +728,7 @@ body {
             <span class="nav-badge">3</span>
         </a> --}}
 
-        <a href="{{ route('chat.start', $job->id) }}" class="service-chat-btn">
+        <a href="{{ route('chat.show', $job->id) }}" class="service-chat-btn">
                         <iconify-icon icon="material-symbols:chat"></iconify-icon>
     Chat
 </a>

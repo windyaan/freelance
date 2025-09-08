@@ -22,7 +22,8 @@ class ProfileController extends Controller
         if (!$user->profile) {
             $user->profile = new Profile([
                 'bio' => '',
-                'skills' => [],
+                // 'skills' => [],
+                'skiils'=>'',
                 'avatar_url' => null
             ]);
         }
@@ -40,13 +41,26 @@ class ProfileController extends Controller
         $user->load(['profile', 'jobs.category']);
 
         // Jika user belum punya profile, buat profile kosong
+        // if (!$user->profile) {
+        //     $user->profile = new Profile([
+        //         'bio' => '',
+        //         'skills' => [],
+        //         'avatar_url' => null
+        //     ]);
+        // }
+
         if (!$user->profile) {
-            $user->profile = new Profile([
-                'bio' => '',
-                'skills' => [],
-                'avatar_url' => null
-            ]);
-        }
+    $user->profile()->updateOrCreate(
+        ['user_id' => $user->id],
+        [
+            'bio' => '',
+            'skills' => '',
+            'avatar_url' => null,
+            'achievement' => ''
+        ]
+    );
+    $user->load('profile');
+}
 
         return view('profile.edit', compact('user'));
     }
