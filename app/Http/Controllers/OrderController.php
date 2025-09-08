@@ -72,9 +72,9 @@ class OrderController extends Controller
     //Admin - Lihat semua order
     public function adminIndex()
     {
-        $orders = Order::with(['offer.job.freelancer', 'offer.job.client'])->get();
+        $orders = Order::with(['offer.job.freelancer'])->get();
 
-        return view('dashboard.admin.orders.index', compact('orders'));
+       return view('order.admin.orders', compact('orders'));
     }
 
     // Form pembayaran order
@@ -89,7 +89,7 @@ class OrderController extends Controller
             abort(403, 'Unauthorized');
         }
         
-        return view('order.payment', compact('order'));
+       return view('payments.client', compact('order'));
     }
 
     /**

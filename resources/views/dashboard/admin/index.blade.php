@@ -3,13 +3,13 @@
 @section('page-title', 'Admin Dashboard')
 
 @section('navigation')
-    <a href="#" class="nav-item active">
+    <a href="/admin-dashboard" class="nav-item active">
         <div class="nav-icon">
             <iconify-icon icon="material-symbols:dashboard"></iconify-icon>
         </div>
         <span class="nav-text">Dashboard</span>
     </a>
-    <a href="#" class="nav-item">
+    <a href="/admin/orders" class="nav-item">
         <div class="nav-icon">
             <iconify-icon icon="material-symbols:list-alt"></iconify-icon>
         </div>
@@ -26,6 +26,22 @@
 
 .admin-layout .nav-item.active {
     background: var(--secondary-color);
+    color: white;
+}
+
+/* Add hover effect for navigation items */
+.nav-item {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.nav-item:hover {
+    background: var(--primary-color);
+    color: white;
+    text-decoration: none;
+}
+
+.nav-item:hover .nav-text {
     color: white;
 }
 

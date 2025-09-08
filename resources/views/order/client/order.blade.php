@@ -226,6 +226,7 @@
     .order-actions {
         display: flex;
         gap: 0.5rem;
+        align-items: center;
     }
 
     .action-btn {
@@ -237,7 +238,9 @@
         cursor: pointer;
         transition: all 0.2s ease;
         text-decoration: none;
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
     }
 
     .btn-details {
@@ -271,6 +274,46 @@
     .btn-contact:hover {
         background: #e2e8f0;
         color: #475569;
+    }
+
+    /* Icon styles for action buttons */
+    .action-btn iconify-icon {
+        font-size: 0.9rem;
+    }
+
+    .btn-details iconify-icon {
+        color: white;
+    }
+
+    .btn-pay iconify-icon {
+        color: white;
+    }
+
+    /* Alert icon styles */
+    .alert-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #dc2626;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-left: 0.5rem;
+        border: 2px solid white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .alert-icon:hover {
+        background: #b91c1c;
+        transform: scale(1.05);
+    }
+
+    .alert-icon iconify-icon {
+        font-size: 1rem;
+        font-weight: bold;
     }
 
     .empty-state {
@@ -362,11 +405,19 @@
 
         .order-actions {
             justify-content: stretch;
+            flex-wrap: wrap;
         }
 
         .action-btn {
             flex: 1;
             text-align: center;
+            justify-content: center;
+        }
+
+        .alert-icon,
+        .payment-icon {
+            margin-left: 0;
+            margin-top: 0.5rem;
         }
     }
 
@@ -459,6 +510,7 @@
                     </div>
                     <div class="order-actions">
                        <a href="{{ route('milestones.showByOrder', $orderItem->id) }}" class="action-btn btn-details">
+                           <iconify-icon icon="material-symbols:info"></iconify-icon>
                            Details
                        </a>
                         
@@ -468,6 +520,7 @@
 
                         @if(in_array($orderItem->status, ['failed', 'dp']) || $remainingAmount > 0)
                             <a href="{{ route('order.showPayment', $orderItem->id) }}" class="action-btn btn-pay">
+                                <iconify-icon icon="material-symbols:payment"></iconify-icon>
                                 @if($orderItem->status === 'dp' && $remainingAmount > 0)
                                     Pay Remaining (Rp{{ number_format($remainingAmount, 0, ',', '.') }})
                                 @else
@@ -476,11 +529,23 @@
                             </a>
                         @endif
                         
-                        @if($orderItem->offer->job->freelancer ?? null)
-                            <button class="action-btn btn-contact" 
-                                    onclick="contactFreelancer('{{ $orderItem->offer->job->freelancer->name }}')">
-                                Contact
-                            </button>
+                     <a href="{{ route('order.showPayment', $orderItem->id) }}" class="action-btn btn-contact">
+                    <iconify-icon icon="material-symbols:credit-card"></iconify-icon>
+                    Payment
+                    </a>
+
+                        <!-- Payment Icon (for quick payment access) -->
+                        @if(in_array($orderItem->status, ['failed', 'unpaid', 'dp']))
+                            <div class="payment-icon" title="Quick Payment" onclick="quickPayment('{{ $orderItem->id }}')">
+                                <iconify-icon icon="material-symbols:credit-card"></iconify-icon>
+                            </div>
+                        @endif
+
+                        <!-- Alert Icon (for issues/notifications) -->
+                        @if(in_array($orderItem->status, ['failed', 'dp']) || $orderItem->created_at->diffInDays() > 7)
+                            <div class="alert-icon" title="Attention Required" onclick="showOrderAlert('{{ $orderItem->id }}', '{{ $orderItem->status }}')">
+                                <iconify-icon icon="material-symbols:warning"></iconify-icon>
+                            </div>
                         @endif
                     </div>
                 </div>
@@ -572,6 +637,31 @@ function contactFreelancer(freelancerName) {
     // Implement your contact logic here
     alert('Contacting ' + freelancerName + '...');
     // You can replace this with a modal, redirect to chat, etc.
+}
+
+// Quick payment function
+function quickPayment(orderId) {
+    // Navigate to payment page
+    window.location.href = `/order/${orderId}/payment`;
+}
+
+// Show order alert function
+function showOrderAlert(orderId, status) {
+    let message = '';
+    switch(status) {
+        case 'failed':
+            message = 'Payment failed. Please retry payment.';
+            break;
+        case 'dp':
+            message = 'Deposit paid. Remaining payment required.';
+            break;
+        default:
+            message = 'This order requires attention.';
+    }
+    
+  if(confirm(message + ' Would you like to report this issue?')) {
+    window.location.href = `/client/reports/create?order_id=${orderId}`;
+}
 }
 </script>
 @endsection
@@ -719,8 +809,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Order card click handling
     document.addEventListener('click', function(e) {
         const orderCard = e.target.closest('.order-card');
-        if (orderCard && !e.target.closest('.action-btn')) {
-            // Click on card but not on buttons - could show order details
+        if (orderCard && !e.target.closest('.action-btn') && !e.target.closest('.payment-icon') && !e.target.closest('.alert-icon')) {
+            // Click on card but not on buttons or icons - could show order details
             const orderId = orderCard.getAttribute('data-order-id');
             window.location.href = `/order/${orderId}`;
         }

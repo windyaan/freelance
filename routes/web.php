@@ -86,7 +86,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/{order}', [OrderController::class, 'show'])->name('show');
         Route::post('/', [OrderController::class, 'store'])->name('store');
         Route::get('/create/{job}', [OrderController::class, 'create'])->name('create');
+        
+        // Payment routes - UPDATED
         Route::get('/{order}/payment', [OrderController::class, 'showPayment'])->name('showPayment');
+        Route::post('/{order}/payment', [OrderController::class, 'processPayment'])->name('processPayment');
     });
 
     // Profile routes - TANPA PARAMETER (untuk user yang sedang login)
@@ -119,9 +122,9 @@ Route::middleware('auth')->group(function () {
         Route::patch('/order/{order}/cancel', [OrderController::class, 'cancel'])->name('order.cancel');
         Route::get('/order/{order}/invoice', [OrderController::class, 'downloadInvoice'])->name('order.invoice');
 
-        // Route untuk client kirim laporan
-        Route::get('/reports/create', [ReportController::class, 'create'])->name('reports.create');
-        Route::post('/reports', [ReportController::class, 'store'])->name('reports.store');
+        // Route untuk client kirim laporan - Updated
+    Route::get('/reports/create', [ReportController::class, 'create'])->name('reports.create');
+    Route::post('/reports', [ReportController::class, 'store'])->name('reports.store');
     });
 
     // Freelancer routes group
