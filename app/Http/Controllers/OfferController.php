@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Offer;
 use App\Models\Job;
+use App\Models\Chat;
+use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -49,7 +51,7 @@ class OfferController extends Controller
             ->firstOrFail();
 
         // Buat penawaran baru
-        Offer::create([
+       $offer = Offer::create([
             'job_id'        => $job->id,
             'freelancer_id' => Auth::id(), // ID freelancer yang sedang login
             'client_id'     => $request->client_id, // ID klien yang diterima dari form
@@ -58,6 +60,23 @@ class OfferController extends Controller
             'final_price'   => $request->final_price,
             'deadline'      => $request->deadline,
             'status'        => 'pending',
+        ]);
+
+        // Cari atau buat chat room antara client dan freelancer
+        $chat = Chat::firstOrCreate([
+            'client_id'     => $request->client_id,
+            'freelancer_id' => Auth::id(),
+        ], [
+            'offer_id'      => $offer->id, // Set offer_id hanya saat membuat chat baru
+        ]);
+
+        // Buat message yang mereferensikan offer ini
+        Message::create([
+            'sender_id'   => Auth::id(),
+            'receiver_id' => $request->client_id,
+            'content'     => 'Penawaran baru telah dibuat', // Berikan nilai content yang valid
+            'offer_id'    => $offer->id,
+            'chat_id'     => $chat->id, // Sekarang ada chat_id yang valid
         ]);
 
         // return redirect()->route('chat.index')->with('success', 'Offer berhasil dibuat.');

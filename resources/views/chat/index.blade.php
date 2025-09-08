@@ -55,6 +55,9 @@
     --chat-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
     --chat-accent-green: #4CBC9A;
     --offer-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --offer-success: #10b981;
+    --offer-warning: #f59e0b;
+    --offer-danger: #ef4444;
 }
 
 .chat-container {
@@ -354,84 +357,248 @@
     border-bottom-left-radius: 8px;
 }
 
-/* Offer Message Styles */
+/* Enhanced Offer Message Styles */
 .offer-message {
-    max-width: 80%;
-    margin: 1rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    max-width: 85%;
+    margin: 1.5rem 0;
+    animation: slideInMessage 0.4s ease-out;
+}
+
+.offer-message.sent {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.offer-message.received {
+    align-self: flex-start;
+}
+
+.offer-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid var(--chat-border);
+}
+
+.offer-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .offer-card {
     background: white;
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border-radius: 18px;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
     overflow: hidden;
     border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    position: relative;
+    min-width: 320px;
+}
+
+.offer-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 64px rgba(0, 0, 0, 0.2);
 }
 
 .offer-header {
     background: var(--offer-bg);
     color: white;
-    padding: 1rem;
+    padding: 1.25rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.offer-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
 }
 
 .offer-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+    position: relative;
+    z-index: 1;
 }
 
 .offer-meta {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
+    gap: 1rem;
     font-size: 0.85rem;
-    opacity: 0.9;
+    opacity: 0.95;
+    position: relative;
+    z-index: 1;
+}
+
+.offer-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.offer-meta iconify-icon {
+    font-size: 1.1rem;
+    opacity: 0.8;
 }
 
 .offer-body {
-    padding: 1rem;
+    padding: 1.25rem;
+}
+
+.offer-description {
+    color: var(--chat-text-secondary);
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.offer-price-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
 }
 
 .offer-price {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #1a202c;
-    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--offer-success);
 }
 
-.offer-time {
+.offer-deadline {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--chat-text-secondary);
+    font-size: 0.85rem;
+}
+
+.offer-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 20px;
     font-size: 0.75rem;
-    color: #718096;
-    margin-bottom: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.offer-status.pending {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+}
+
+.offer-status.accepted {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #34d399;
+}
+
+.offer-status.rejected {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #f87171;
+}
+
+.offer-status.completed {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #60a5fa;
 }
 
 .offer-actions {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.75rem;
+    margin-top: 1rem;
 }
 
 .btn-offer {
     flex: 1;
-    padding: 0.625rem 1rem;
+    padding: 0.75rem 1rem;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     text-decoration: none;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-accept {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
+
+.btn-accept:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-reject {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
+}
+
+.btn-reject:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(239, 68, 68, 0.4);
+    color: white;
+    text-decoration: none;
 }
 
 .btn-details {
-    background: #64748b;
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
     color: white;
+    box-shadow: 0 4px 14px rgba(107, 114, 128, 0.3);
 }
 
 .btn-details:hover {
-    background: #475569;
+    background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(107, 114, 128, 0.4);
     color: white;
     text-decoration: none;
+}
+
+.offer-time {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 0.5rem;
+    text-align: right;
 }
 
 .message-time {
@@ -687,6 +854,41 @@
     background: #2d3748;
 }
 
+/* Success/Error Notifications */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+    animation: slideInNotification 0.3s ease-out;
+}
+
+@keyframes slideInNotification {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.notification.success {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #34d399;
+}
+
+.notification.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #f87171;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .chat-container {
@@ -707,7 +909,11 @@
     }
 
     .message, .offer-message {
-        max-width: 85%;
+        max-width: 90%;
+    }
+
+    .offer-card {
+        min-width: 280px;
     }
 
     .chat-messages {
@@ -731,6 +937,16 @@
     .form-grid {
         grid-template-columns: 1fr;
         gap: 0.75rem;
+    }
+
+    .offer-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .offer-meta {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
     }
 }
 </style>
@@ -833,59 +1049,179 @@
                     @endif
                 </div>
 
-                <!-- Messages -->
-                <div class="chat-messages" id="chatMessages">
-                    @foreach($activeChat->messages as $msg)
-                        <div class="message {{ $msg->sender_id == auth()->id() ? 'sent' : 'received' }}">
-                            <div class="message-avatar">
-                                <img src="{{ $msg->sender->profile->avatar_url ?? 'https://via.placeholder.com/32' }}"
-                                     alt="{{ $msg->sender->name }}">
-                            </div>
-                            <div class="message-content">
-                                {{ $msg->content }}
-                                <div class="message-time">
-                                    {{ $msg->created_at->format('H:i A') }}
-                                    @if($msg->sender_id == auth()->id())
-                                        <span class="message-status">
-                                            <iconify-icon icon="material-symbols:check" style="font-size: 0.75rem; color: var(--chat-accent-green);"></iconify-icon>
-                                            <iconify-icon icon="material-symbols:check" style="font-size: 0.75rem; margin-left: -0.25rem; color: var(--chat-accent-green);"></iconify-icon>
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
+               <!-- Messages Section - Replace the existing messages section -->
+<div class="chat-messages" id="chatMessages">
+    @php
+        $allItems = collect();
+        
+        // Add messages
+        foreach($activeChat->messages as $msg) {
+            $allItems->push((object)[
+                'type' => 'message',
+                'data' => $msg,
+                'created_at' => $msg->created_at
+            ]);
+        }
+        
+        // Add offers - menggunakan method getAllOffers()
+        $offers = $activeChat->getAllOffers();
+        foreach($offers as $offer) {
+            $allItems->push((object)[
+                'type' => 'offer',
+                'data' => $offer,
+                'created_at' => $offer->created_at
+            ]);
+        }
+        
+        // Sort by created_at
+        $allItems = $allItems->sortBy('created_at');
+    @endphp
 
-                    <!-- Display Offers -->
-                    @if(isset($activeChat->offers))
-                        @foreach($activeChat->offers as $offer)
-                            @if($offer->status === 'pending')
-                            <div class="offer-message {{ $offer->freelancer_id == auth()->id() ? 'sent' : 'received' }}">
-                                <div class="offer-card">
-                                    <div class="offer-header">
-                                        <div class="offer-title">{{ $offer->title }}</div>
-                                        <div class="offer-meta">
-                                            <div>Price: {{ $offer->formatted_price }}</div>
-                                            <div>Deadline: {{ $offer->formatted_deadline }}</div>
-                                            <div class="offer-time">{{ $offer->created_at->format('H:i A') }}</div>
-                                        </div>
-                                    </div>
-                                    
-                                    @if($offer->client_id == auth()->id())
-                                    <div class="offer-body">
-                                        <div class="offer-actions">
-                                            <a href="{{ route('offers.show', $offer) }}" class="btn-offer btn-details">
-                                                View Details
-                                            </a>
-                                        </div>
-                                    </div>
-                                    @endif
-                                </div>
-                            </div>
-                            @endif
-                        @endforeach
+    @forelse($allItems as $item)
+        @if($item->type === 'message')
+            @php $msg = $item->data; @endphp
+            <div class="message {{ $msg->sender_id == auth()->id() ? 'sent' : 'received' }}">
+                <div class="message-avatar">
+                    <img src="{{ $msg->sender->profile->avatar_url ?? 'https://via.placeholder.com/32' }}"
+                         alt="{{ $msg->sender->name }}">
+                </div>
+                <div class="message-content">
+                    {{ $msg->content }}
+                    <div class="message-time">
+                        {{ $msg->created_at->format('H:i A') }}
+                        @if($msg->sender_id == auth()->id())
+                            <span class="message-status">
+                                <iconify-icon icon="material-symbols:check" style="font-size: 0.75rem; color: var(--chat-accent-green);"></iconify-icon>
+                                <iconify-icon icon="material-symbols:check" style="font-size: 0.75rem; margin-left: -0.25rem; color: var(--chat-accent-green);"></iconify-icon>
+                            </span>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+        @elseif($item->type === 'offer')
+            @php $offer = $item->data; @endphp
+            <div class="offer-message {{ $offer->freelancer_id == auth()->id() ? 'sent' : 'received' }}">
+                <div class="offer-avatar">
+                    @if($offer->freelancer_id == auth()->id())
+                        <img src="{{ auth()->user()->profile->avatar_url ?? 'https://via.placeholder.com/36' }}"
+                             alt="{{ auth()->user()->name }}">
+                    @else
+                        <img src="{{ $offer->freelancer->profile->avatar_url ?? 'https://via.placeholder.com/36' }}"
+                             alt="{{ $offer->freelancer->name }}">
                     @endif
                 </div>
+                <div class="offer-card">
+                    <div class="offer-header">
+                        <div class="offer-title">
+                            <iconify-icon icon="material-symbols:work-outline"></iconify-icon>
+                            {{ $offer->title }}
+                        </div>
+                        <div class="offer-meta">
+                            <div class="offer-meta-item">
+                                <iconify-icon icon="material-symbols:payments-outline"></iconify-icon>
+                                <span>Rp {{ number_format($offer->final_price, 0, ',', '.') }}</span>
+                            </div>
+                            <div class="offer-meta-item">
+                                <iconify-icon icon="material-symbols:schedule-outline"></iconify-icon>
+                                <span>{{ \Carbon\Carbon::parse($offer->deadline)->format('d M Y') }}</span>
+                            </div>
+                        </div>
+                        <div class="offer-time">{{ $offer->created_at->format('H:i A') }}</div>
+                    </div>
+                    
+                    <div class="offer-body">
+                        @if($offer->description)
+                            <div class="offer-description">
+                                {{ Str::limit($offer->description, 120) }}
+                            </div>
+                        @endif
+
+                        <div class="offer-price-section">
+                            <div class="offer-price">
+                                Rp {{ number_format($offer->final_price, 0, ',', '.') }}
+                            </div>
+                            <div class="offer-deadline">
+                                <iconify-icon icon="material-symbols:event-available-outline"></iconify-icon>
+                                {{ \Carbon\Carbon::parse($offer->deadline)->diffForHumans() }}
+                            </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span class="offer-status {{ $offer->status }}">
+                                @if($offer->status === 'pending')
+                                    <iconify-icon icon="material-symbols:pending-outline"></iconify-icon>
+                                    Menunggu
+                                @elseif($offer->status === 'accepted')
+                                    <iconify-icon icon="material-symbols:check-circle-outline"></iconify-icon>
+                                    Diterima
+                                @elseif($offer->status === 'rejected')
+                                    <iconify-icon icon="material-symbols:cancel-outline"></iconify-icon>
+                                    Ditolak
+                                @elseif($offer->status === 'completed')
+                                    <iconify-icon icon="material-symbols:task-alt"></iconify-icon>
+                                    Selesai
+                                @endif
+                            </span>
+
+                            @if($offer->job_id && $offer->job)
+                                <small style="color: var(--chat-text-secondary);">
+                                    Job: {{ $offer->job->title }}
+                                </small>
+                            @endif
+                        </div>
+                        
+                        <!-- Action buttons based on user role and offer status -->
+                        @if($offer->status === 'pending')
+                            @if($offer->client_id == auth()->id())
+                                <!-- Client can accept/reject -->
+                                <div class="offer-actions">
+                                    <form action="{{ route('offers.accept', $offer) }}" method="POST" style="flex: 1;">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn-offer btn-accept">
+                                            <iconify-icon icon="material-symbols:check"></iconify-icon>
+                                            Accept
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('offers.reject', $offer) }}" method="POST" style="flex: 1;">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn-offer btn-reject">
+                                            <iconify-icon icon="material-symbols:close"></iconify-icon>
+                                            Reject
+                                        </button>
+                                    </form>
+                                </div>
+                            @else
+                                <!-- Freelancer can only view -->
+                                <div class="offer-actions">
+                                    <a href="{{ route('offers.show', $offer) }}" class="btn-offer btn-details">
+                                        <iconify-icon icon="material-symbols:visibility-outline"></iconify-icon>
+                                        View Details
+                                    </a>
+                                </div>
+                            @endif
+                        @else
+                            <!-- Show details button for completed/accepted/rejected offers -->
+                            <div class="offer-actions">
+                                <a href="{{ route('offers.show', $offer) }}" class="btn-offer btn-details">
+                                    <iconify-icon icon="material-symbols:visibility-outline"></iconify-icon>
+                                    View Details
+                                </a>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @endif
+    @empty
+        <div class="text-center text-gray-500 py-8">
+            <iconify-icon icon="material-symbols:chat-bubble-outline" class="text-4xl mb-2"></iconify-icon>
+            <p>Belum ada pesan atau penawaran</p>
+        </div>
+    @endforelse
+</div>
 
                 <!-- Chat Input -->
                 <div class="chat-input-container">
@@ -977,8 +1313,6 @@
                     </div>
                 </div>
 
-
-
                 <!-- Form Actions -->
                 <div class="form-actions">
                     <button type="button" onclick="closeOfferModal()" class="btn btn-secondary">
@@ -1015,6 +1349,28 @@ document.addEventListener('click', function(e) {
     }
 });
 
+// Show notification
+function showNotification(message, type = 'success') {
+    // Remove existing notifications
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notification => {
+        notification.remove();
+    });
+
+    // Create new notification
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 5000);
+}
+
 // Handle offer form submission
 document.addEventListener('DOMContentLoaded', function() {
     const offerForm = document.getElementById('offerForm');
@@ -1024,7 +1380,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = 'Mengirim...';
+            submitBtn.innerHTML = '<iconify-icon icon="material-symbols:hourglass-empty"></iconify-icon> Mengirim...';
             submitBtn.disabled = true;
             
             const formData = new FormData(this);
@@ -1041,16 +1397,19 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.success) {
                     closeOfferModal();
-                    // Show success message
-                    alert('Penawaran berhasil dikirim!');
-                    location.reload(); // Refresh to show the offer
+                    showNotification('Penawaran berhasil dikirim!', 'success');
+                    
+                    // Add offer to chat immediately for better UX
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
                 } else {
                     throw new Error(data.message || 'Unknown error');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Terjadi kesalahan: ' + error.message);
+                showNotification('Terjadi kesalahan: ' + error.message, 'error');
             })
             .finally(() => {
                 submitBtn.innerHTML = originalText;
@@ -1058,6 +1417,25 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    // Handle offer action buttons
+    const offerForms = document.querySelectorAll('form[action*="offers"]');
+    offerForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            // Add loading state
+            submitBtn.innerHTML = '<iconify-icon icon="material-symbols:hourglass-empty"></iconify-icon>';
+            submitBtn.disabled = true;
+            
+            // Re-enable after form submission
+            setTimeout(() => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, 2000);
+        });
+    });
 
     // Chat item selection
     const chatItems = document.querySelectorAll('.chat-item');
@@ -1100,8 +1478,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (window.Echo && window.currentChatId) {
         window.Echo.private(`chat.${window.currentChatId}`)
             .listen('MessageSent', (e) => {
-                // Add new message to chat
                 appendMessage(e.message);
+            })
+            .listen('OfferSent', (e) => {
+                // Reload page to show new offer
+                location.reload();
             });
     }
 });
